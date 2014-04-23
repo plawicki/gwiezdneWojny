@@ -1,0 +1,19 @@
+{
+  "name": "gwiezdneWojny",
+  "version": "0.0.1",
+  "authors": [
+    "Patryk Ławicki <patlaw96@gmail.com>"
+  ],
+  "license": "Attribution-NonCommercial 2.0 Generic",
+  "homepage": "https://github.com/true-or-false/gwiezdneWojny",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.x"
+  }
+}

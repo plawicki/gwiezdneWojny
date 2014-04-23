@@ -1,0 +1,25 @@
+{
+  "name": "gwiezdneWojny",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/true-or-false/gwiezdneWojny"
+  },
+  "author": "Patryk Ławicki",
+  "license": "Attribution-NonCommercial 2.0 Generic",
+  "bugs": {
+    "url": "https://github.com/true-or-false/gwiezdneWojny/issues"
+  },
+  "homepage": "https://github.com/true-or-false/gwiezdneWojny",
+  "dependencies": {
+    "express": "3.x",
+    "less-middleware": "0.1.x",
+    "ejs": "*",
+    "socket.io": "0.9.x"
+  }
+}
