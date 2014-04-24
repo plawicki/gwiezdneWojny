@@ -1,46 +1,45 @@
-/*
-	* statek class
-		* wejscie class
-		* fizyka class
-	* mapa class
-		* planeta class
-			* surowiec class
-*/
 
-function planetaTyp (objekt, surowce) {
+
+function PlanetaTyp (objekt, surowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.surowce = surowce;
 }
 
-function planeta (nazwa, planetaTyp, wielkosc) {
+function UkladTyp (objekt, temperatura) {
+	this.nazwa = objekt.nazwa;
+	this.grafika = objekt.grafika;
+	this.temperatura = temperatura;
+}
+
+function Planeta (nazwa, planetaTyp, wielkosc) {
 	this.nazwa = nazwa;
 	this.grafika = planetaTyp.grafika;
 	this.planetaTyp = planetaTyp;
 	this.wielkosc = wielkosc;
 }
 
-function uklad(nazwa, objekt, planety, wielkosc, pozycja) {
+function Uklad(nazwa, ukladTyp, planety, wielkosc, pozycja) {
 	this.nazwa = nazwa;
-	this.grafika = objekt;
+	this.grafika = ukladTyp.grafika;
 	this.planety = planety;
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
 }
 
-function mapa (uklady) {
-	this.uklady = uklady;
+function Mapa () {
+	this.uklady = [];
 }
 
-function wejscie (statek, input) {
+function Wejscie (statek, input) {
 	// przechwytywanie klawiatury + siec
 }
 
-function wektor2 (x, y) {
+function Wektor2 (x, y) {
 	this.x = x; this.y = y;
 }
 
-function fizyka (kto, kogo) {
+function Fizyka (kto, kogo) {
 	this.sprawdz = function(kto, kogo) {
 		if (true)
 			return true;
@@ -49,39 +48,37 @@ function fizyka (kto, kogo) {
 	};
 }
 
-function objekt (id, nazwa, grafika)
+function Objekt (id, nazwa, grafika)
 {
 	this.id = id;
 	this.nazwa = nazwa;
-	this.grafika = grafika;
-	this.img = new Image();
-	this.img.src = grafika;
+	this.grafika = new Image();
 
-	that = this;
+	this.grafika.src = grafika;
 
-	this.img.onload = function(){
-		that.grafika = that.img;
+	this.grafika.onload = function(){
+		console.log("DONE");
 	}
 }
 
-function ekran (objekt) {
+function Ekran (objekt) {
 	this.tlo = objekt.grafika;
 	this.tytul = objekt.nazwa;
 	this.przyciski = [];
 	this.teksty = [];
 }
 
-function  wezel(ten, nastepny, poprzedni) {
+function  Wezel(ten, nastepny, poprzedni) {
 	this.ten = ten;
 	this.nastepny = nastepny;
 	this.poprzedni = poprzedni;
 }
 
-function drzewoRozwoju(){
+function DrzewoRozwoju(){
 	this.wezly = [];
 }
 
-function rozwoj () {
+function Rozwoj () {
 	this.posiadaneBronie = [];
 	this.zdobywalneBronie = [];
 
@@ -108,7 +105,7 @@ function rozwoj () {
 	this.aktualnyExtruder = null;
 }
 
-function bron (objekt, moc, szybkostrzelnosc, zasieg) {
+function Bron (objekt, moc, szybkostrzelnosc, zasieg) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.moc = moc;
@@ -116,45 +113,45 @@ function bron (objekt, moc, szybkostrzelnosc, zasieg) {
 	this.zasieg = zasieg;
 }
 
-function pancerz (objekt, wytrzymalosc) {
+function Pancerz (objekt, wytrzymalosc) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.wytrzymalosc = wytrzymalosc;
 }
 
-function silnik(objekt, przyspieszenie, szybkosc) {
+function Silnik(objekt, przyspieszenie, szybkosc) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.przyspieszenie = przyspieszenie;
 	this.szybkosc = szybkosc;
 }
 
-function surowiec (objekt, waga) {
+function Surowiec (objekt, waga) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.waga = waga;
 }
 
-function magazyn(objekt, pojemnosc) {
+function Magazyn(objekt, pojemnosc) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.pojemnosc = pojemnosc;
 }
 
-function extruder(objekt, surowce) {
+function Extruder(objekt, surowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.surowce = [];
 }
 
-function typStatku(objekt, fizyka) {
+function TypStatku(objekt, fizyka) {
 	this.id = objekt.id;
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.fizyka = fizyka;
 }
 
-function pocisk(objekt, pozycja, szybkosc, obrot) {
+function Pocisk(objekt, pozycja, szybkosc, obrot) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.pozycja = pozycja;
@@ -162,7 +159,7 @@ function pocisk(objekt, pozycja, szybkosc, obrot) {
 	this.obrot = obrot;
 }
 
-function statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie) {
+function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie) {
 	this.id = 0;
 	this.typ = typ;
 	this.fizyka = typ.fizyka;
