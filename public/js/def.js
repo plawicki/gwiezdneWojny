@@ -54,6 +54,14 @@ function objekt (id, nazwa, grafika)
 	this.id = id;
 	this.nazwa = nazwa;
 	this.grafika = grafika;
+	this.img = new Image();
+	this.img.src = grafika;
+
+	that = this;
+
+	this.img.onload = function(){
+		that.grafika = that.img;
+	}
 }
 
 function ekran (objekt) {

@@ -1,5 +1,7 @@
 $(function(){
 
+	$('body').html($('body').html()+ "LOADING");
+
 	var canvas = $('canvas')[0];
 
 	canvas.width = document.body.clientWidth;
@@ -10,15 +12,18 @@ $(function(){
 
 	var ctx = canvas.getContext("2d");
 
-	var img = new Image();
-	img.src = objone.grafika;
 
-	window.onload = function(){
-		ctx.drawImage(img, 0, 0);
+	init = function(){
+		
+		// After all media are initialized we can start a game loop
+
+		setInterval(play, 30);
 	}
 
-	console.log();
+	play = function(){
+		
+		ctx.drawImage(objone.grafika,0,0);
+	}
 
-	// ctx.fillRect(20, 20, 10, 10);
-
+	window.onload = init;
 });
