@@ -12,23 +12,70 @@ function UkladTyp (objekt, temperatura) {
 	this.temperatura = temperatura;
 }
 
-function Planeta (nazwa, planetaTyp, wielkosc) {
+function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 	this.nazwa = nazwa;
 	this.grafika = planetaTyp.grafika;
 	this.planetaTyp = planetaTyp;
 	this.wielkosc = wielkosc;
+	this.pozycja = pozycja;
+
+	var that = this;
+
+	this.rysuj = function(ctx){
+
+		if(ctx && that.grafika)
+		{
+			that.grafika.rysuj(ctx, that.pozycja);
+		}
+		
+	}
 }
 
-function Uklad(nazwa, ukladTyp, planety, wielkosc, pozycja) {
+function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.nazwa = nazwa;
+	this.ukladTyp = ukladTyp;
 	this.grafika = ukladTyp.grafika;
-	this.planety = planety;
+	this.planety = [];
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
+
+	var that = this;
+
+	this.rysuj = function(ctx){
+
+		if(ctx && that.grafika)
+		{
+			that.grafika.rysuj(ctx, that.pozycja);
+		}
+		
+	}
+
+	this.rysujSrodek = function(ctx){
+		if(ctx)
+		{
+			for(var i=0; i<that.planety.length; i++)
+			{
+				that.planety[i].rysuj(ctx);
+			}
+		}
+	}
 }
 
 function Mapa () {
 	this.uklady = [];
+
+	var that = this;
+
+	this.rysuj = function(ctx){
+		if(ctx)
+		{
+			for(var i=0; i<that.uklady.length; i++)
+			{
+				that.uklady[i].rysuj(ctx);
+			}
+		}
+		
+	}
 }
 
 function Wejscie (statek, input) {
@@ -36,7 +83,14 @@ function Wejscie (statek, input) {
 }
 
 function Wektor2 (x, y) {
-	this.x = x; this.y = y;
+	if(x && y)
+	{
+		this.x = x; this.y = y;
+	}
+	else
+	{
+		this.x = 0; this.y = 0;
+	}
 }
 
 function Fizyka (kto, kogo) {
@@ -52,12 +106,70 @@ function Objekt (id, nazwa, grafika)
 {
 	this.id = id;
 	this.nazwa = nazwa;
+
 	this.grafika = new Image();
 
 	this.grafika.src = grafika;
 
 	this.grafika.onload = function(){
-		console.log("DONE");
+		console.log("x "+this.width+" y "+this.height);
+	}
+
+	this.grafika.rysuj = function(ctx, pozycja){
+
+		if(pozycja)
+		{
+			ctx.save();
+			ctx.drawImage(this, pozycja.x, pozycja.y);
+			ctx.restore();
+		}
+	}
+}
+
+function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
+
+	// tekst = obj
+	this.tekst = tekst;
+
+	this.tekst.pozycja = pozycja;
+	this.tekst.offset = offset;
+
+	this.pozycja = pozycja;
+	this.dzialanie = dzialanie;
+	this.grafika = objekt.grafika;
+
+	var that = this;
+
+	this.rysuj = function(ctx){
+		that.grafika.rysuj(ctx, that.pozycja);
+		that.tekst.rysuj(ctx);
+	}
+}
+
+function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
+
+	// tekst = string
+
+	this.tekst = tekst;
+	this.pozycja = pozycja;
+	this.kolor = kolor;
+	this.rozmiar = rozmiar;
+	this.czcionka = czcionka;
+	this.offset = offset;
+
+	if(!offset)
+		this.offset = new Wektor2();
+
+	var that = this;
+
+	this.rysuj = function(ctx){
+		ctx.save();
+
+		ctx.font = that.rozmiar+"px "+that.czcionka;
+		ctx.fillStyle = that.kolor;
+		ctx.fillText(that.tekst, that.pozycja.x +  that.offset.x, that.pozycja.y + that.offset.y);
+
+		ctx.restore();
 	}
 }
 
@@ -105,12 +217,13 @@ function Rozwoj () {
 	this.aktualnyExtruder = null;
 }
 
-function Bron (objekt, moc, szybkostrzelnosc, zasieg) {
+function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.moc = moc;
 	this.szybkostrzelnosc = szybkostrzelnosc;
 	this.zasieg = zasieg;
+	this.szybkoscPocisku = szybkoscPocisku;
 }
 
 function Pancerz (objekt, wytrzymalosc) {
@@ -157,6 +270,14 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 	this.pozycja = pozycja;
 	this.szybkosc = szybkosc;
 	this.obrot = obrot;
+	var that = this;
+
+	this.rysuj = function(ctx){
+		if(ctx)
+		{
+			that.grafika.rysuj(ctx, that.pozycja);
+		}
+	}
 }
 
 function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie) {

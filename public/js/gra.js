@@ -17,16 +17,15 @@ $(function(){
 		
 		// After all media are initialized we can start a game loop
 
+		przycisk1.rysuj(ctx);
+		mapa.rysuj(ctx);
 
 
 		setInterval(play, 30);
 	}
 
 	play = function(){
-		
-		ctx.drawImage(space.grafika,0,0);
-		ctx.drawImage(mapa.uklady[0].grafika, 0, 0);
-
+	
 
 	}
 
