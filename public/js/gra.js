@@ -12,6 +12,9 @@ $(function(){
 
 	var ctx = canvas.getContext("2d");
 
+	// 0 - menu, 1 - mapa uniwersum, 2 - mapa ukladu, 3 - mapa drzewka rozwoju, 4 - gameover
+
+	var gameState = 0;
 
 	init = function(){
 		
@@ -26,6 +29,26 @@ $(function(){
 
 	play = function(){
 	
+		if(gameState === 1)
+		{
+
+		} 
+		else if(gameState === 0)
+		{
+
+		} 
+		else if(gameState === 2)
+		{
+
+		}
+		else if(gameState === 3)
+		{
+
+		}
+		else if(gameState === 4)
+		{
+
+		}
 
 	}
 

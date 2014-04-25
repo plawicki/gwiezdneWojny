@@ -178,6 +178,45 @@ function Ekran (objekt) {
 	this.tytul = objekt.nazwa;
 	this.przyciski = [];
 	this.teksty = [];
+	this.mapa = null;
+	this.gracz = null;
+	this.inniGracze = [];
+
+	this.przesuniecieWidoku = new Wektor2();
+
+	var that = this;
+
+	this.rysuj(ctx){
+
+		that.tlo.rysuj(ctx);
+
+		if(that.gracz)
+			that.przesuniecieWidoku = that.gracz.pozycja;
+
+		if(that.mapa)
+			that.mapa.rysuj(ctx);
+
+		if(that.inniGracze.length != 0)
+		{
+			for(var i=0; that.inniGracze.length; i++)
+				that.inniGracze[i].rysuj(ctx);
+		}
+			
+		if(that.gracz)
+			that.gracz.rysuj(ctx);
+
+		if(that.przyciski.length != 0)
+		{
+			for(var i=0; that.przyciski.length; i++)
+				that.przyciski[i].rysuj(ctx);
+		}
+
+		if(that.teksty.length != 0)
+		{
+			for(var i=0; that.teksty.length; i++)
+				that.teksty[i].rysuj(ctx);
+		}
+	}
 }
 
 function  Wezel(ten, nastepny, poprzedni) {
