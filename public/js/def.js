@@ -28,7 +28,7 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 			that.grafika.rysuj(ctx, that.pozycja);
 		}
 		
-	}
+	};
 }
 
 function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
@@ -48,7 +48,7 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 			that.grafika.rysuj(ctx, that.pozycja);
 		}
 		
-	}
+	};
 
 	this.rysujSrodek = function(ctx){
 		if(ctx)
@@ -58,7 +58,7 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 				that.planety[i].rysuj(ctx);
 			}
 		}
-	}
+	};
 }
 
 function Mapa () {
@@ -75,7 +75,7 @@ function Mapa () {
 			}
 		}
 		
-	}
+	};
 }
 
 function Wejscie (statek, input) {
@@ -113,17 +113,24 @@ function Objekt (id, nazwa, grafika)
 
 	this.grafika.onload = function(){
 		console.log("x "+this.width+" y "+this.height);
-	}
+	};
 
-	this.grafika.rysuj = function(ctx, pozycja){
+	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset){
+		ctx.save();
 
-		if(pozycja)
-		{
-			ctx.save();
-			ctx.drawImage(this, pozycja.x, pozycja.y);
-			ctx.restore();
-		}
-	}
+		if(!offset)
+			var offset = new Wektor2();
+
+		if(!pozycja)
+			var pozycja = new Wektor2();
+
+		if(rozmiar)
+			ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y, rozmiar.x, rozmiar.y);
+		else
+			ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y);
+
+		ctx.restore();
+	};
 }
 
 function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
@@ -143,7 +150,7 @@ function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
 	this.rysuj = function(ctx){
 		that.grafika.rysuj(ctx, that.pozycja);
 		that.tekst.rysuj(ctx);
-	}
+	};
 }
 
 function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
@@ -170,25 +177,27 @@ function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
 		ctx.fillText(that.tekst, that.pozycja.x +  that.offset.x, that.pozycja.y + that.offset.y);
 
 		ctx.restore();
-	}
+	};
 }
 
-function Ekran (objekt) {
+function Ekran (objekt, mapa, gracz) {
 	this.tlo = objekt.grafika;
 	this.tytul = objekt.nazwa;
 	this.przyciski = [];
 	this.teksty = [];
-	this.mapa = null;
-	this.gracz = null;
+	this.mapa = mapa;
+	this.gracz = gracz;
 	this.inniGracze = [];
 
 	this.przesuniecieWidoku = new Wektor2();
 
 	var that = this;
 
-	this.rysuj(ctx){
+	this.rysuj = function(ctx){
 
-		that.tlo.rysuj(ctx);
+		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(document.body.clientWidth, document.body.clientHeight));
+
+
 
 		if(that.gracz)
 			that.przesuniecieWidoku = that.gracz.pozycja;
@@ -196,27 +205,27 @@ function Ekran (objekt) {
 		if(that.mapa)
 			that.mapa.rysuj(ctx);
 
-		if(that.inniGracze.length != 0)
+		if(that.inniGracze.length !== 0)
 		{
-			for(var i=0; that.inniGracze.length; i++)
+			for(var i=0; i<that.inniGracze.length; i++)
 				that.inniGracze[i].rysuj(ctx);
 		}
 			
 		if(that.gracz)
 			that.gracz.rysuj(ctx);
 
-		if(that.przyciski.length != 0)
+		if(that.przyciski.length !== 0)
 		{
-			for(var i=0; that.przyciski.length; i++)
+			for(var i=0; i<that.przyciski.length; i++)
 				that.przyciski[i].rysuj(ctx);
 		}
 
-		if(that.teksty.length != 0)
+		if(that.teksty.length !== 0)
 		{
-			for(var i=0; that.teksty.length; i++)
+			for(var i=0; i<that.teksty.length; i++)
 				that.teksty[i].rysuj(ctx);
 		}
-	}
+	};
 }
 
 function  Wezel(ten, nastepny, poprzedni) {
@@ -316,11 +325,12 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 		{
 			that.grafika.rysuj(ctx, that.pozycja);
 		}
-	}
+	};
 }
 
 function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie) {
 	this.id = 0;
+
 	this.typ = typ;
 	this.fizyka = typ.fizyka;
 	this.pozycja = pozycja;
@@ -333,12 +343,12 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie
 	this.silniki = rozwoj.silniki;
 	this.magazyny = rozwoj.magazyny;
 	this.extrudery = rozwoj.extrudery;
+
 	this.wejscie = wejscie;
 
 
 	this.pociski = [];
 
 }
-
 
 
