@@ -40,7 +40,7 @@ $(function(){
 		
 		// After all media are initialized we can start a game loop
 
-		setInterval(play, 30);
+		setInterval(play, 33);
 	}
 
 	play = function(){
@@ -51,8 +51,9 @@ $(function(){
 		} 
 		else if(gameState === 0)
 		{
-			ekran1.rysuj(ctx);
+			
 			ekran1.gracz.odswiez();
+			ekran1.rysuj(ctx);
 		} 
 		else if(gameState === 2)
 		{

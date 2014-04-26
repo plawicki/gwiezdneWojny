@@ -25,8 +25,6 @@ for(var j=0; j<50; j++)
 
 }
 
-
-
 var ekran1 = new Ekran(space, mapa, gracz);
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');

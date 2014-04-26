@@ -128,8 +128,21 @@ function Objekt (id, nazwa, grafika)
 		console.log("x "+this.width+" y "+this.height);
 	};
 
-	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset){
+	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset, obrot){
 		ctx.save();
+
+		var pozycja = pozycja;
+		var offset = offset;
+
+		if(obrot)
+		{
+			ctx.translate(pozycja.x, pozycja.y);
+			ctx.translate(this.width/2, this.height/2);
+			ctx.rotate(obrot);
+
+			pozycja = new Wektor2();
+			offset = new Wektor2(-this.width/2, -this.height/2);
+		}
 
 		if(!offset)
 			var offset = new Wektor2();
@@ -409,11 +422,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj) {
 	this.rysuj = function(ctx)
 	{
 		ctx.save();
-		ctx.translate(that.pozycja.x, that.pozycja.y);
-		ctx.translate(that.grafika.width/2, that.grafika.height/2);
-		ctx.rotate(that.obrot);
 
-		ctx.drawImage(that.grafika, -that.grafika.width/2, -that.grafika.height/2);
+		that.grafika.rysuj(ctx, that.pozycja, null, null, that.obrot);
 
 		ctx.restore();
 
