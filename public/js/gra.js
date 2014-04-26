@@ -14,12 +14,12 @@ $(function(){
 
 	var mouseEvent = function(e){
 		wejscie.mysz = e;
-		wejscie.dzialaj();
+		wejscie.dzialajMysz();
 	}
 
 	var keyboardEvent = function(e){
 		wejscie.klawiatura = e;
-		wejscie.dzialaj();
+		wejscie.dzialajKlawiatura();
 	}
 
 	$('canvas').mousemove(mouseEvent);

@@ -1,5 +1,3 @@
-var wejscie = new Wejscie(null);
-
 var space = new Objekt(1, "Nowy", "/img/space.jpg");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazda1.png" );
@@ -30,5 +28,7 @@ var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 var przycisk1 = new Przycisk(tekst1, objektprzycisk, new Wektor2(100, 100), new Wektor2(150, 200), function(){ alert("HELLO WORLD"); });
 
 ekran1.przyciski.push(przycisk1);
+
+var wejscie = new Wejscie(ekran1);
 
 // tekst, objekt, pozycja, offset, dzialanie

@@ -78,17 +78,20 @@ function Mapa () {
 	};
 }
 
-function Wejscie (statek, input) {
+function Wejscie (ekran) {
 	// przechwytywanie klawiatury + siec
-	this.mysz = input;
-	this.klawiatura = input;
-	console.log(input);
+	this.mysz = null;
+	this.klawiatura = null;
+	this.ekran = ekran;
 
 	var that = this;
 
-	this.dzialaj = function(){
-		console.log(that.mysz);
-		console.log(that.klawiatura);
+	this.dzialajMysz = function(){
+		that.ekran.dzialaj(that.mysz);
+	};
+
+	this.dzialajKlawiatura = function(){
+		that.ekran.dzialaj(that.klawiatura);
 	};
 }
 
@@ -202,6 +205,29 @@ function Ekran (objekt, mapa, gracz) {
 	this.przesuniecieWidoku = new Wektor2();
 
 	var that = this;
+
+	this.dzialaj = function(e){
+		if(e.type === "click")
+		{
+			var wcisniety = false;
+			for(var i=0; i<that.przyciski.length; i++)
+			{
+				if(e.clientX >= that.przyciski[i].pozycja.x && e.clientX <= (that.przyciski[i].pozycja.x + that.przyciski[i].grafika.width) &&
+				   e.clientY >= that.przyciski[i].pozycja.y && e.clientY <= (that.przyciski[i].pozycja.y + that.przyciski[i].grafika.height))
+				{
+					that.przyciski[i].dzialanie();
+					wcisniety = true;
+					break;
+				}
+
+				if(!wcisniety)
+				{
+					console.log("zrobic cos ze statkiem");
+				}
+				wcisniety = false;
+			}
+		}
+	}
 
 	this.rysuj = function(ctx){
 
