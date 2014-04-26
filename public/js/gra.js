@@ -12,14 +12,14 @@ $(function(){
 
 	var ctx = canvas.getContext("2d");
 
-	var wejscie();
-
 	var mouseEvent = function(e){
-		
+		wejscie.mysz = e;
+		wejscie.dzialaj();
 	}
 
 	var keyboardEvent = function(e){
-		
+		wejscie.klawiatura = e;
+		wejscie.dzialaj();
 	}
 
 	$('canvas').mousemove(mouseEvent);
@@ -38,10 +38,6 @@ $(function(){
 	init = function(){
 		
 		// After all media are initialized we can start a game loop
-
-		//przycisk1.rysuj(ctx);
-		
-		console.log();
 
 		setInterval(play, 30);
 	}

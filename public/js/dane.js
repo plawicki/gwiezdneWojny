@@ -1,3 +1,5 @@
+var wejscie = new Wejscie(null);
+
 var space = new Objekt(1, "Nowy", "/img/space.jpg");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazda1.png" );

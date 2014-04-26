@@ -80,6 +80,16 @@ function Mapa () {
 
 function Wejscie (statek, input) {
 	// przechwytywanie klawiatury + siec
+	this.mysz = input;
+	this.klawiatura = input;
+	console.log(input);
+
+	var that = this;
+
+	this.dzialaj = function(){
+		console.log(that.mysz);
+		console.log(that.klawiatura);
+	};
 }
 
 function Wektor2 (x, y) {
