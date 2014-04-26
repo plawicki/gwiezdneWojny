@@ -4,6 +4,12 @@ var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazda1.png" );
 
 var objektprzycisk = new Objekt(3, "", "/img/przycisk.jpg");
 
+var objektstatek1 = new Objekt(4, "Statek ludzi", "/img/statki/1.png");
+
+var typstatku1 = new TypStatku(objektstatek1, null);
+
+var gracz = new Statek(typstatku1, new Wektor2(800,400), null, 0.0, "red", "Gracz", null);
+
 var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
 
 var mapa = new Mapa();
@@ -19,7 +25,9 @@ for(var j=0; j<50; j++)
 
 }
 
-var ekran1 = new Ekran(space, mapa, null);
+
+
+var ekran1 = new Ekran(space, mapa, gracz);
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 

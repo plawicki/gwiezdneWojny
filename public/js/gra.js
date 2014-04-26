@@ -11,6 +11,7 @@ $(function(){
 	canvas.style.height = canvas.height + "px";
 
 	var ctx = canvas.getContext("2d");
+	//canvas.globalAlpha = 0.5;
 
 	var mouseEvent = function(e){
 		wejscie.mysz = e;
@@ -51,6 +52,7 @@ $(function(){
 		else if(gameState === 0)
 		{
 			ekran1.rysuj(ctx);
+			ekran1.gracz.odswiez();
 		} 
 		else if(gameState === 2)
 		{

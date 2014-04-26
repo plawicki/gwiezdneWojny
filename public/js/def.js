@@ -227,6 +227,16 @@ function Ekran (objekt, mapa, gracz) {
 				wcisniety = false;
 			}
 		}
+
+		if(e.type === "mousemove")
+		{
+			gracz.obroc(e.clientX, e.clientY);
+		}
+
+		if(e.type === "keypress")
+		{
+			gracz.ruszaj();
+		}
 	}
 
 	this.rysuj = function(ctx){
@@ -341,13 +351,6 @@ function Extruder(objekt, surowce) {
 	this.surowce = [];
 }
 
-function TypStatku(objekt, fizyka) {
-	this.id = objekt.id;
-	this.nazwa = objekt.nazwa;
-	this.grafika = objekt.grafika;
-	this.fizyka = fizyka;
-}
-
 function Pocisk(objekt, pozycja, szybkosc, obrot) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
@@ -364,23 +367,68 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 	};
 }
 
-function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, wejscie) {
+function TypStatku(objekt, fizyka) {
+	this.id = objekt.id;
+	this.nazwa = objekt.nazwa;
+	this.grafika = objekt.grafika;
+	this.fizyka = fizyka;
+}
+
+function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj) {
 	this.id = 0;
 
-	this.typ = typ;
-	this.fizyka = typ.fizyka;
+
+
 	this.pozycja = pozycja;
-	this.pozycjaMapa = pozycjaMapa;
 	this.obrot = obrot;
+	this.grafika = typ.grafika;
+
+	this.typ = typ;
+	//this.fizyka = typ.fizyka;
+
+	this.pozycjaMapa = pozycjaMapa;
+
 	this.kolor = kolor;
 	this.nazwa = nazwa;
+	this.predkosc = 0;
+	/*
 	this.bronie = rozwoj.bronie;
 	this.pancerze = rozwoj.pancerze;
 	this.silniki = rozwoj.silniki;
 	this.magazyny = rozwoj.magazyny;
 	this.extrudery = rozwoj.extrudery;
+	*/
+	
 
-	this.wejscie = wejscie;
+	var that = this;
+
+	this.obroc = function(x, y){
+		that.obrot = Math.atan2(y - (that.grafika.height/2) - that.pozycja.y, x - (that.grafika.width/2) - that.pozycja.x);
+	}
+
+	this.rysuj = function(ctx)
+	{
+		ctx.save();
+		ctx.translate(that.pozycja.x, that.pozycja.y);
+		ctx.translate(that.grafika.width/2, that.grafika.height/2);
+		ctx.rotate(that.obrot);
+
+		ctx.drawImage(that.grafika, -that.grafika.width/2, -that.grafika.height/2);
+
+		ctx.restore();
+
+	}
+
+	this.ruszaj = function(){
+		
+		that.predkosc += 1;
+		console.log("x " + that.pozycja.x + " y " + that.pozycja.y);
+	}
+
+	this.odswiez = function(){
+		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
+		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
+	}
 
 
 	this.pociski = [];
