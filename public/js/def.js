@@ -134,21 +134,21 @@ function Objekt (id, nazwa, grafika)
 		var pozycja = pozycja;
 		var offset = offset;
 
+		if(!offset)
+			var offset = new Wektor2();
+
+		if(!pozycja)
+			var pozycja = new Wektor2();
+
 		if(obrot)
 		{
-			ctx.translate(pozycja.x, pozycja.y);
+			ctx.translate(pozycja.x + offset.x, pozycja.y + offset.y);
 			ctx.translate(this.width/2, this.height/2);
 			ctx.rotate(obrot);
 
 			pozycja = new Wektor2();
 			offset = new Wektor2(-this.width/2, -this.height/2);
 		}
-
-		if(!offset)
-			var offset = new Wektor2();
-
-		if(!pozycja)
-			var pozycja = new Wektor2();
 
 		if(rozmiar)
 			ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y, rozmiar.x, rozmiar.y);
@@ -254,7 +254,7 @@ function Ekran (objekt, mapa, gracz) {
 
 	this.rysuj = function(ctx){
 
-		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(document.body.clientWidth, document.body.clientHeight));
+		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
 
 
 

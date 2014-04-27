@@ -11,6 +11,9 @@ $(function(){
 	canvas.style.height = canvas.height + "px";
 
 	var ctx = canvas.getContext("2d");
+	ctx.szerokosc = canvas.width;
+	ctx.wysokosc = canvas.height;
+	console.log(ctx.szerokosc);
 	//canvas.globalAlpha = 0.5;
 
 	var mouseEvent = function(e){
