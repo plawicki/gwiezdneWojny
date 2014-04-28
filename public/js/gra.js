@@ -11,9 +11,15 @@ $(function(){
 	canvas.style.height = canvas.height + "px";
 
 	var ctx = canvas.getContext("2d");
+
 	ctx.szerokosc = canvas.width;
 	ctx.wysokosc = canvas.height;
-	console.log(ctx.szerokosc);
+	ctx.srodek = new Wektor2(canvas.width/2, canvas.height/2);
+
+	gracz.srodek = ctx.srodek;
+
+
+	console.log(ctx.srodek);
 	//canvas.globalAlpha = 0.5;
 
 	var mouseEvent = function(e){
@@ -47,6 +53,8 @@ $(function(){
 	}
 
 	play = function(){
+
+		ctx.przesuniecie = new Wektor2(gracz.pozycja.x, gracz.pozycja.y);
 	
 		if(gameState === 1)
 		{

@@ -25,7 +25,7 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 
 		if(ctx && that.grafika)
 		{
-			that.grafika.rysuj(ctx, that.pozycja);
+			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
 		}
 		
 	};
@@ -45,7 +45,8 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 
 		if(ctx && that.grafika)
 		{
-			that.grafika.rysuj(ctx, that.pozycja);
+			// ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza
+			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
 		}
 		
 	};
@@ -128,7 +129,7 @@ function Objekt (id, nazwa, grafika)
 		console.log("x "+this.width+" y "+this.height);
 	};
 
-	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset, obrot){
+	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
 		ctx.save();
 
 		var pozycja = pozycja;
@@ -148,6 +149,11 @@ function Objekt (id, nazwa, grafika)
 
 			pozycja = new Wektor2();
 			offset = new Wektor2(-this.width/2, -this.height/2);
+		}
+
+		if(przesunacWzgledemGracza)
+		{
+			offset = new Wektor2(offset.x - ctx.przesuniecie.x, offset.y - ctx.przesuniecie.y);
 		}
 
 		if(rozmiar)
@@ -387,7 +393,7 @@ function TypStatku(objekt, fizyka) {
 	this.fizyka = fizyka;
 }
 
-function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj) {
+function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, srodek) {
 	this.id = 0;
 
 
@@ -395,6 +401,9 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj) {
 	this.pozycja = pozycja;
 	this.obrot = obrot;
 	this.grafika = typ.grafika;
+
+	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
+	this.srodekEkranu = srodek;
 
 	this.typ = typ;
 	//this.fizyka = typ.fizyka;
@@ -416,14 +425,14 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj) {
 	var that = this;
 
 	this.obroc = function(x, y){
-		that.obrot = Math.atan2(y - (that.grafika.height/2) - that.pozycja.y, x - (that.grafika.width/2) - that.pozycja.x);
+		that.obrot = Math.atan2(y - (that.grafika.height/2) - that.srodek.y, x - (that.grafika.width/2) - that.srodek.x);
 	}
 
 	this.rysuj = function(ctx)
 	{
 		ctx.save();
 
-		that.grafika.rysuj(ctx, that.pozycja, null, null, that.obrot);
+		that.grafika.rysuj(ctx, that.srodek, null, null, that.obrot);
 
 		ctx.restore();
 
