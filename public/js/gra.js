@@ -60,8 +60,10 @@ $(function(){
 		} 
 		else if(gameState === 0)
 		{
-			ekran1.gracz.odswiez();
-			ekran1.rysuj(ctx);
+			if(ekran1.aktywny)
+			{
+				ekran1.odswiez(ctx);
+			}
 		} 
 		else if(gameState === 2)
 		{

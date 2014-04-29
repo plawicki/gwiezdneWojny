@@ -197,6 +197,7 @@ function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
 	this.rozmiar = rozmiar;
 	this.czcionka = czcionka;
 	this.offset = offset;
+	this.aktywny = false;
 
 	if(!offset)
 		this.offset = new Wektor2();
@@ -227,6 +228,7 @@ function Ekran (ekranTyp, mapa, gracz) {
 	this.mapa = mapa;
 	this.gracz = gracz;
 	this.inniGracze = [];
+	this.aktywny = false;
 
 	this.przesuniecieWidoku = new Wektor2();
 
@@ -260,7 +262,7 @@ function Ekran (ekranTyp, mapa, gracz) {
 						if(e.clientX >= that.mapa.uklady[i].pozycja.x - that.gracz.pozycja.x && e.clientX <= (that.mapa.uklady[i].pozycja.x + that.mapa.uklady[i].grafika.width - that.gracz.pozycja.x) &&
 			  			   e.clientY >= that.mapa.uklady[i].pozycja.y - that.gracz.pozycja.y && e.clientY <= (that.mapa.uklady[i].pozycja.y + that.mapa.uklady[i].grafika.height - that.gracz.pozycja.y))
 							{
-								that.gracz.ruszajDoGwiazdy(that.mapa.uklady[i].pozycja,e.clientX, e.clientY);
+								that.gracz.ruszajDoGwiazdy(that.mapa.uklady[i],e.clientX, e.clientY);
 							}
 					}
 				}
@@ -291,11 +293,8 @@ function Ekran (ekranTyp, mapa, gracz) {
 
 		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
 
-
-
-		if(that.gracz)
-			that.przesuniecieWidoku = that.gracz.pozycja;
-
+		ctx.przesuniecie = that.gracz.pozycja;
+	
 		if(that.mapa)
 			that.mapa.rysuj(ctx);
 
@@ -320,7 +319,52 @@ function Ekran (ekranTyp, mapa, gracz) {
 				that.teksty[i].rysuj(ctx);
 		}
 	};
+
+	this.rysujUklad = function(ctx){
+
+		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
+		ctx.przesuniecie = that.gracz.pozycja;
+
+		that.gracz.kierunek.rysujSrodek(ctx);
+
+		if(that.inniGracze.length !== 0)
+		{
+			for(var i=0; i<that.inniGracze.length; i++)
+				that.inniGracze[i].rysuj(ctx);
+		}
+
+		if(that.gracz)
+			that.gracz.rysuj(ctx);
+
+		if(that.przyciski.length !== 0)
+		{
+			for(var i=0; i<that.przyciski.length; i++)
+				that.przyciski[i].rysuj(ctx);
+		}
+
+		if(that.teksty.length !== 0)
+		{
+			for(var i=0; i<that.teksty.length; i++)
+				that.teksty[i].rysuj(ctx);
+		}
+
+	}
+
+	this.odswiez = function(ctx){
+
+		that.gracz.odswiez();
+
+		if(that.gracz.dotarl)
+		{
+			that.nazwa = "Uklad";
+			that.rysujUklad(ctx);
+		}
+			
+		else
+			that.rysuj(ctx);
+	};
 }
+
 
 function  Wezel(ten, nastepny, poprzedni) {
 	this.ten = ten;
@@ -434,8 +478,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	// uniwersum
 	this.pozycjaMapa = pozycjaMapa;
-	this.kierunek = new Wektor2();
-
+	this.kierunek = null;
+	this.dotarl = false;
 
 	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
 	this.srodekEkranu = srodek;
@@ -476,8 +520,7 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 		that.ruszaj("przod");
 		that.kierunek = dokad;
-		console.log(dokad);
-	}
+	};
 
 	this.ruszaj = function(e){
 
@@ -502,23 +545,26 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 				if(that.predkosc <= 0.0 && that.predkosc >= -1)
 					that.predkosc = 0;
 			}
-
-		console.log(e);
 	};
 
 	this.odswiez = function(){
 		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
 		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
 
-		//console.log(" pozycja " + that.pozycja.x);
-		//console.log(" kierunek " + (that.kierunek.x - that.srodek.x));
 
-		if(that.pozycja.x >= that.kierunek.x - that.srodek.x - 32 && that.pozycja.x <= that.kierunek.x  - that.srodek.x + 32
-		&& that.pozycja.y >= that.kierunek.y - that.srodek.y - 32 && that.pozycja.y <= that.kierunek.y  - that.srodek.y + 32)
+
+		if(that.kierunek &&
+		   that.pozycja.x >= that.kierunek.pozycja.x - that.srodek.x - 32 && that.pozycja.x <= that.kierunek.pozycja.x  - that.srodek.x + 32
+		&& that.pozycja.y >= that.kierunek.pozycja.y - that.srodek.y - 32 && that.pozycja.y <= that.kierunek.pozycja.y  - that.srodek.y + 32)
 		{
 			that.ruszaj("stop");
+			that.dotarl = true;
 		}
+
+
+		console.log(that.dotarl);
 			
+
 	};
 
 

@@ -1,12 +1,14 @@
 
 // typy ekranow : Uniwersum, Uklad, Menu
 var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
+var objektekran2 = new Objekt(1, "Uklad", "/img/tla/skybox1.jpg");
+var objektekran3 = new Objekt(1, "Menu", "/img/tla/skybox1.jpg");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
 
 var objektprzycisk = new Objekt(3, "", "/img/GUI/przycisk.jpg");
 
-var objektstatek1 = new Objekt(4, "Statek ludzi", "/img/statki/1.png");
+var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 
 var typstatku1 = new TypStatku(objektstatek1, null);
 
@@ -28,6 +30,7 @@ for(var j=0; j<50; j++)
 }
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
+ekran1.aktywny = true;
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 
