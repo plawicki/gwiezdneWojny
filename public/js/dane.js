@@ -1,14 +1,16 @@
-var space = new Objekt(1, "Nowy", "/img/space.jpg");
 
-var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazda1.png" );
+// typy ekranow : Uniwersum, Uklad, Menu
+var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
 
-var objektprzycisk = new Objekt(3, "", "/img/przycisk.jpg");
+var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
+
+var objektprzycisk = new Objekt(3, "", "/img/GUI/przycisk.jpg");
 
 var objektstatek1 = new Objekt(4, "Statek ludzi", "/img/statki/1.png");
 
 var typstatku1 = new TypStatku(objektstatek1, null);
 
-var gracz = new Statek(typstatku1, new Wektor2(800,400), null, 0.0, "red", "Gracz", null);
+var gracz = new Statek(typstatku1, new Wektor2(0,0), null, 0.0, "Gracz", null, null);
 
 var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
 
@@ -25,7 +27,7 @@ for(var j=0; j<50; j++)
 
 }
 
-var ekran1 = new Ekran(space, mapa, gracz);
+var ekran1 = new Ekran(objektekran1, mapa, gracz);
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 
@@ -33,7 +35,7 @@ var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 
 var przycisk1 = new Przycisk(tekst1, objektprzycisk, new Wektor2(100, 100), new Wektor2(150, 200), function(){ alert("HELLO WORLD"); });
 
-ekran1.przyciski.push(przycisk1);
+//ekran1.przyciski.push(przycisk1);
 
 var wejscie = new Wejscie(ekran1);
 

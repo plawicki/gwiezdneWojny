@@ -1,7 +1,5 @@
 $(function(){
 
-	$('body').html($('body').html()+ "LOADING");
-
 	var canvas = $('canvas')[0];
 
 	canvas.width = document.body.clientWidth;
@@ -62,7 +60,6 @@ $(function(){
 		} 
 		else if(gameState === 0)
 		{
-			
 			ekran1.gracz.odswiez();
 			ekran1.rysuj(ctx);
 		} 

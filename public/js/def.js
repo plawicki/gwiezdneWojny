@@ -125,6 +125,8 @@ function Objekt (id, nazwa, grafika)
 
 	this.grafika.src = grafika;
 
+	that = this;
+
 	this.grafika.onload = function(){
 		console.log("x "+this.width+" y "+this.height);
 	};
@@ -134,7 +136,7 @@ function Objekt (id, nazwa, grafika)
 
 		var pozycja = pozycja;
 		var offset = offset;
-
+		
 		if(!offset)
 			var offset = new Wektor2();
 
@@ -212,9 +214,14 @@ function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
 	};
 }
 
-function Ekran (objekt, mapa, gracz) {
-	this.tlo = objekt.grafika;
-	this.tytul = objekt.nazwa;
+function ekranTyp(objekt, nazwa){
+	this.nazwa = nazwa;
+	this.grafika = objekt.grafika;
+}
+
+function Ekran (ekranTyp, mapa, gracz) {
+	this.tlo = ekranTyp.grafika;
+	this.nazwa = ekranTyp.nazwa;
 	this.przyciski = [];
 	this.teksty = [];
 	this.mapa = mapa;
@@ -238,25 +245,47 @@ function Ekran (objekt, mapa, gracz) {
 					wcisniety = true;
 					break;
 				}
-
-				if(!wcisniety)
-				{
-					console.log("zrobic cos ze statkiem");
-				}
-				wcisniety = false;
 			}
+
+			// typy ekranow : Uniwersum, Uklad, Menu
+
+			if(!wcisniety)
+			{
+				if(that.nazwa === "Uniwersum")
+				{
+					// wyznaczanie kierunku statkowi ku ukladowi gwiezdnemu 
+
+					for(var i=0; i<that.mapa.uklady.length; i++)
+					{
+						if(e.clientX >= that.mapa.uklady[i].pozycja.x - that.gracz.pozycja.x && e.clientX <= (that.mapa.uklady[i].pozycja.x + that.mapa.uklady[i].grafika.width - that.gracz.pozycja.x) &&
+			  			   e.clientY >= that.mapa.uklady[i].pozycja.y - that.gracz.pozycja.y && e.clientY <= (that.mapa.uklady[i].pozycja.y + that.mapa.uklady[i].grafika.height - that.gracz.pozycja.y))
+							{
+								that.gracz.ruszajDoGwiazdy(that.mapa.uklady[i].pozycja,e.clientX, e.clientY);
+							}
+					}
+				}
+					
+				if(that.nazwa === "Uklad")
+					console.log("zrobic cos ze statkiem w ukladzie");
+				
+				if(that.nazwa === "Menu")
+					console.log("zrobic cos ze statkiem w menu");
+			}
+			wcisniety = false;
 		}
 
 		if(e.type === "mousemove")
 		{
-			gracz.obroc(e.clientX, e.clientY);
+			if(that.nazwa === "Uklad")
+				gracz.obroc(e.clientX, e.clientY);
 		}
 
 		if(e.type === "keypress")
 		{
-			gracz.ruszaj();
+			if(that.nazwa === "Uklad")
+				gracz.ruszaj(e);
 		}
-	}
+	};
 
 	this.rysuj = function(ctx){
 
@@ -393,24 +422,27 @@ function TypStatku(objekt, fizyka) {
 	this.fizyka = fizyka;
 }
 
-function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, srodek) {
+function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.id = 0;
 
 
-
-	this.pozycja = pozycja;
-	this.obrot = obrot;
+	this.typ = typ;
 	this.grafika = typ.grafika;
+	this.pozycja = pozycja;
+
+	this.obrot = obrot;
+
+	// uniwersum
+	this.pozycjaMapa = pozycjaMapa;
+	this.kierunek = new Wektor2();
+
 
 	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
 	this.srodekEkranu = srodek;
 
-	this.typ = typ;
+
 	//this.fizyka = typ.fizyka;
 
-	this.pozycjaMapa = pozycjaMapa;
-
-	this.kolor = kolor;
 	this.nazwa = nazwa;
 	this.predkosc = 0;
 	/*
@@ -426,7 +458,7 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, srodek)
 
 	this.obroc = function(x, y){
 		that.obrot = Math.atan2(y - (that.grafika.height/2) - that.srodek.y, x - (that.grafika.width/2) - that.srodek.x);
-	}
+	};
 
 	this.rysuj = function(ctx)
 	{
@@ -436,18 +468,58 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, kolor, nazwa, rozwoj, srodek)
 
 		ctx.restore();
 
+	};
+
+	this.ruszajDoGwiazdy = function(dokad, x, y)
+	{
+		that.obroc(x,y);
+
+		that.ruszaj("przod");
+		that.kierunek = dokad;
+		console.log(dokad);
 	}
 
-	this.ruszaj = function(){
+	this.ruszaj = function(e){
+
+		if(e === "przod")
+		{
+			that.predkosc = 1;
+		}
+
+		if(e === "stop")
+		{
+			that.predkosc = 0;
+		}
 		
-		that.predkosc += 1;
-		console.log("x " + that.pozycja.x + " y " + that.pozycja.y);
-	}
+		if(e.keyCode === 119)
+			that.predkosc += 1;
+
+		if(e.keyCode === 115)
+			if(that.predkosc >= 0.0)
+			{
+				that.predkosc -= 1;
+				
+				if(that.predkosc <= 0.0 && that.predkosc >= -1)
+					that.predkosc = 0;
+			}
+
+		console.log(e);
+	};
 
 	this.odswiez = function(){
 		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
 		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
-	}
+
+		//console.log(" pozycja " + that.pozycja.x);
+		//console.log(" kierunek " + (that.kierunek.x - that.srodek.x));
+
+		if(that.pozycja.x >= that.kierunek.x - that.srodek.x - 32 && that.pozycja.x <= that.kierunek.x  - that.srodek.x + 32
+		&& that.pozycja.y >= that.kierunek.y - that.srodek.y - 32 && that.pozycja.y <= that.kierunek.y  - that.srodek.y + 32)
+		{
+			that.ruszaj("stop");
+		}
+			
+	};
 
 
 	this.pociski = [];
