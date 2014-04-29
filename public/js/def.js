@@ -1,5 +1,3 @@
-
-
 function PlanetaTyp (objekt, surowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
@@ -155,7 +153,7 @@ function Objekt (id, nazwa, grafika)
 
 		if(przesunacWzgledemGracza)
 		{
-			offset = new Wektor2(offset.x - ctx.przesuniecie.x, offset.y - ctx.przesuniecie.y);
+			offset = new Wektor2(offset.x - ctx.przesuniecie.x + ctx.srodek.x, offset.y - ctx.przesuniecie.y + ctx.srodek.y);
 		}
 
 		if(rozmiar)
@@ -259,8 +257,8 @@ function Ekran (ekranTyp, mapa, gracz) {
 
 					for(var i=0; i<that.mapa.uklady.length; i++)
 					{
-						if(e.clientX >= that.mapa.uklady[i].pozycja.x - that.gracz.pozycja.x && e.clientX <= (that.mapa.uklady[i].pozycja.x + that.mapa.uklady[i].grafika.width - that.gracz.pozycja.x) &&
-			  			   e.clientY >= that.mapa.uklady[i].pozycja.y - that.gracz.pozycja.y && e.clientY <= (that.mapa.uklady[i].pozycja.y + that.mapa.uklady[i].grafika.height - that.gracz.pozycja.y))
+						if(e.clientX >= that.mapa.uklady[i].pozycja.x - that.gracz.pozycja.x + that.gracz.srodek.x && e.clientX <= (that.mapa.uklady[i].pozycja.x + that.mapa.uklady[i].grafika.width - that.gracz.pozycja.x + that.gracz.srodek.x) &&
+			  			   e.clientY >= that.mapa.uklady[i].pozycja.y - that.gracz.pozycja.y + that.gracz.srodek.y && e.clientY <= (that.mapa.uklady[i].pozycja.y + that.mapa.uklady[i].grafika.height - that.gracz.pozycja.y + that.gracz.srodek.y))
 							{
 								that.gracz.ruszajDoGwiazdy(that.mapa.uklady[i],e.clientX, e.clientY);
 							}
@@ -268,7 +266,11 @@ function Ekran (ekranTyp, mapa, gracz) {
 				}
 					
 				if(that.nazwa === "Uklad")
+				{
 					console.log("zrobic cos ze statkiem w ukladzie");
+					gracz.strzel();
+				}
+					
 				
 				if(that.nazwa === "Menu")
 					console.log("zrobic cos ze statkiem w menu");
@@ -358,6 +360,7 @@ function Ekran (ekranTyp, mapa, gracz) {
 		{
 			that.nazwa = "Uklad";
 			that.rysujUklad(ctx);
+
 		}
 			
 		else
@@ -454,9 +457,16 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 	this.rysuj = function(ctx){
 		if(ctx)
 		{
-			that.grafika.rysuj(ctx, that.pozycja);
+			that.grafika.rysuj(ctx, that.pozycja, null, null, that.obrot, true);
 		}
+
+		console.log(that.pozycja);
 	};
+
+	this.odswiez = function(){
+
+		//that.pozycja.x += szybkosc;
+	}
 }
 
 function TypStatku(objekt, fizyka) {
@@ -477,7 +487,6 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.obrot = obrot;
 
 	// uniwersum
-	this.pozycjaMapa = pozycjaMapa;
 	this.kierunek = null;
 	this.dotarl = false;
 
@@ -489,6 +498,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	this.nazwa = nazwa;
 	this.predkosc = 0;
+
+	this.pociski = [];
 	/*
 	this.bronie = rozwoj.bronie;
 	this.pancerze = rozwoj.pancerze;
@@ -496,7 +507,6 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.magazyny = rozwoj.magazyny;
 	this.extrudery = rozwoj.extrudery;
 	*/
-	
 
 	var that = this;
 
@@ -510,6 +520,13 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 		that.grafika.rysuj(ctx, that.srodek, null, null, that.obrot);
 
+		if(that.pociski && that.pociski.length !== 0)
+		{
+			for(var i=0; i<that.pociski.length; i++)
+			{
+				that.pociski[i].rysuj(ctx);
+			}
+		}
 		ctx.restore();
 
 	};
@@ -547,6 +564,15 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 			}
 	};
 
+	this.strzel = function(){
+
+		var pocisk = new Pocisk(objektgwiazda1, $.extend( {}, that.pozycja ), 5, $.extend( {}, that.obrot ));
+
+		that.pociski.push(pocisk);
+
+		that.test =  b = $.extend( {}, that.pozycja );
+	};
+
 	this.odswiez = function(){
 		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
 		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
@@ -554,22 +580,22 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 
 		if(that.kierunek &&
-		   that.pozycja.x >= that.kierunek.pozycja.x - that.srodek.x - 32 && that.pozycja.x <= that.kierunek.pozycja.x  - that.srodek.x + 32
-		&& that.pozycja.y >= that.kierunek.pozycja.y - that.srodek.y - 32 && that.pozycja.y <= that.kierunek.pozycja.y  - that.srodek.y + 32)
+		   that.pozycja.x >= that.kierunek.pozycja.x - 32 && that.pozycja.x <= that.kierunek.pozycja.x + 32
+		&& that.pozycja.y >= that.kierunek.pozycja.y - 32 && that.pozycja.y <= that.kierunek.pozycja.y + 32)
 		{
 			that.ruszaj("stop");
 			that.dotarl = true;
 		}
 
-
-		console.log(that.dotarl);
-			
+		if(that.pociski && that.pociski.length !== 0)
+		{
+			for(var i=0; i<that.pociski.length; i++)
+			{
+				that.pociski[i].odswiez();
+			}
+		}
 
 	};
-
-
-	this.pociski = [];
-
 }
 
 

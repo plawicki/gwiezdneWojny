@@ -29,6 +29,8 @@ for(var j=0; j<50; j++)
 
 }
 
+mapa.uklady.push(new Uklad(500, ukladtyp1, 200, new Wektor2(0,0)));
+
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
 ekran1.aktywny = true;
 
