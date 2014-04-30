@@ -27,6 +27,14 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 		}
 		
 	};
+
+	this.rysujSrodek = function (ctx) {
+		if(ctx && that.grafika)
+		{
+			//rysowanie duzej planety na srodku ekranu
+			that.grafika.rysuj(ctx, new Wektor2(), new Wektor2(ctx.width/2, ctx.height/2), new Wektor2(ctx.width/4, ctx.height/4), null, false);
+		}
+	}
 }
 
 function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
