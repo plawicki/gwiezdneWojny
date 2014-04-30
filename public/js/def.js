@@ -132,28 +132,26 @@ function Objekt (id, nazwa, grafika)
 	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
 		ctx.save();
 
-		var pozycja = pozycja;
-		var offset = offset;
-		
 		if(!offset)
-			var offset = new Wektor2();
+			offset = new Wektor2();
 
 		if(!pozycja)
-			var pozycja = new Wektor2();
+			pozycja = new Wektor2();
+
+		if(przesunacWzgledemGracza)
+		{
+			offset = new Wektor2(offset.x - ctx.przesuniecie.x + ctx.srodek.x, offset.y - ctx.przesuniecie.y + ctx.srodek.y);
+		}
 
 		if(obrot)
 		{
 			ctx.translate(pozycja.x + offset.x, pozycja.y + offset.y);
 			ctx.translate(this.width/2, this.height/2);
 			ctx.rotate(obrot);
-
+			
 			pozycja = new Wektor2();
-			offset = new Wektor2(-this.width/2, -this.height/2);
-		}
 
-		if(przesunacWzgledemGracza)
-		{
-			offset = new Wektor2(offset.x - ctx.przesuniecie.x + ctx.srodek.x, offset.y - ctx.przesuniecie.y + ctx.srodek.y);
+			offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
 		}
 
 		if(rozmiar)
@@ -460,7 +458,7 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 			that.grafika.rysuj(ctx, that.pozycja, null, null, that.obrot, true);
 		}
 
-		console.log(that.pozycja);
+		console.log(that.obrot);
 	};
 
 	this.odswiez = function(){
@@ -566,11 +564,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	this.strzel = function(){
 
-		var pocisk = new Pocisk(objektgwiazda1, $.extend( {}, that.pozycja ), 5, $.extend( {}, that.obrot ));
-
+		var pocisk = new Pocisk(objektgwiazda1, $.extend( true, new Wektor2(), that.pozycja ), 5, that.obrot);
 		that.pociski.push(pocisk);
-
-		that.test =  b = $.extend( {}, that.pozycja );
 	};
 
 	this.odswiez = function(){
