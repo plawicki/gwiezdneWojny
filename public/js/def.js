@@ -444,18 +444,18 @@ function Extruder(objekt, surowce) {
 	this.surowce = [];
 }
 
-function Pocisk(objekt, pozycja, szybkosc, obrot) {
+function Pocisk(objekt, pozycja, predkosc, obrot) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.pozycja = pozycja;
-	this.szybkosc = szybkosc;
+	this.predkosc = predkosc;
 	this.obrot = obrot;
 	var that = this;
 
 	this.rysuj = function(ctx){
 		if(ctx)
 		{
-			that.grafika.rysuj(ctx, that.pozycja, null, null, that.obrot, true);
+			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
 		}
 
 		console.log(that.obrot);
@@ -463,7 +463,9 @@ function Pocisk(objekt, pozycja, szybkosc, obrot) {
 
 	this.odswiez = function(){
 
-		//that.pozycja.x += szybkosc;
+		//2that.pozycja.x += szybkosc;
+		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
+		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
 	}
 }
 
