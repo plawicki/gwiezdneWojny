@@ -16,26 +16,24 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 	this.planetaTyp = planetaTyp;
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
+}
 
-	var that = this;
+Planeta.prototype.rysuj = function(ctx){
 
-	this.rysuj = function(ctx){
-
-		if(ctx && that.grafika)
-		{
-			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
-		}
+	if(ctx && this.grafika)
+	{
+		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
+	}
 		
-	};
+};
 
-	this.rysujSrodek = function (ctx) {
-		if(ctx && that.grafika)
+Planeta.prototype.rysujSrodek = function (ctx) {
+		if(ctx && this.grafika)
 		{
 			//rysowanie duzej planety na srodku ekranu
-			that.grafika.rysuj(ctx, new Wektor2(), new Wektor2(ctx.width/2, ctx.height/2), new Wektor2(ctx.width/4, ctx.height/4), null, false);
+			this.grafika.rysuj(ctx, new Wektor2(), new Wektor2(ctx.width/2, ctx.height/2), new Wektor2(ctx.width/4, ctx.height/4), null, false);
 		}
-	}
-}
+	};
 
 function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.nazwa = nazwa;
@@ -44,63 +42,57 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.planety = [];
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
-
-	var that = this;
-
-	this.rysuj = function(ctx){
-
-		if(ctx && that.grafika)
-		{
-			// ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza
-			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
-		}
-		
-	};
-
-	this.rysujSrodek = function(ctx){
-		if(ctx)
-		{
-			for(var i=0; i<that.planety.length; i++)
-			{
-				that.planety[i].rysuj(ctx);
-			}
-		}
-	};
 }
+
+Uklad.prototype.rysuj = function(ctx){
+
+	if(ctx && this.grafika)
+	{
+		// ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza
+		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
+	}
+	
+};
+
+Uklad.prototype.rysujSrodek = function(ctx){
+	if(ctx)
+	{
+		for(var i=0; i<this.planety.length; i++)
+		{
+			this.planety[i].rysuj(ctx);
+		}
+	}
+};
 
 function Mapa () {
 	this.uklady = [];
-
-	var that = this;
-
-	this.rysuj = function(ctx){
-		if(ctx)
-		{
-			for(var i=0; i<that.uklady.length; i++)
-			{
-				that.uklady[i].rysuj(ctx);
-			}
-		}
-		
-	};
 }
+
+Mapa.prototype.rysuj = function(ctx){
+	if(ctx)
+	{
+		for(var i=0; i<this.uklady.length; i++)
+		{
+			this.uklady[i].rysuj(ctx);
+		}
+	}
+	
+};
 
 function Wejscie (ekran) {
 	// przechwytywanie klawiatury + siec
 	this.mysz = null;
 	this.klawiatura = null;
 	this.ekran = ekran;
-
-	var that = this;
-
-	this.dzialajMysz = function(){
-		that.ekran.dzialaj(that.mysz);
-	};
-
-	this.dzialajKlawiatura = function(){
-		that.ekran.dzialaj(that.klawiatura);
-	};
 }
+
+Wejscie.prototype.dzialajMysz = function(){
+	this.ekran.dzialaj(this.mysz);
+};
+
+Wejscie.prototype.dzialajKlawiatura = function(){
+	this.ekran.dzialaj(this.klawiatura);
+};
 
 function Wektor2 (x, y) {
 	if(x && y)
@@ -122,6 +114,43 @@ function Fizyka (kto, kogo) {
 	};
 }
 
+Image.prototype.onload = function(){
+	console.log("x "+this.width+" y "+this.height);
+}
+
+Image.prototype.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
+	ctx.save();
+
+	if(!offset)
+		offset = new Wektor2();
+
+	if(!pozycja)
+		pozycja = new Wektor2();
+
+	if(przesunacWzgledemGracza)
+	{
+		offset = new Wektor2(offset.x - ctx.przesuniecie.x + ctx.srodek.x, offset.y - ctx.przesuniecie.y + ctx.srodek.y);
+	}
+
+	if(obrot)
+	{
+		ctx.translate(pozycja.x + offset.x, pozycja.y + offset.y);
+		ctx.translate(this.width/2, this.height/2);
+		ctx.rotate(obrot);
+		
+		pozycja = new Wektor2();
+
+		offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
+	}
+
+	if(rozmiar)
+		ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y, rozmiar.x, rozmiar.y);
+	else
+		ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y);
+
+	ctx.restore();
+};
+
 function Objekt (id, nazwa, grafika)
 {
 	this.id = id;
@@ -130,46 +159,8 @@ function Objekt (id, nazwa, grafika)
 	this.grafika = new Image();
 
 	this.grafika.src = grafika;
-
-	that = this;
-
-	this.grafika.onload = function(){
-		console.log("x "+this.width+" y "+this.height);
-	};
-
-	this.grafika.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
-		ctx.save();
-
-		if(!offset)
-			offset = new Wektor2();
-
-		if(!pozycja)
-			pozycja = new Wektor2();
-
-		if(przesunacWzgledemGracza)
-		{
-			offset = new Wektor2(offset.x - ctx.przesuniecie.x + ctx.srodek.x, offset.y - ctx.przesuniecie.y + ctx.srodek.y);
-		}
-
-		if(obrot)
-		{
-			ctx.translate(pozycja.x + offset.x, pozycja.y + offset.y);
-			ctx.translate(this.width/2, this.height/2);
-			ctx.rotate(obrot);
-			
-			pozycja = new Wektor2();
-
-			offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
-		}
-
-		if(rozmiar)
-			ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y, rozmiar.x, rozmiar.y);
-		else
-			ctx.drawImage(this, pozycja.x+offset.x, pozycja.y+offset.y);
-
-		ctx.restore();
-	};
 }
+
 
 function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
 
@@ -182,13 +173,11 @@ function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
 	this.pozycja = pozycja;
 	this.dzialanie = dzialanie;
 	this.grafika = objekt.grafika;
+}
 
-	var that = this;
-
-	this.rysuj = function(ctx){
-		that.grafika.rysuj(ctx, that.pozycja);
-		that.tekst.rysuj(ctx);
-	};
+Przycisk.prototype.rysuj = function(ctx){
+	this.grafika.rysuj(ctx, this.pozycja);
+	this.tekst.rysuj(ctx);
 }
 
 function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
@@ -205,19 +194,17 @@ function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
 
 	if(!offset)
 		this.offset = new Wektor2();
-
-	var that = this;
-
-	this.rysuj = function(ctx){
-		ctx.save();
-
-		ctx.font = that.rozmiar+"px "+that.czcionka;
-		ctx.fillStyle = that.kolor;
-		ctx.fillText(that.tekst, that.pozycja.x +  that.offset.x, that.pozycja.y + that.offset.y);
-
-		ctx.restore();
-	};
 }
+
+Tekst.prototype.rysuj = function(ctx){
+	ctx.save();
+
+	ctx.font = this.rozmiar+"px "+this.czcionka;
+	ctx.fillStyle = this.kolor;
+	ctx.fillText(this.tekst, this.pozycja.x +  this.offset.x, this.pozycja.y + this.offset.y);
+
+	ctx.restore();
+};
 
 function ekranTyp(objekt, nazwa){
 	this.nazwa = nazwa;
@@ -235,144 +222,141 @@ function Ekran (ekranTyp, mapa, gracz) {
 	this.aktywny = false;
 
 	this.przesuniecieWidoku = new Wektor2();
+}
 
-	var that = this;
+Ekran.prototype.odswiez = function(ctx){
 
-	this.dzialaj = function(e){
-		if(e.type === "click")
-		{
-			var wcisniety = false;
-			for(var i=0; i<that.przyciski.length; i++)
-			{
-				if(e.clientX >= that.przyciski[i].pozycja.x && e.clientX <= (that.przyciski[i].pozycja.x + that.przyciski[i].grafika.width) &&
-				   e.clientY >= that.przyciski[i].pozycja.y && e.clientY <= (that.przyciski[i].pozycja.y + that.przyciski[i].grafika.height))
-				{
-					that.przyciski[i].dzialanie();
-					wcisniety = true;
-					break;
-				}
-			}
+	this.gracz.odswiez();
 
-			// typy ekranow : Uniwersum, Uklad, Menu
-
-			if(!wcisniety)
-			{
-				if(that.nazwa === "Uniwersum")
-				{
-					// wyznaczanie kierunku statkowi ku ukladowi gwiezdnemu 
-
-					for(var i=0; i<that.mapa.uklady.length; i++)
-					{
-						if(e.clientX >= that.mapa.uklady[i].pozycja.x - that.gracz.pozycja.x + that.gracz.srodek.x && e.clientX <= (that.mapa.uklady[i].pozycja.x + that.mapa.uklady[i].grafika.width - that.gracz.pozycja.x + that.gracz.srodek.x) &&
-			  			   e.clientY >= that.mapa.uklady[i].pozycja.y - that.gracz.pozycja.y + that.gracz.srodek.y && e.clientY <= (that.mapa.uklady[i].pozycja.y + that.mapa.uklady[i].grafika.height - that.gracz.pozycja.y + that.gracz.srodek.y))
-							{
-								that.gracz.ruszajDoGwiazdy(that.mapa.uklady[i],e.clientX, e.clientY);
-							}
-					}
-				}
-					
-				if(that.nazwa === "Uklad")
-				{
-					console.log("zrobic cos ze statkiem w ukladzie");
-					gracz.strzel();
-				}
-					
-				
-				if(that.nazwa === "Menu")
-					console.log("zrobic cos ze statkiem w menu");
-			}
-			wcisniety = false;
-		}
-
-		if(e.type === "mousemove")
-		{
-			if(that.nazwa === "Uklad")
-				gracz.obroc(e.clientX, e.clientY);
-		}
-
-		if(e.type === "keypress")
-		{
-			if(that.nazwa === "Uklad")
-				gracz.ruszaj(e);
-		}
-	};
-
-	this.rysuj = function(ctx){
-
-		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
-
-		ctx.przesuniecie = that.gracz.pozycja;
-	
-		if(that.mapa)
-			that.mapa.rysuj(ctx);
-
-		if(that.inniGracze.length !== 0)
-		{
-			for(var i=0; i<that.inniGracze.length; i++)
-				that.inniGracze[i].rysuj(ctx);
-		}
-			
-		if(that.gracz)
-			that.gracz.rysuj(ctx);
-
-		if(that.przyciski.length !== 0)
-		{
-			for(var i=0; i<that.przyciski.length; i++)
-				that.przyciski[i].rysuj(ctx);
-		}
-
-		if(that.teksty.length !== 0)
-		{
-			for(var i=0; i<that.teksty.length; i++)
-				that.teksty[i].rysuj(ctx);
-		}
-	};
-
-	this.rysujUklad = function(ctx){
-
-		that.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
-		ctx.przesuniecie = that.gracz.pozycja;
-
-		that.gracz.kierunek.rysujSrodek(ctx);
-
-		if(that.inniGracze.length !== 0)
-		{
-			for(var i=0; i<that.inniGracze.length; i++)
-				that.inniGracze[i].rysuj(ctx);
-		}
-
-		if(that.gracz)
-			that.gracz.rysuj(ctx);
-
-		if(that.przyciski.length !== 0)
-		{
-			for(var i=0; i<that.przyciski.length; i++)
-				that.przyciski[i].rysuj(ctx);
-		}
-
-		if(that.teksty.length !== 0)
-		{
-			for(var i=0; i<that.teksty.length; i++)
-				that.teksty[i].rysuj(ctx);
-		}
+	if(this.gracz.dotarl)
+	{
+		this.nazwa = "Uklad";
+		this.rysujUklad(ctx);
 
 	}
+		
+	else
+		this.rysuj(ctx);
+};
 
-	this.odswiez = function(ctx){
+Ekran.prototype.rysujUklad = function(ctx){
 
-		that.gracz.odswiez();
+	this.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
+	ctx.przesuniecie = this.gracz.pozycja;
 
-		if(that.gracz.dotarl)
+	this.gracz.kierunek.rysujSrodek(ctx);
+
+	if(this.inniGracze.length !== 0)
+	{
+		for(var i=0; i<this.inniGracze.length; i++)
+			this.inniGracze[i].rysuj(ctx);
+	}
+
+	if(this.gracz)
+		this.gracz.rysuj(ctx);
+
+	if(this.przyciski.length !== 0)
+	{
+		for(var i=0; i<this.przyciski.length; i++)
+			this.przyciski[i].rysuj(ctx);
+	}
+
+	if(this.teksty.length !== 0)
+	{
+		for(var i=0; i<this.teksty.length; i++)
+			this.teksty[i].rysuj(ctx);
+	}
+
+};
+
+Ekran.prototype.rysuj = function(ctx){
+
+	this.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
+
+	ctx.przesuniecie = this.gracz.pozycja;
+
+	if(this.mapa)
+		this.mapa.rysuj(ctx);
+
+	if(this.inniGracze.length !== 0)
+	{
+		for(var i=0; i<this.inniGracze.length; i++)
+			this.inniGracze[i].rysuj(ctx);
+	}
+		
+	if(this.gracz)
+		this.gracz.rysuj(ctx);
+
+	if(this.przyciski.length !== 0)
+	{
+		for(var i=0; i<this.przyciski.length; i++)
+			this.przyciski[i].rysuj(ctx);
+	}
+
+	if(this.teksty.length !== 0)
+	{
+		for(var i=0; i<this.teksty.length; i++)
+			this.teksty[i].rysuj(ctx);
+	}
+};
+
+Ekran.prototype.dzialaj = function(e){
+	if(e.type === "click")
+	{
+		var wcisniety = false;
+		for(var i=0; i<this.przyciski.length; i++)
 		{
-			that.nazwa = "Uklad";
-			that.rysujUklad(ctx);
-
+			if(e.clientX >= this.przyciski[i].pozycja.x && e.clientX <= (this.przyciski[i].pozycja.x + this.przyciski[i].grafika.width) && e.clientY >= this.przyciski[i].pozycja.y && e.clientY <= (this.przyciski[i].pozycja.y + this.przyciski[i].grafika.height))
+			{
+				this.przyciski[i].dzialanie();
+				wcisniety = true;
+				break;
+			}
 		}
+
+		// typy ekranow : Uniwersum, Uklad, Menu
+
+		if(!wcisniety)
+		{
+			if(this.nazwa === "Uniwersum")
+			{
+				// wyznaczanie kierunku statkowi ku ukladowi gwiezdnemu 
+
+				for(var i=0; i<this.mapa.uklady.length; i++)
+				{
+					if(e.clientX >= this.mapa.uklady[i].pozycja.x - this.gracz.pozycja.x + this.gracz.srodek.x && e.clientX <= (this.mapa.uklady[i].pozycja.x + this.mapa.uklady[i].grafika.width - this.gracz.pozycja.x + this.gracz.srodek.x) && e.clientY >= this.mapa.uklady[i].pozycja.y - this.gracz.pozycja.y + this.gracz.srodek.y && e.clientY <= (this.mapa.uklady[i].pozycja.y + this.mapa.uklady[i].grafika.height - this.gracz.pozycja.y + this.gracz.srodek.y))
+						{
+							this.gracz.ruszajDoGwiazdy(this.mapa.uklady[i],e.clientX, e.clientY);
+						}
+				}
+			}
+				
+			if(this.nazwa === "Uklad")
+			{
+				console.log("zrobic cos ze statkiem w ukladzie");
+				gracz.strzel();
+			}
+				
 			
-		else
-			that.rysuj(ctx);
-	};
-}
+			if(this.nazwa === "Menu")
+				console.log("zrobic cos ze statkiem w menu");
+		}
+		wcisniety = false;
+	}
+
+	if(e.type === "mousemove")
+	{
+		if(this.nazwa === "Uklad")
+			gracz.obroc(e.clientX, e.clientY);
+	}
+
+	if(e.type === "keypress")
+	{
+		if(this.nazwa === "Uklad")
+			gracz.ruszaj(e);
+	}
+};
+
 
 
 function  Wezel(ten, nastepny, poprzedni) {
@@ -458,24 +442,23 @@ function Pocisk(objekt, pozycja, predkosc, obrot) {
 	this.pozycja = pozycja;
 	this.predkosc = predkosc;
 	this.obrot = obrot;
-	var that = this;
-
-	this.rysuj = function(ctx){
-		if(ctx)
-		{
-			that.grafika.rysuj(ctx, that.pozycja, null, null, null, true);
-		}
-
-		console.log(that.obrot);
-	};
-
-	this.odswiez = function(){
-
-		//2that.pozycja.x += szybkosc;
-		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
-		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
-	}
 }
+
+Pocisk.prototype.rysuj = function(ctx){
+	if(ctx)
+	{
+		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
+	}
+
+	console.log(this.obrot);
+};
+
+Pocisk.prototype.odswiez = function(){
+
+	//this.pozycja.x += szybkosc;
+	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
+	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
+};
 
 function TypStatku(objekt, fizyka) {
 	this.id = objekt.id;
@@ -515,92 +498,86 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.magazyny = rozwoj.magazyny;
 	this.extrudery = rozwoj.extrudery;
 	*/
-
-	var that = this;
-
-	this.obroc = function(x, y){
-		that.obrot = Math.atan2(y - (that.grafika.height/2) - that.srodek.y, x - (that.grafika.width/2) - that.srodek.x);
-	};
-
-	this.rysuj = function(ctx)
-	{
-		ctx.save();
-
-		that.grafika.rysuj(ctx, that.srodek, null, null, that.obrot);
-
-		if(that.pociski && that.pociski.length !== 0)
-		{
-			for(var i=0; i<that.pociski.length; i++)
-			{
-				that.pociski[i].rysuj(ctx);
-			}
-		}
-		ctx.restore();
-
-	};
-
-	this.ruszajDoGwiazdy = function(dokad, x, y)
-	{
-		that.obroc(x,y);
-
-		that.ruszaj("przod");
-		that.kierunek = dokad;
-	};
-
-	this.ruszaj = function(e){
-
-		if(e === "przod")
-		{
-			that.predkosc = 1;
-		}
-
-		if(e === "stop")
-		{
-			that.predkosc = 0;
-		}
-		
-		if(e.keyCode === 119)
-			that.predkosc += 1;
-
-		if(e.keyCode === 115)
-			if(that.predkosc >= 0.0)
-			{
-				that.predkosc -= 1;
-				
-				if(that.predkosc <= 0.0 && that.predkosc >= -1)
-					that.predkosc = 0;
-			}
-	};
-
-	this.strzel = function(){
-
-		var pocisk = new Pocisk(objektgwiazda1, $.extend( true, new Wektor2(), that.pozycja ), 5, that.obrot);
-		that.pociski.push(pocisk);
-	};
-
-	this.odswiez = function(){
-		that.pozycja.x += Math.cos(that.obrot) * that.predkosc; 
-		that.pozycja.y += Math.sin(that.obrot) * that.predkosc;
-
-
-
-		if(that.kierunek &&
-		   that.pozycja.x >= that.kierunek.pozycja.x - 32 && that.pozycja.x <= that.kierunek.pozycja.x + 32
-		&& that.pozycja.y >= that.kierunek.pozycja.y - 32 && that.pozycja.y <= that.kierunek.pozycja.y + 32)
-		{
-			that.ruszaj("stop");
-			that.dotarl = true;
-		}
-
-		if(that.pociski && that.pociski.length !== 0)
-		{
-			for(var i=0; i<that.pociski.length; i++)
-			{
-				that.pociski[i].odswiez();
-			}
-		}
-
-	};
 }
 
+Statek.prototype.obroc = function(x, y){
+	this.obrot = Math.atan2(y - (this.grafika.height/2) - this.srodek.y, x - (this.grafika.width/2) - this.srodek.x);
+};
 
+Statek.prototype.rysuj = function(ctx)
+{
+	ctx.save();
+
+	this.grafika.rysuj(ctx, this.srodek, null, null, this.obrot);
+
+	if(this.pociski && this.pociski.length !== 0)
+	{
+		for(var i=0; i<this.pociski.length; i++)
+		{
+			this.pociski[i].rysuj(ctx);
+		}
+	}
+	ctx.restore();
+
+};
+
+Statek.prototype.ruszajDoGwiazdy = function(dokad, x, y)
+{
+	this.obroc(x,y);
+
+	this.ruszaj("przod");
+	this.kierunek = dokad;
+};
+
+Statek.prototype.ruszaj = function(e){
+
+	if(e === "przod")
+	{
+		this.predkosc = 1;
+	}
+
+	if(e === "stop")
+	{
+		this.predkosc = 0;
+	}
+	
+	if(e.keyCode === 119)
+		this.predkosc += 1;
+
+	if(e.keyCode === 115)
+		if(this.predkosc >= 0.0)
+		{
+			this.predkosc -= 1;
+			
+			if(this.predkosc <= 0.0 && this.predkosc >= -1)
+				this.predkosc = 0;
+		}
+};
+
+Statek.prototype.strzel = function(){
+
+	var pocisk = new Pocisk(objektgwiazda1, $.extend( true, new Wektor2(), this.pozycja ), 5, this.obrot);
+	this.pociski.push(pocisk);
+};
+
+Statek.prototype.odswiez = function(){
+	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
+	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
+
+
+
+	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
+	{
+		this.ruszaj("stop");
+		this.dotarl = true;
+	}
+
+	if(this.pociski && this.pociski.length !== 0)
+	{
+		for(var i=0; i<this.pociski.length; i++)
+		{
+			this.pociski[i].odswiez();
+		}
+	}
+
+};
