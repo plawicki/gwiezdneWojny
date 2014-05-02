@@ -116,7 +116,7 @@ function Fizyka (kto, kogo) {
 
 Image.prototype.onload = function(){
 	console.log("x "+this.width+" y "+this.height);
-}
+};
 
 Image.prototype.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
 	ctx.save();
@@ -135,12 +135,20 @@ Image.prototype.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunac
 	if(obrot)
 	{
 		ctx.translate(pozycja.x + offset.x, pozycja.y + offset.y);
-		ctx.translate(this.width/2, this.height/2);
+
+		if(!rozmiar)
+			ctx.translate(this.width/2, this.height/2);
+		else
+			ctx.translate(rozmiar.x/2, rozmiar.y/2);
+
 		ctx.rotate(obrot);
 		
 		pozycja = new Wektor2();
 
-		offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
+		if(!rozmiar)
+			offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
+		else
+			offset = new Wektor2(-offset.x - rozmiar.x/2, -offset.x - rozmiar.y/2);
 	}
 
 	if(rozmiar)
@@ -178,7 +186,7 @@ function Przycisk (tekst, objekt, pozycja, offset, dzialanie) {
 Przycisk.prototype.rysuj = function(ctx){
 	this.grafika.rysuj(ctx, this.pozycja);
 	this.tekst.rysuj(ctx);
-}
+};
 
 function Tekst (tekst, pozycja, kolor, rozmiar, czcionka, offset) {
 
@@ -285,7 +293,7 @@ Ekran.prototype.rysuj = function(ctx){
 	}
 		
 	if(this.gracz)
-		this.gracz.rysuj(ctx);
+		this.gracz.rysuj(ctx, new Wektor2(25,25));
 
 	if(this.przyciski.length !== 0)
 	{
@@ -334,7 +342,7 @@ Ekran.prototype.dzialaj = function(e){
 			if(this.nazwa === "Uklad")
 			{
 				console.log("zrobic cos ze statkiem w ukladzie");
-				gracz.strzel();
+				this.gracz.strzel();
 			}
 				
 			
@@ -347,13 +355,13 @@ Ekran.prototype.dzialaj = function(e){
 	if(e.type === "mousemove")
 	{
 		if(this.nazwa === "Uklad")
-			gracz.obroc(e.clientX, e.clientY);
+			this.gracz.obroc(e.clientX, e.clientY);
 	}
 
 	if(e.type === "keypress")
 	{
 		if(this.nazwa === "Uklad")
-			gracz.ruszaj(e);
+			this.gracz.ruszaj(e);
 	}
 };
 
@@ -504,11 +512,14 @@ Statek.prototype.obroc = function(x, y){
 	this.obrot = Math.atan2(y - (this.grafika.height/2) - this.srodek.y, x - (this.grafika.width/2) - this.srodek.x);
 };
 
-Statek.prototype.rysuj = function(ctx)
+Statek.prototype.rysuj = function(ctx, rozmiar)
 {
 	ctx.save();
 
-	this.grafika.rysuj(ctx, this.srodek, null, null, this.obrot);
+	if(!rozmiar)
+		this.grafika.rysuj(ctx, this.srodek, null, null, this.obrot);
+	else
+		this.grafika.rysuj(ctx, this.srodek, rozmiar, null, this.obrot);
 
 	if(this.pociski && this.pociski.length !== 0)
 	{
@@ -563,8 +574,6 @@ Statek.prototype.strzel = function(){
 Statek.prototype.odswiez = function(){
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
-
-
 
 	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
 	{
