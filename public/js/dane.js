@@ -14,7 +14,7 @@ var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 
 var typstatku1 = new TypStatku(objektstatek1, null);
 
-var gracz = new Statek(typstatku1, new Wektor2(0,0), null, 0.0, "Gracz", null, null);
+var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", null, null);
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, []);
 
@@ -32,10 +32,7 @@ for(var j=0; j<50; j++)
 	var n = new Uklad(j, ukladtyp1, s, new Wektor2(x,y));
 	n.planety.push(planeta1);
 	
-	console.log(n.planety);
-
 	mapa.uklady.push(n);
-
 }
 
 mapa.uklady.push(new Uklad(500, ukladtyp1, 200, new Wektor2(0,0)));

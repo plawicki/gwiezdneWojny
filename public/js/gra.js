@@ -17,7 +17,7 @@ $(function(){
 	gracz.srodek = ctx.srodek;
 
 
-	console.log(ctx.srodek);
+	//console.log(ctx.srodek);
 	//canvas.globalAlpha = 0.5;
 
 	var mouseEvent = function(e){

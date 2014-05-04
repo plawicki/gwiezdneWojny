@@ -42,13 +42,14 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.planety = [];
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
+
+
 }
 
 Uklad.prototype.rysuj = function(ctx){
 
 	if(ctx && this.grafika)
 	{
-		// ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza
 		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
 	}
 	
@@ -240,9 +241,7 @@ Ekran.prototype.odswiez = function(ctx){
 	{
 		this.nazwa = "Uklad";
 		this.rysujUklad(ctx);
-
 	}
-		
 	else
 		this.rysuj(ctx);
 };
@@ -458,7 +457,7 @@ Pocisk.prototype.rysuj = function(ctx){
 		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
 	}
 
-	console.log(this.obrot);
+	//console.log(this.obrot);
 };
 
 Pocisk.prototype.odswiez = function(){
@@ -577,8 +576,11 @@ Statek.prototype.odswiez = function(){
 
 	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
 	{
-		this.ruszaj("stop");
-		this.dotarl = true;
+		if(this.dotarl === false)
+		{
+			this.ruszaj("stop");
+			this.dotarl = true;
+		}
 	}
 
 	if(this.pociski && this.pociski.length !== 0)
