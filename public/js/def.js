@@ -115,10 +115,6 @@ function Fizyka (kto, kogo) {
 	};
 }
 
-Image.prototype.onload = function(){
-	console.log("x "+this.width+" y "+this.height);
-};
-
 Image.prototype.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza){
 	ctx.save();
 
