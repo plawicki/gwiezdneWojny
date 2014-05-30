@@ -14,7 +14,23 @@ var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 
 var typstatku1 = new TypStatku(objektstatek1, null);
 
-var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", null, null);
+// gracz
+var surowce = [];
+surowce.push(new Surowiec(objektgwiazda1));
+var bronie = [];
+bronie.push(new Bron(objektgwiazda1, 1, 20, 2));
+var pancerze = [];
+pancerze.push(new Pancerz(objektgwiazda1, 10));
+var silniki = [];
+silniki.push(new Silnik(objektgwiazda1, 4, 1));
+var magazyny = [];
+magazyny.push(new Magazyn(objektgwiazda1, 10));
+var extrudery = [];
+extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
+
+var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
+var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
+gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[0];
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, []);
 

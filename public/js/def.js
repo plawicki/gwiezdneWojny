@@ -368,33 +368,57 @@ function  Wezel(ten, nastepny, poprzedni) {
 	this.poprzedni = poprzedni;
 }
 
+// rezygnacja z konceptu drzewa, malo czasu
 function DrzewoRozwoju(){
 	this.wezly = [];
 }
 
-function Rozwoj () {
-	this.posiadaneBronie = [];
-	this.zdobywalneBronie = [];
+// mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
+function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
+	// referencja do typu statku, w zaleznosci od typu - wiecej mozliwosci
+	this.typStatku = typStatku;
+
+	if(pBronie)
+		this.posiadaneBronie = pBronie;
+	else
+		this.posiadaneBronie = [];
+	this.zdobywalneBronie = bronie;
 
 	this.aktualnaBron = null;
 
-	this.posiadanePancerze = [];
-	this.zdobywalnePancerze = [];
+	if(pPancerze)
+		this.posiadanePancerze = pPancerze;
+	else
+		this.posiadanePancerze = [];
+	
+	this.zdobywalnePancerze = pancerze;
 
 	this.aktualnyPancerz = null;
 
-	this.posiadaneSilniki = [];
-	this.zdobywalneSilniki = [];
+	if(pSilniki)
+		this.posiadaneSilniki = pSilniki;
+	else
+		this.posiadaneSilniki = [];
+
+	this.zdobywalneSilniki = silniki;
 
 	this.aktualnySilnik = null;
 
-	this.posiadaneMagazyny = [];
-	this.zdobywalneMagazyny = [];
+	if(pMagazyny)
+		this.posiadaneMagazyny = pMagazyny;
+	else
+		this.posiadaneMagazyny = [];
+
+	this.zdobywalneMagazyny = magazyny;
 
 	this.aktualnyMagazyn = null;
 
-	this.posiadaneExtrudery = [];
-	this.zdobywalneExtrudery = [];
+	if(pExtrudery)
+		this.posiadaneExtrudery = pExtrudery;
+	else
+		this.posiadaneExtrudery = [];
+
+	this.zdobywalneExtrudery = extrudery;
 
 	this.aktualnyExtruder = null;
 }
@@ -414,17 +438,16 @@ function Pancerz (objekt, wytrzymalosc) {
 	this.wytrzymalosc = wytrzymalosc;
 }
 
-function Silnik(objekt, przyspieszenie, szybkosc) {
+function Silnik(objekt, szybkosc, przyspieszenie) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
-	this.przyspieszenie = przyspieszenie;
 	this.szybkosc = szybkosc;
+	this.przyspieszenie = przyspieszenie;
 }
 
-function Surowiec (objekt, waga) {
+function Surowiec (objekt) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
-	this.waga = waga;
 }
 
 function Magazyn(objekt, pojemnosc) {
@@ -439,12 +462,14 @@ function Extruder(objekt, surowce) {
 	this.surowce = [];
 }
 
-function Pocisk(objekt, pozycja, predkosc, obrot) {
+function Pocisk(objekt, pozycja, predkosc, obrot, zasieg, moc) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.pozycja = pozycja;
 	this.predkosc = predkosc;
 	this.obrot = obrot;
+	this.zasieg = zasieg;
+	this.moc = moc;
 }
 
 Pocisk.prototype.rysuj = function(ctx){
@@ -463,16 +488,17 @@ Pocisk.prototype.odswiez = function(){
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
 };
 
-function TypStatku(objekt, fizyka) {
+function TypStatku(objekt, fizyka, wielkosc) {
 	this.id = objekt.id;
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
-	this.fizyka = fizyka;
+	this.wielkosc = wielkosc;
+
+	//this.fizyka = fizyka;
 }
 
 function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.id = 0;
-
 
 	this.typ = typ;
 	this.grafika = typ.grafika;
@@ -485,8 +511,7 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.dotarl = false;
 
 	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
-	this.srodekEkranu = srodek;
-
+	this.srodek = srodek;
 
 	//this.fizyka = typ.fizyka;
 
@@ -494,6 +519,9 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.predkosc = 0;
 
 	this.pociski = [];
+
+	this.rozwoj = rozwoj;
+	this.rozwoj.typStatku = typ;
 	/*
 	this.bronie = rozwoj.bronie;
 	this.pancerze = rozwoj.pancerze;
@@ -539,7 +567,8 @@ Statek.prototype.ruszaj = function(e){
 
 	if(e === "przod")
 	{
-		this.predkosc = 1;
+		if(Math.floor(this.predkosc) < this.rozwoj.aktualnySilnik.szybkosc)
+			this.predkosc = this.rozwoj.aktualnySilnik.przyspieszenie;
 	}
 
 	if(e === "stop")
@@ -548,16 +577,19 @@ Statek.prototype.ruszaj = function(e){
 	}
 	
 	if(e.keyCode === 119)
-		this.predkosc += 1;
+		if(Math.floor(this.predkosc) < this.rozwoj.aktualnySilnik.szybkosc)
+			this.predkosc += this.rozwoj.aktualnySilnik.przyspieszenie;
 
 	if(e.keyCode === 115)
 		if(this.predkosc >= 0.0)
 		{
-			this.predkosc -= 1;
+			this.predkosc -= this.rozwoj.aktualnySilnik.przyspieszenie;
 			
 			if(this.predkosc <= 0.0 && this.predkosc >= -1)
 				this.predkosc = 0;
 		}
+
+	console.log(this.rozwoj.aktualnySilnik.szybkosc)
 };
 
 Statek.prototype.strzel = function(){
