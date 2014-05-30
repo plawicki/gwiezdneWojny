@@ -1,5 +1,6 @@
 $(function(){
 
+	// ustawienia grafiki okna gry
 	var canvas = $('canvas')[0];
 
 	canvas.width = document.body.clientWidth;
@@ -18,8 +19,21 @@ $(function(){
 	gracz.srodek = ctx.srodek;
 
 
-	//console.log(ctx.srodek);
-	//canvas.globalAlpha = 0.5;
+	//ustawienia okna upgradow
+	$('#upgrade').hide();
+	$('.upgrade').click(function(){
+		if($(canvas).is(':visible'))
+		{
+			$(canvas).hide();
+			$('#upgrade').show();
+		}
+		else
+		{
+			$(canvas).show();
+			$('#upgrade').hide();
+		}
+
+	})
 
 	var mouseEvent = function(e){
 		wejscie.mysz = e;
