@@ -1,1 +1,1 @@
-body,html{overflow:hidden;margin:0px;padding:0px;width:100%;height:100%}canvas{background:url('/img/roznosci/loader.gif') no-repeat;background-position:center center}
+body,html{overflow:hidden;margin:0px;padding:0px;width:100%;height:100%;background:black}#button{float:left;margin-left:20px;width:10%;padding-top:3px;padding-bottom:3px;background-color:lime;text-align:center;font-size:14px}canvas{background:url('/img/roznosci/loader.gif') no-repeat;background-position:center center}

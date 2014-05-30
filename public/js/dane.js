@@ -28,6 +28,7 @@ magazyny.push(new Magazyn(objektgwiazda1, 10));
 var extrudery = [];
 extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
 
+
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
 gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[0];
