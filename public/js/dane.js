@@ -77,3 +77,10 @@ var przycisk1 = new Przycisk(tekst1, objektprzycisk, new Wektor2(100, 100), new 
 var wejscie = new Wejscie(ekran1);
 
 // tekst, objekt, pozycja, offset, dzialanie
+
+/* 
+	1. Wczytywanie wszystkich obiektów potrzebnych do gry
+	2. Wczytywanie danych na temat gracza ze sesji i ustawianie zmiennej player, oraz player.rozwoj
+	3. Wczytywanie danych na temat otaczajacych go graczy (tworzenie tablicy gracze, i ustawienie kazdego z nich na bota)
+	4. Wczytanie mapy z serwera
+*/

@@ -527,13 +527,6 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	this.rozwoj = rozwoj;
 	this.rozwoj.typStatku = typ;
-	/*
-	this.bronie = rozwoj.bronie;
-	this.pancerze = rozwoj.pancerze;
-	this.silniki = rozwoj.silniki;
-	this.magazyny = rozwoj.magazyny;
-	this.extrudery = rozwoj.extrudery;
-	*/
 }
 
 Statek.prototype.obroc = function(x, y){

@@ -22,7 +22,30 @@ $(function(){
 	// end ustawienia grafiki
 
 	// ustawienia okna wyboru broni
-
+	if(gracz.rozwoj.posiadaneBronie[0])
+		$('#wybor1 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
+	$('#wybor1').click(function(){
+		if(gracz.rozwoj.posiadaneBronie[0])
+			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[0];
+	})
+	if(gracz.rozwoj.posiadaneBronie[1])
+		$('#wybor2 img').replaceWith(gracz.rozwoj.posiadaneBronie[1].grafika);
+	$('#wybor2').click(function(){
+		if(gracz.rozwoj.posiadaneBronie[1])
+			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[1];
+	})
+	if(gracz.rozwoj.posiadaneBronie[2])
+		$('#wybor3 img').replaceWith(gracz.rozwoj.posiadaneBronie[2].grafika);
+	$('#wybor3').click(function(){
+		if(gracz.rozwoj.posiadaneBronie[2])
+			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[2];
+	})
+	if(gracz.rozwoj.posiadaneBronie[3])
+		$('#wybor4 img').replaceWith(gracz.rozwoj.posiadaneBronie[3].grafika);
+	$('#wybor4').click(function(){
+		if(gracz.rozwoj.posiadaneBronie[3])
+			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
+	})	
 	// end okno wyboru
 
 	// ustawienia okna upgradow
