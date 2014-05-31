@@ -18,8 +18,9 @@ var typstatku1 = new TypStatku(objektstatek1, null);
 var surowce = [];
 surowce.push(new Surowiec(objektgwiazda1));
 var bronie = [];
-bronie.push(new Bron(objektgwiazda1, 0, 0, 0)); // null
-bronie.push(new Bron(objektgwiazda1, 1, 20, 2));
+// objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku
+bronie.push(new Bron(objektgwiazda1, 0, 0, 0, 0, objektgwiazda1)); // null
+bronie.push(new Bron(objektgwiazda1, 1, 20, 10, 60, objektgwiazda1));
 var pancerze = [];
 pancerze.push(new Pancerz(objektgwiazda1, 0)); // null
 pancerze.push(new Pancerz(objektgwiazda1, 10));
@@ -36,6 +37,7 @@ extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
 gracz.rozwoj.posiadaneBronie.push(bronie[0]);
+gracz.rozwoj.posiadaneBronie.push(bronie[1]);
 gracz.rozwoj.posiadaneExtrudery.push(extrudery[0]);
 gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[0];
 gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[0];

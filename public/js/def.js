@@ -360,19 +360,6 @@ Ekran.prototype.dzialaj = function(e){
 	}
 };
 
-
-
-function  Wezel(ten, nastepny, poprzedni) {
-	this.ten = ten;
-	this.nastepny = nastepny;
-	this.poprzedni = poprzedni;
-}
-
-// rezygnacja z konceptu drzewa, malo czasu
-function DrzewoRozwoju(){
-	this.wezly = [];
-}
-
 // mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
 function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
 	// referencja do typu statku, w zaleznosci od typu - wiecej mozliwosci
@@ -428,13 +415,14 @@ function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, posiadaneSurowc
 	this.aktualnyExtruder = null;
 }
 
-function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku) {
+function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.moc = moc;
 	this.szybkostrzelnosc = szybkostrzelnosc;
 	this.zasieg = zasieg;
 	this.szybkoscPocisku = szybkoscPocisku;
+	this.objektPocisku = objektPocisku; 
 }
 
 function Pancerz (objekt, wytrzymalosc) {
@@ -467,14 +455,16 @@ function Extruder(objekt, surowce) {
 	this.surowce = [];
 }
 
-function Pocisk(objekt, pozycja, predkosc, obrot, zasieg, moc) {
-	this.nazwa = objekt.nazwa;
-	this.grafika = objekt.grafika;
+function Pocisk(bron, pozycja, predkosc, obrot) {
+	this.nazwa = bron.objektPocisku.nazwa;
+	this.grafika = bron.objektPocisku.grafika;
 	this.pozycja = pozycja;
 	this.predkosc = predkosc;
 	this.obrot = obrot;
-	this.zasieg = zasieg;
-	this.moc = moc;
+	this.zasieg = bron.zasieg;
+	this.moc = bron.moc;
+	this.odleglosc = 0;
+	this.doSkasowania = false;
 }
 
 Pocisk.prototype.rysuj = function(ctx){
@@ -482,8 +472,6 @@ Pocisk.prototype.rysuj = function(ctx){
 	{
 		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
 	}
-
-	//console.log(this.obrot);
 };
 
 Pocisk.prototype.odswiez = function(){
@@ -491,6 +479,9 @@ Pocisk.prototype.odswiez = function(){
 	//this.pozycja.x += szybkosc;
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
+	this.odleglosc++
+	if(this.odleglosc >= this.zasieg)
+		this.doSkasowania = true;
 };
 
 function TypStatku(objekt, fizyka, wielkosc) {
@@ -527,6 +518,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	this.rozwoj = rozwoj;
 	this.rozwoj.typStatku = typ;
+
+	this.timer = 0;
 }
 
 Statek.prototype.obroc = function(x, y){
@@ -586,17 +579,23 @@ Statek.prototype.ruszaj = function(e){
 			if(this.predkosc <= 0.0 && this.predkosc >= -1)
 				this.predkosc = 0;
 		}
-
-	console.log(this.rozwoj.aktualnySilnik.szybkosc)
 };
 
 Statek.prototype.strzel = function(){
-
-	var pocisk = new Pocisk(objektgwiazda1, $.extend( true, new Wektor2(), this.pozycja ), 5, this.obrot);
-	this.pociski.push(pocisk);
+	// bron, pozycja, predkosc, obrot	
+	console.log(this.timer);
+	if(this.rozwoj.aktualnaBron && this.timer >= this.rozwoj.aktualnaBron.szybkostrzelnosc)
+	{
+		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, $.extend( true, new Wektor2(), this.pozycja ), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot)
+		this.pociski.push(pocisk);
+		this.timer = 0;
+	}
 };
 
 Statek.prototype.odswiez = function(){
+	// pomocnicza do liczenia szybkostrzelnosci statku
+	this.timer++;
+
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
 
@@ -613,7 +612,13 @@ Statek.prototype.odswiez = function(){
 	{
 		for(var i=0; i<this.pociski.length; i++)
 		{
-			this.pociski[i].odswiez();
+			if(this.pociski[i].doSkasowania)
+			{
+				this.pociski.splice(i, 1);
+				continue;
+			}
+			if(i < this.pociski.length)
+				this.pociski[i].odswiez();
 		}
 	}
 
