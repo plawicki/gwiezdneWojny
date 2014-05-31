@@ -18,20 +18,29 @@ var typstatku1 = new TypStatku(objektstatek1, null);
 var surowce = [];
 surowce.push(new Surowiec(objektgwiazda1));
 var bronie = [];
+bronie.push(new Bron(objektgwiazda1, 0, 0, 0)); // null
 bronie.push(new Bron(objektgwiazda1, 1, 20, 2));
 var pancerze = [];
+pancerze.push(new Pancerz(objektgwiazda1, 0)); // null
 pancerze.push(new Pancerz(objektgwiazda1, 10));
 var silniki = [];
-silniki.push(new Silnik(objektgwiazda1, 4, 1));
+silniki.push(new Silnik(objektgwiazda1, 4, 1)); // default
+silniki.push(new Silnik(objektgwiazda1, 6, 1)); // spalinowy
 var magazyny = [];
-magazyny.push(new Magazyn(objektgwiazda1, 10));
+magazyny.push(new Magazyn(objektgwiazda1, 0)); // null
+magazyny.push(new Magazyn(objektgwiazda1, 10)); // maly
 var extrudery = [];
 extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
 
 
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
+gracz.rozwoj.posiadaneBronie.push(bronie[0]);
+gracz.rozwoj.posiadaneExtrudery.push(extrudery[0]);
+gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[0];
+gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[0];
 gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[0];
+
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, []);
 

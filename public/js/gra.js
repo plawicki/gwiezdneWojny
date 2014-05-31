@@ -1,6 +1,7 @@
 $(function(){
 
 	// ustawienia grafiki okna gry
+
 	var canvas = $('canvas')[0];
 
 	canvas.width = document.body.clientWidth;
@@ -18,22 +19,48 @@ $(function(){
 
 	gracz.srodek = ctx.srodek;
 
+	// end ustawienia grafiki
 
-	//ustawienia okna upgradow
+	// ustawienia okna wyboru broni
+
+	// end okno wyboru
+
+	// ustawienia okna upgradow
 	$('#upgrade').hide();
 	$('.upgrade').click(function(){
 		if($(canvas).is(':visible'))
 		{
 			$(canvas).hide();
+			$('#wybor').hide();
 			$('#upgrade').show();
 		}
 		else
 		{
 			$(canvas).show();
+			$('#wybor').show();
 			$('#upgrade').hide();
 		}
 
 	})
+	$('#zelazo').text($('#zelazo').text() + gracz.rozwoj.posiadaneSurowce[0]);
+	$('#wegiel').text($('#wegiel').text() + gracz.rozwoj.posiadaneSurowce[1]);
+	$('#pluton').text($('#pluton').text() + gracz.rozwoj.posiadaneSurowce[2]);
+	$('#aluminium').text($('#aluminium').text() + gracz.rozwoj.posiadaneSurowce[3]);
+
+	$('#aktualnySilnik').text(gracz.rozwoj.aktualnySilnik.nazwa);
+	// tak wiem ze bronie nie sa poprawna forma
+	$.each(gracz.rozwoj.posiadaneBronie, function(i, el){
+		$('#posiadaneBronie').text($('#posiadaneBronie').text() + el.nazwa);
+	});
+	$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
+	$('#aktualnyMagazyn').text(gracz.rozwoj.aktualnyMagazyn.nazwa);
+	$.each(gracz.rozwoj.posiadaneExtrudery, function(i, el){
+		$('#posiadaneExtrudery').text($('#posiadaneExtrudery').text() + el.nazwa);
+	});
+	
+
+
+	// end okno upgradow
 
 	var mouseEvent = function(e){
 		wejscie.mysz = e;

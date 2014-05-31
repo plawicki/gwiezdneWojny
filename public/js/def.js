@@ -374,9 +374,14 @@ function DrzewoRozwoju(){
 }
 
 // mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
-function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
+function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
 	// referencja do typu statku, w zaleznosci od typu - wiecej mozliwosci
 	this.typStatku = typStatku;
+
+	if(posiadaneSurowce)
+		this.posiadaneSurowce = posiadaneSurowce;
+	else
+		this.posiadaneSurowce = [0, 0, 0, 0]; // zawsze sa 4 surowce, liczby sa iloscia surowcow
 
 	if(pBronie)
 		this.posiadaneBronie = pBronie;
