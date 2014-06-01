@@ -249,7 +249,7 @@ function Ekran (ekranTyp, mapa, gracz) {
 	this.mapa = mapa;
 	this.gracz = gracz;
 	this.inniGracze = [];
-	this.aktywny = false;
+	this.aktywny = true;
 
 	this.przesuniecieWidoku = new Wektor2();
 }
@@ -269,9 +269,18 @@ Ekran.prototype.odswiez = function(ctx){
 	this.gracz.odswiez();
 
 	if(this.gracz.dotarl)
-	{
+	{	
 		this.nazwa = "Uklad";
 		this.rysujUklad(ctx);
+				// liczenie odleglosci gracza od srodka ukladu, jesli pozycja dalej niz wielkosc ukladu to powrot do mapy 
+		if(Math.sqrt(this.gracz.pozycja.x*this.gracz.pozycja.x +this.gracz.pozycja.y*this.gracz.pozycja.y) >= this.gracz.kierunek.wielkosc)
+		{
+			this.nazwa = "Uniwersum";
+			this.gracz.dotarl = false;
+			this.gracz.ruszaj("stop");
+			this.gracz.pozycja.x = this.gracz.kierunek.pozycja.x + 35;
+			this.gracz.pozycja.y = this.gracz.kierunek.pozycja.y;
+		}
 	}
 	else
 		this.rysuj(ctx);
@@ -356,7 +365,7 @@ Ekran.prototype.dzialaj = function(e){
 
 		if(!wcisniety)
 		{
-			if(this.nazwa === "Uniwersum")
+			if(this.nazwa == "Uniwersum")
 			{
 				// wyznaczanie kierunku statkowi ku ukladowi gwiezdnemu 
 
@@ -369,7 +378,7 @@ Ekran.prototype.dzialaj = function(e){
 				}
 			}
 				
-			if(this.nazwa === "Uklad")
+			if(this.nazwa == "Uklad")
 			{
 				console.log("zrobic cos ze statkiem w ukladzie");
 				// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
@@ -383,7 +392,7 @@ Ekran.prototype.dzialaj = function(e){
 			}
 				
 			
-			if(this.nazwa === "Menu")
+			if(this.nazwa == "Menu")
 				console.log("zrobic cos ze statkiem w menu");
 		}
 		wcisniety = false;
@@ -391,13 +400,13 @@ Ekran.prototype.dzialaj = function(e){
 
 	if(e.type === "mousemove")
 	{
-		if(this.nazwa === "Uklad")
+		if(this.nazwa == "Uklad")
 			this.gracz.obroc(e.clientX, e.clientY);
 	}
 
 	if(e.type === "keypress")
 	{
-		if(this.nazwa === "Uklad")
+		if(this.nazwa == "Uklad")
 			this.gracz.ruszaj(e);
 	}
 };
@@ -557,7 +566,8 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.obrot = obrot;
 
 	// uniwersum
-	this.kierunek = null;
+	this.kierunek = null; // uklad w ktorym sie znajduje
+	this.planeta = null; // planeta na ktorej laduje
 	this.dotarl = false;
 
 	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
@@ -652,6 +662,9 @@ Statek.prototype.odswiez = function(){
 		this.fizyka.wysokosc = this.grafika.height;
 	}
 
+	this.fizyka.pozycja.x = this.pozycja.x;
+	this.fizyka.pozycja.y = this.pozycja.y;
+
 	if(this.isDead) // logika co jesli nie zyje
 		return 0;
 
@@ -667,6 +680,7 @@ Statek.prototype.odswiez = function(){
 		{
 			this.ruszaj("stop");
 			this.dotarl = true;
+			this.pozycja = new Wektor2();
 		}
 	}
 

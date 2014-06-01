@@ -56,17 +56,16 @@ for(var j=0; j<50; j++)
 {
 	var x = Math.random() * (1600 - 0) + 0;
 	var y = Math.random() * (600 - 50) + 50;
-	var s = Math.random() * (1200 - 100) + 100;
-	var n = new Uklad(j, ukladtyp1, s, new Wektor2(x,y));
+	var s = Math.random() * (1500 - 800) + 800;
+	var n = new Uklad(j, ukladtyp1, 1600, new Wektor2(x,y));
 	n.planety.push(planeta1);
 	
 	mapa.uklady.push(n);
 }
 
-mapa.uklady.push(new Uklad(500, ukladtyp1, 200, new Wektor2(0,0)));
+mapa.uklady.push(new Uklad(500, ukladtyp1, 500, new Wektor2(0,0)));
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
-ekran1.aktywny = true;
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 

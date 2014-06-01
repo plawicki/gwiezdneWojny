@@ -27,6 +27,12 @@ $(function(){
 
 	// end okno logowania
 
+	// ustawienia okna planety
+
+	$('#planeta').hide();
+
+	// end okno planety
+
 	// ustawienia okna wyboru broni
 	if(gracz.rozwoj.posiadaneBronie[0])
 		$('#wybor0 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
@@ -60,12 +66,14 @@ $(function(){
 		if($(canvas).is(':visible'))
 		{
 			$(canvas).hide();
+			ekran1.aktywny = false;
 			$('#wybor').hide();
 			$('#upgrade').show();
 		}
 		else
 		{
 			$(canvas).show();
+			ekran1.aktywny = true;
 			$('#wybor').show();
 			$('#upgrade').hide();
 		}
