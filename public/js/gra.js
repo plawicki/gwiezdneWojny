@@ -28,7 +28,6 @@ $(function(){
 	// end okno logowania
 
 	// ustawienia okna wyboru broni
-	console.log(gracz.rozwoj.posiadaneBronie[0]);
 	if(gracz.rozwoj.posiadaneBronie[0])
 		$('#wybor0 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
 	$('#wybor0').click(function(){

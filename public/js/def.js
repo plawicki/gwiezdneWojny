@@ -16,9 +16,17 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 	this.planetaTyp = planetaTyp;
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
+	this.fizyka = new Fizyka(pozycja, planetaTyp.grafika.width,  planetaTyp.grafika.height);
 }
 
 Planeta.prototype.rysuj = function(ctx){
+
+	// fizyka fix
+	if(this.fizyka.szerokosc === 0)
+	{
+		this.fizyka.szerokosc = this.grafika.width;
+		this.fizyka.wysokosc = this.grafika.height;
+	}
 
 	if(ctx && this.grafika)
 	{
@@ -106,9 +114,26 @@ function Wektor2 (x, y) {
 	}
 }
 
-function Fizyka (kto, kogo) {
-	this.sprawdz = function(kto, kogo) {
-		if (true)
+function Fizyka (pozycja, szerokosc, wysokosc) {
+
+	this.pozycja = pozycja; // referencja na wektor (nie trzeba updateowac)
+	this.szerokosc = szerokosc;
+	this.wysokosc = wysokosc;
+
+	this.sprawdz = function(zkim) {
+
+			// czy ktorys z 4 wierzcholkow zawiera sie w innym prostokacie 
+			// 1 1
+			// 1 1
+		if(	(zkim.pozycja.x >= this.pozycja.x && zkim.pozycja.x <= this.pozycja.x + this.szerokosc &&
+			 zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
+			(zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
+			 zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
+			(zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
+			 zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc) ||
+			(zkim.pozycja.x >= this.pozycja.x && zkim.pozycja.x <= this.pozycja.x + this.szerokosc &&
+			 zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc)
+		  )	
 			return true;
 		else
 			return false;
@@ -231,14 +256,14 @@ function Ekran (ekranTyp, mapa, gracz) {
 
 Ekran.prototype.odswiez = function(ctx){
 
-
-	// czy pocisk trafil cel
-	$.each(this.inniGracze, function(i,el){
-		$.each(el.pociski, function(j, pocisk){
-			if(pocisk.pozycja.x >= this.gracz.pozycja.x && pocisk.pozycja.x <= this.gracz.pozycja.x + this.gracz.grafika.width && pocisk.pozycja.y >= this.gracz.pozycja.y && pocisk.pozycja.y >= this.gracz.pozycja.y && pocisk.pozycja.y <= this.gracz.pozycja.y + this.gracz.gracz.height)
+	for(var i=0; i < this.inniGracze.length; i++)
+	{
+		for(var j=0; j < this.inniGracze.pociski.length; j++)
+		{
+			if(this.inniGracze.pociski[j].sprawdz(this.gracz.fizyka))
 				this.gracz.hp -= pocisk.moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
-		})
-	});
+		}
+	}
 
 
 	this.gracz.odswiez();
@@ -347,6 +372,13 @@ Ekran.prototype.dzialaj = function(e){
 			if(this.nazwa === "Uklad")
 			{
 				console.log("zrobic cos ze statkiem w ukladzie");
+				// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
+				for(var i=0; i<this.gracz.kierunek.planety.length; i++)
+				{
+					if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
+						console.log("mozna ladaowac")
+				}
+
 				this.gracz.strzel();
 			}
 				
@@ -468,6 +500,7 @@ function Extruder(objekt, surowce) {
 function Pocisk(bron, pozycja, predkosc, obrot) {
 	this.nazwa = bron.objektPocisku.nazwa;
 	this.grafika = bron.objektPocisku.grafika;
+	this.fizyka = new Fizyka(pozycja, 0, 0);
 	this.pozycja = pozycja;
 	this.predkosc = predkosc;
 	this.obrot = obrot;
@@ -486,6 +519,12 @@ Pocisk.prototype.rysuj = function(ctx){
 
 Pocisk.prototype.odswiez = function(){
 
+	if(this.fizyka.szerokosc === 0)
+	{
+		this.fizyka.szerokosc = this.grafika.width;
+		this.fizyka.wysokosc = this.grafika.height;
+	}
+
 	//this.pozycja.x += szybkosc;
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
@@ -494,13 +533,12 @@ Pocisk.prototype.odswiez = function(){
 		this.doSkasowania = true;
 };
 
-function TypStatku(objekt, fizyka, hp) {
+function TypStatku(objekt, hp) {
 	this.id = objekt.id;
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.hp = hp;
 
-	//this.fizyka = fizyka;
 }
 
 function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
@@ -514,6 +552,7 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.typ = typ;
 	this.grafika = typ.grafika;
 	this.pozycja = pozycja;
+	this.fizyka = new Fizyka(this.pozycja, typ.grafika.width, typ.grafika.height);
 
 	this.obrot = obrot;
 
@@ -570,7 +609,6 @@ Statek.prototype.ruszajDoGwiazdy = function(dokad, x, y)
 };
 
 Statek.prototype.ruszaj = function(e){
-
 	if(e === "przod")
 	{
 		if(Math.floor(this.predkosc) < this.rozwoj.aktualnySilnik.szybkosc)
@@ -597,8 +635,6 @@ Statek.prototype.ruszaj = function(e){
 };
 
 Statek.prototype.strzel = function(){
-	// bron, pozycja, predkosc, obrot	
-	console.log(this.timer);
 	if(this.rozwoj.aktualnaBron && this.timer >= this.rozwoj.aktualnaBron.szybkostrzelnosc)
 	{
 		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, $.extend( true, new Wektor2(), this.pozycja ), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot)
@@ -608,10 +644,18 @@ Statek.prototype.strzel = function(){
 };
 
 Statek.prototype.odswiez = function(){
-	// pomocnicza do liczenia szybkostrzelnosci statku
+
+	// fizyka fix
+	if(this.fizyka.szerokosc === 0)
+	{
+		this.fizyka.szerokosc = this.grafika.width;
+		this.fizyka.wysokosc = this.grafika.height;
+	}
+
 	if(this.isDead) // logika co jesli nie zyje
 		return 0;
 
+	// pomocnicza do liczenia szybkostrzelnosci statku
 	this.timer++;
 
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 

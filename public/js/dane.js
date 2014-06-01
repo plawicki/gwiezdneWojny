@@ -12,7 +12,7 @@ var objektprzycisk = new Objekt(3, "", "/img/GUI/przycisk.jpg");
 
 var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 
-var typstatku1 = new TypStatku(objektstatek1, null, 100);
+var typstatku1 = new TypStatku(objektstatek1, 100);
 
 // gracz
 var surowce = [];
