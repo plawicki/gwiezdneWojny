@@ -30,6 +30,9 @@ $(function(){
 	// ustawienia okna planety
 
 	$('#planeta').hide();
+	$('#planeta #odlec').click(function(){
+		gracz.planeta = null;
+	})
 
 	// end okno planety
 
@@ -62,22 +65,41 @@ $(function(){
 
 	// ustawienia okna upgradow
 	$('#upgrade').hide();
+	var ostatniEkran = null;
 	$('.upgrade').click(function(){
+		if($('#upgrade').is(':visible'))
+		{
+			if(ostatniEkran == "canvas")
+			{
+				$(canvas).show();
+				$('#wybor').show();
+
+			}
+			if(ostatniEkran == "planeta")
+				$('#planeta').show();
+			$('#upgrade').hide();
+
+			return 0;
+		}
 		if($(canvas).is(':visible'))
 		{
+			ostatniEkran = "canvas";
 			$(canvas).hide();
-			ekran1.aktywny = false;
+
 			$('#wybor').hide();
 			$('#upgrade').show();
-		}
-		else
-		{
-			$(canvas).show();
-			ekran1.aktywny = true;
-			$('#wybor').show();
-			$('#upgrade').hide();
-		}
 
+			return 0;
+		}
+		if($('#planeta').is(':visible'))
+		{
+			ostatniEkran = "planeta";
+			$('#wybor').hide();
+			$('#planeta').hide();
+			$('#upgrade').show();
+
+			return 0;
+		}
 	})
 	$('#zelazo').text($('#zelazo').text() + gracz.rozwoj.posiadaneSurowce[0]);
 	$('#wegiel').text($('#wegiel').text() + gracz.rozwoj.posiadaneSurowce[1]);
@@ -139,6 +161,18 @@ $(function(){
 		} 
 		else if(gameState === 0)
 		{
+			if(gracz.isDead === true)
+				gameState = 1;
+
+			if(gracz.planeta)
+			{
+				$('#planeta img').replaceWith(gracz.planeta.grafika);
+				$('#planeta').show();
+				$(canvas).hide();
+				gameState = 2;
+			}
+
+
 			if(gracz)
 			{
 				if(ekran1.aktywny)
@@ -151,7 +185,13 @@ $(function(){
 			
 		} 
 		else if(gameState === 2)
-		{
+		{	
+			if(!gracz.planeta)
+			{
+				$('#planeta').hide();
+				$(canvas).show();
+				gameState = 0;
+			}
 
 		}
 		else if(gameState === 3)

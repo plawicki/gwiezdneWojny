@@ -385,7 +385,7 @@ Ekran.prototype.dzialaj = function(e){
 				for(var i=0; i<this.gracz.kierunek.planety.length; i++)
 				{
 					if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
-						console.log("mozna ladaowac")
+						this.gracz.planeta = this.gracz.kierunek.planety[i];
 				}
 
 				this.gracz.strzel();
