@@ -231,6 +231,16 @@ function Ekran (ekranTyp, mapa, gracz) {
 
 Ekran.prototype.odswiez = function(ctx){
 
+
+	// czy pocisk trafil cel
+	$.each(this.inniGracze, function(i,el){
+		$.each(el.pociski, function(j, pocisk){
+			if(pocisk.pozycja.x >= this.gracz.pozycja.x && pocisk.pozycja.x <= this.gracz.pozycja.x + this.gracz.grafika.width && pocisk.pozycja.y >= this.gracz.pozycja.y && pocisk.pozycja.y >= this.gracz.pozycja.y && pocisk.pozycja.y <= this.gracz.pozycja.y + this.gracz.gracz.height)
+				this.gracz.hp -= pocisk.moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+		})
+	});
+
+
 	this.gracz.odswiez();
 
 	if(this.gracz.dotarl)
@@ -484,17 +494,22 @@ Pocisk.prototype.odswiez = function(){
 		this.doSkasowania = true;
 };
 
-function TypStatku(objekt, fizyka, wielkosc) {
+function TypStatku(objekt, fizyka, hp) {
 	this.id = objekt.id;
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
-	this.wielkosc = wielkosc;
+	this.hp = hp;
 
 	//this.fizyka = fizyka;
 }
 
 function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.id = 0;
+
+	this.hp = 100;
+	this.hp += typ.hp;
+	this.hp += rozwoj.aktualnyPancerz;
+	this.isDead = false;
 
 	this.typ = typ;
 	this.grafika = typ.grafika;
@@ -594,6 +609,9 @@ Statek.prototype.strzel = function(){
 
 Statek.prototype.odswiez = function(){
 	// pomocnicza do liczenia szybkostrzelnosci statku
+	if(this.isDead) // logika co jesli nie zyje
+		return 0;
+
 	this.timer++;
 
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 

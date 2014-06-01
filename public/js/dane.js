@@ -12,7 +12,7 @@ var objektprzycisk = new Objekt(3, "", "/img/GUI/przycisk.jpg");
 
 var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 
-var typstatku1 = new TypStatku(objektstatek1, null);
+var typstatku1 = new TypStatku(objektstatek1, null, 100);
 
 // gracz
 var surowce = [];
@@ -36,7 +36,7 @@ extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
 
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
-gracz.rozwoj.posiadaneBronie.push(bronie[0]);
+//gracz.rozwoj.posiadaneBronie.push(bronie[0]);
 gracz.rozwoj.posiadaneBronie.push(bronie[1]);
 gracz.rozwoj.posiadaneExtrudery.push(extrudery[0]);
 gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[0];
