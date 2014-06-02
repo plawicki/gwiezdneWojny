@@ -14,9 +14,12 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 	this.nazwa = nazwa;
 	this.grafika = planetaTyp.grafika;
 	this.planetaTyp = planetaTyp;
+	this.surowce = planetaTyp.surowce;
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
 	this.fizyka = new Fizyka(pozycja, planetaTyp.grafika.width,  planetaTyp.grafika.height);
+
+	this.wydobyc = 0; // zmienna tymczasowa, po restarcie serwera jest zerowana
 }
 
 Planeta.prototype.rysuj = function(ctx){
@@ -50,12 +53,15 @@ function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.planety = [];
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
+	this.fizyka = new Fizyka(this.pozycja, 0, 0);
 
 
 }
 
 Uklad.prototype.rysuj = function(ctx){
-
+	//fizyka fix
+	this.fizyka.szerokosc = this.grafika.width;
+	this.fizyka.wysokosc = this.grafika.height;
 	if(ctx && this.grafika)
 	{
 		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
@@ -371,10 +377,11 @@ Ekran.prototype.dzialaj = function(e){
 
 				for(var i=0; i<this.mapa.uklady.length; i++)
 				{
+
 					if(e.clientX >= this.mapa.uklady[i].pozycja.x - this.gracz.pozycja.x + this.gracz.srodek.x && e.clientX <= (this.mapa.uklady[i].pozycja.x + this.mapa.uklady[i].grafika.width - this.gracz.pozycja.x + this.gracz.srodek.x) && e.clientY >= this.mapa.uklady[i].pozycja.y - this.gracz.pozycja.y + this.gracz.srodek.y && e.clientY <= (this.mapa.uklady[i].pozycja.y + this.mapa.uklady[i].grafika.height - this.gracz.pozycja.y + this.gracz.srodek.y))
-						{
-							this.gracz.ruszajDoGwiazdy(this.mapa.uklady[i],e.clientX, e.clientY);
-						}
+					{
+						this.gracz.ruszajDoGwiazdy(this.mapa.uklady[i],e.clientX, e.clientY);
+					}
 				}
 			}
 				
@@ -385,7 +392,11 @@ Ekran.prototype.dzialaj = function(e){
 				for(var i=0; i<this.gracz.kierunek.planety.length; i++)
 				{
 					if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
+					{
 						this.gracz.planeta = this.gracz.kierunek.planety[i];
+						this.gracz.ruszaj("stop");
+						continue;
+					}
 				}
 
 				this.gracz.strzel();
@@ -412,9 +423,11 @@ Ekran.prototype.dzialaj = function(e){
 };
 
 // mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
-function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
+function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
 	// referencja do typu statku, w zaleznosci od typu - wiecej mozliwosci
 	this.typStatku = typStatku;
+
+	this.surowce = surowce;
 
 	if(posiadaneSurowce)
 		this.posiadaneSurowce = posiadaneSurowce;
@@ -466,6 +479,21 @@ function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, posiadaneSurowc
 	this.aktualnyExtruder = null;
 }
 
+Rozwoj.prototype.dodajSurowiec = function(surowiec){
+
+	if(this.aktualnyMagazyn && this.aktualnyExtruder)
+	{
+		for(var i=0; i<this.surowce.length; i++)
+		{
+			if(surowiec.nazwa === this.surowce[i].nazwa && this.posiadaneSurowce[i] < this.aktualnyMagazyn.pojemnosc && this.aktualnyExtruder.nazwa === surowiec.wymaganyExtruder.nazwa)
+			{
+				this.posiadaneSurowce[i]++;
+				console.log("dodano " + surowiec.nazwa)
+			}
+		}
+	}
+}	
+
 function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
@@ -489,9 +517,10 @@ function Silnik(objekt, szybkosc, przyspieszenie) {
 	this.przyspieszenie = przyspieszenie;
 }
 
-function Surowiec (objekt) {
+function Surowiec (objekt, wymaganyExtruder) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
+	this.wymaganyExtruder = wymaganyExtruder;
 }
 
 function Magazyn(objekt, pojemnosc) {
@@ -500,10 +529,9 @@ function Magazyn(objekt, pojemnosc) {
 	this.pojemnosc = pojemnosc;
 }
 
-function Extruder(objekt, surowce) {
+function Extruder(objekt) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
-	this.surowce = [];
 }
 
 function Pocisk(bron, pozycja, predkosc, obrot) {
@@ -652,6 +680,32 @@ Statek.prototype.strzel = function(){
 		this.timer = 0;
 	}
 };
+
+Statek.prototype.wydobywaj = function(){
+
+	if(this.planeta && this.rozwoj.aktualnyMagazyn && this.rozwoj.aktualnyExtruder)
+	{
+
+		for(var i=0; i<this.planeta.surowce.length; i++)
+		{
+			// random number of surowiec
+
+			// wielkosc planety wyznacza ile razy mozna na niej wydobywac
+
+			var s = Math.floor(Math.random() * (10 - 0) + 0); // stopien trudnosci wydobycia
+
+			if(s === 9 && this.planeta.wydobyc <= this.planeta.wielkosc/10)
+			{
+				this.rozwoj.dodajSurowiec(this.planeta.surowce[i]);
+				console.log(this.rozwoj.posiadaneSurowce)
+				this.planeta.wydobyc++;
+			}
+			if(this.planeta.wydobyc >= this.planeta.wielkosc/10)
+				console.log("przekroczona ilosc wydobyc")
+		}
+	
+	}
+}
 
 Statek.prototype.odswiez = function(){
 

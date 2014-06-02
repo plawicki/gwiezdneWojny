@@ -15,8 +15,7 @@ var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
 var typstatku1 = new TypStatku(objektstatek1, 100);
 
 // gracz
-var surowce = [];
-surowce.push(new Surowiec(objektgwiazda1));
+
 var bronie = [];
 // objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku
 bronie.push(new Bron(objektgwiazda1, 0, 0, 0, 0, objektgwiazda1)); // null
@@ -31,26 +30,30 @@ var magazyny = [];
 magazyny.push(new Magazyn(objektgwiazda1, 0)); // null
 magazyny.push(new Magazyn(objektgwiazda1, 10)); // maly
 var extrudery = [];
-extrudery.push(new Extruder(objektgwiazda1, [surowce[0]]));
+extrudery.push(new Extruder(objektgwiazda1));
+var surowce = [];
+surowce.push(new Surowiec(objektgwiazda1, extrudery[0]));
 
-
-var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, extrudery);
+var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
 //gracz.rozwoj.posiadaneBronie.push(bronie[0]);
 gracz.rozwoj.posiadaneBronie.push(bronie[1]);
-gracz.rozwoj.posiadaneExtrudery.push(extrudery[0]);
-gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[0];
-gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[0];
-gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[0];
+gracz.rozwoj.aktualnyExtruder = gracz.rozwoj.zdobywalneExtrudery[0];
+gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[1];
+gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[1];
+gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[1];
 
 
-var planetatyp1 = new PlanetaTyp(objektplaneta1, []);
+var planetatyp1 = new PlanetaTyp(objektplaneta1, surowce);
 
 var planeta1 = new Planeta("Ziemia", planetatyp1, 30, new Wektor2(0, 0));
 
 var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
 
 var mapa = new Mapa();
+
+mapa.uklady.push(new Uklad(500, ukladtyp1, 500, new Wektor2(0,0)));
+mapa.uklady[0].planety.push(planeta1);
 
 for(var j=0; j<50; j++)
 {
@@ -63,7 +66,7 @@ for(var j=0; j<50; j++)
 	mapa.uklady.push(n);
 }
 
-mapa.uklady.push(new Uklad(500, ukladtyp1, 500, new Wektor2(0,0)));
+
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
 

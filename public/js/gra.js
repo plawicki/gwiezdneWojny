@@ -30,7 +30,7 @@ $(function(){
 	// ustawienia okna planety
 
 	$('#planeta').hide();
-	$('#planeta #odlec').click(function(){
+	$('#menu .odlec').click(function(){
 		gracz.planeta = null;
 	})
 
@@ -62,6 +62,13 @@ $(function(){
 			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
 	})	
 	// end okno wyboru
+
+	// menu
+
+	$('.wydobywanie').click(function(){
+		gracz.wydobywaj();
+		console.log("wcisnieto");
+	});
 
 	// ustawienia okna upgradow
 	$('#upgrade').hide();
@@ -116,8 +123,6 @@ $(function(){
 	$.each(gracz.rozwoj.posiadaneExtrudery, function(i, el){
 		$('#posiadaneExtrudery').text($('#posiadaneExtrudery').text() + el.nazwa);
 	});
-	
-
 
 	// end okno upgradow
 
@@ -153,6 +158,7 @@ $(function(){
 
 	play = function(){
 
+		// ustawienie rysowania wzgeldem gracza
 		ctx.przesuniecie = new Wektor2(gracz.pozycja.x, gracz.pozycja.y);
 	
 		if(gameState === 1)
@@ -166,8 +172,15 @@ $(function(){
 
 			if(gracz.planeta)
 			{
+				$('#planeta #wielkosc').text("");
+				$('#planeta #doWykopania').text("");
 				$('#planeta img').replaceWith(gracz.planeta.grafika);
+				$('#planeta #wielkosc').text($('#planeta #wielkosc').text() + gracz.planeta.wielkosc);
+				$.each(gracz.planeta.surowce, function(i, surowiec){
+					$('#planeta #doWykopania').text($('#planeta #doWykopania').text() + " " + surowiec.nazwa);
+				})
 				$('#planeta').show();
+				$('#wybor').hide();
 				$(canvas).hide();
 				gameState = 2;
 			}
@@ -186,10 +199,15 @@ $(function(){
 		} 
 		else if(gameState === 2)
 		{	
+			$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
+			$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
+			$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
+			$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[3]);
 			if(!gracz.planeta)
 			{
 				$('#planeta').hide();
 				$(canvas).show();
+				$('#wybor').show();
 				gameState = 0;
 			}
 
