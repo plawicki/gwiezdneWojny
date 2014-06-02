@@ -266,7 +266,6 @@ Ekran.prototype.odswiez = function(ctx){
 		}
 	}
 
-
 	this.gracz.odswiez();
 
 	if(this.gracz.dotarl)
