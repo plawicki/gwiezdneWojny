@@ -12,6 +12,8 @@ var objektbron1 = new Objekt(3, "Gauss Cannon", "/img/bronie/gauss.png");
 
 var objektpocisk1 = new Objekt(6, "Kinetic missile", "/img/pociski/gauss.png");
 
+var objektnull = new Objekt(0, "null", "/img/GUI/none.png");
+
 
 var typstatku1 = new TypStatku(objektstatek1, 100);
 
@@ -19,7 +21,7 @@ var typstatku1 = new TypStatku(objektstatek1, 100);
 
 var bronie = [];
 // objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku
-bronie.push(new Bron(objektgwiazda1, 0, 0, 0, 0, objektgwiazda1)); // null
+bronie.push(new Bron(objektnull, 0, 0, 0, 0, objektnull)); // null
 bronie.push(new Bron(objektbron1, 1, 20, 10, 60, objektpocisk1));
 var pancerze = [];
 pancerze.push(new Pancerz(objektgwiazda1, 0)); // null
@@ -37,8 +39,9 @@ surowce.push(new Surowiec(objektgwiazda1, extrudery[0]));
 
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce);
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
-//gracz.rozwoj.posiadaneBronie.push(bronie[0]);
+
 gracz.rozwoj.posiadaneBronie.push(bronie[1]);
+
 gracz.rozwoj.aktualnyExtruder = gracz.rozwoj.zdobywalneExtrudery[0];
 gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[1];
 gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[1];

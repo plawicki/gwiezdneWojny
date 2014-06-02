@@ -6,10 +6,10 @@ $(function(){
 
 	canvas.width = document.body.clientWidth;
 	// height of canvas is set to 90% of screen
-	canvas.height = document.body.clientHeight - (document.body.clientHeight/50);
+	canvas.height = document.body.clientHeight;
 
 	canvas.style.width = canvas.width + "px";
-	canvas.style.height = (canvas.height-(canvas.height/50))  + "px";
+	canvas.style.height = canvas.height  + "px";
 
 	var ctx = canvas.getContext("2d");
 
