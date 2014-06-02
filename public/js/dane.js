@@ -4,8 +4,6 @@ var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
 
 var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/planet3.png");
 
-var objektplaneta1 = new Objekt(7, "White Star", "/img/planety/blue_star.png");
-
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
 
 var objektstatek1 = new Objekt(4, "Statek", "/img/statki/scouter.png");
@@ -73,7 +71,7 @@ for(var j=0; j<50; j++)
 }
 
 //typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek
-var obcy = new Statek(typstatku1, new Wektor2(0, 0), mapa[0], 0, "inny", null, new Wektor2(), true);
+var obcy = new Statek(typstatku1, new Wektor2(0, 0), mapa[0], 0, "inny", rozwojGracza, new Wektor2(), true);
 obcy.obroc(200, 100);
 
 

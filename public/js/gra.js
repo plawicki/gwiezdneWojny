@@ -116,12 +116,6 @@ $(function(){
 
 		if($('#upgrade').is(':visible'))
 		{
-			if(ostatniEkran == "canvas")
-			{
-				$(canvas).show();
-				$('#wybor').show();
-
-			}
 			if(ostatniEkran == "planeta")
 				$('#planeta').show();
 			$('#upgrade').hide();
@@ -131,9 +125,7 @@ $(function(){
 		if($(canvas).is(':visible'))
 		{
 			ostatniEkran = "canvas";
-			$(canvas).hide();
 
-			$('#wybor').hide();
 			$('#upgrade').show();
 
 			return 0;
@@ -200,7 +192,7 @@ $(function(){
 
 		// ustawienie rysowania wzgeldem gracza
 		ctx.przesuniecie = new Wektor2(gracz.pozycja.x, gracz.pozycja.y);
-	
+
 		if(gameState === 1)
 		{
 

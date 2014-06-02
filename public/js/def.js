@@ -259,6 +259,7 @@ Ekran.prototype.odswiez = function(ctx){
 
 	for(var i=0; i < this.inniGracze.length; i++)
 	{
+		this.inniGracze[i].odswiez();
 		if(this.inniGracze[i] && this.inniGracze[i].pociski)
 		{
 			for(var j=0; j < this.inniGracze[i].pociski.length; j++)
