@@ -2,7 +2,9 @@
 // typy ekranow : Uniwersum, Uklad, Menu
 var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
 
-var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/Earth.png");
+var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/planet3.png");
+
+var objektplaneta1 = new Objekt(7, "White Star", "/img/planety/blue_star.png");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
 
@@ -13,7 +15,6 @@ var objektbron1 = new Objekt(3, "Gauss Cannon", "/img/bronie/gauss.png");
 var objektpocisk1 = new Objekt(6, "Kinetic missile", "/img/pociski/gauss.png");
 
 var objektnull = new Objekt(0, "null", "/img/GUI/none.png");
-
 
 var typstatku1 = new TypStatku(objektstatek1, 100);
 
@@ -50,7 +51,8 @@ gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[1];
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, surowce);
 
-var planeta1 = new Planeta("Ziemia", planetatyp1, 40, new Wektor2(0, 0));
+// 30 < d < 60
+var planeta1 = new Planeta("Ziemia", planetatyp1, 30, new Wektor2(0, 0));
 
 var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
 

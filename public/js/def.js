@@ -27,7 +27,7 @@ Planeta.prototype.rysuj = function(ctx){
 	if(ctx && this.grafika)
 	{
 		//ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza)
-		this.skala = new Wektor2(this.grafika.width * this.wielkosc/100, this.grafika.height * this.wielkosc/100);
+		this.skala = new Wektor2(this.grafika.width * this.wielkosc/40, this.grafika.height * this.wielkosc/40);
 		this.grafika.rysuj(ctx, this.pozycja, this.skala, null, null, true);
 	}
 
