@@ -46,7 +46,7 @@ gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[1];
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, surowce);
 
-var planeta1 = new Planeta("Ziemia", planetatyp1, 30, new Wektor2(0, 0));
+var planeta1 = new Planeta("Ziemia", planetatyp1, 40, new Wektor2(0, 0));
 
 var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
 

@@ -31,6 +31,9 @@ $(function(){
 
 	$('#planeta').hide();
 	$('#menu .odlec').click(function(){
+	
+		if(gracz.planeta)
+			$('#upgrade').hide();
 		gracz.planeta = null;
 	})
 
@@ -66,6 +69,8 @@ $(function(){
 	// menu
 
 	$('.wydobywanie').click(function(){
+		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
+			$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
 		gracz.wydobywaj();
 		console.log("wcisnieto");
 	});
@@ -74,6 +79,12 @@ $(function(){
 	$('#upgrade').hide();
 	var ostatniEkran = null;
 	$('.upgrade').click(function(){
+
+		$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
+		$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
+		$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
+		$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[3]);
+
 		if($('#upgrade').is(':visible'))
 		{
 			if(ostatniEkran == "canvas")
@@ -176,6 +187,7 @@ $(function(){
 				$('#planeta #doWykopania').text("");
 				$('#planeta img').replaceWith(gracz.planeta.grafika);
 				$('#planeta #wielkosc').text($('#planeta #wielkosc').text() + gracz.planeta.wielkosc);
+				$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
 				$.each(gracz.planeta.surowce, function(i, surowiec){
 					$('#planeta #doWykopania').text($('#planeta #doWykopania').text() + " " + surowiec.nazwa);
 				})
@@ -199,10 +211,7 @@ $(function(){
 		} 
 		else if(gameState === 2)
 		{	
-			$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
-			$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
-			$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
-			$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[3]);
+
 			if(!gracz.planeta)
 			{
 				$('#planeta').hide();

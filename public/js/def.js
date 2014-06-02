@@ -24,27 +24,22 @@ function Planeta (nazwa, planetaTyp, wielkosc, pozycja) {
 
 Planeta.prototype.rysuj = function(ctx){
 
+	if(ctx && this.grafika)
+	{
+		//ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza)
+		this.skala = new Wektor2(this.grafika.width * this.wielkosc/100, this.grafika.height * this.wielkosc/100);
+		this.grafika.rysuj(ctx, this.pozycja, this.skala, null, null, true);
+	}
+	
 	// fizyka fix
 	if(this.fizyka.szerokosc === 0)
 	{
-		this.fizyka.szerokosc = this.grafika.width;
-		this.fizyka.wysokosc = this.grafika.height;
-	}
-
-	if(ctx && this.grafika)
-	{
-		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
+		this.fizyka.szerokosc = this.skala.x;
+		this.fizyka.wysokosc = this.skala.y;
 	}
 		
 };
 
-Planeta.prototype.rysujSrodek = function (ctx) {
-		if(ctx && this.grafika)
-		{
-			//rysowanie duzej planety na srodku ekranu
-			this.grafika.rysuj(ctx, new Wektor2(), new Wektor2(ctx.width/2, ctx.height/2), new Wektor2(ctx.width/4, ctx.height/4), null, false);
-		}
-	};
 
 function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
 	this.nazwa = nazwa;
@@ -488,13 +483,12 @@ Rozwoj.prototype.dodajSurowiec = function(surowiec){
 			if(surowiec.nazwa === this.surowce[i].nazwa && this.posiadaneSurowce[i] < this.aktualnyMagazyn.pojemnosc && this.aktualnyExtruder.nazwa === surowiec.wymaganyExtruder.nazwa)
 			{
 				this.posiadaneSurowce[i]++;
-				console.log("dodano " + surowiec.nazwa)
 			}
 		}
 	}
 }	
 
-function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku) {
+function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.moc = moc;
@@ -502,19 +496,22 @@ function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPoc
 	this.zasieg = zasieg;
 	this.szybkoscPocisku = szybkoscPocisku;
 	this.objektPocisku = objektPocisku; 
+	this.wymaganeSurowce = wymaganeSurowce;
 }
 
-function Pancerz (objekt, wytrzymalosc) {
+function Pancerz (objekt, wytrzymalosc, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.wytrzymalosc = wytrzymalosc;
+	this.wymaganeSurowce = wymaganeSurowce;
 }
 
-function Silnik(objekt, szybkosc, przyspieszenie) {
+function Silnik(objekt, szybkosc, przyspieszenie, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.szybkosc = szybkosc;
 	this.przyspieszenie = przyspieszenie;
+	this.wymaganeSurowce = wymaganeSurowce;
 }
 
 function Surowiec (objekt, wymaganyExtruder) {
@@ -523,15 +520,17 @@ function Surowiec (objekt, wymaganyExtruder) {
 	this.wymaganyExtruder = wymaganyExtruder;
 }
 
-function Magazyn(objekt, pojemnosc) {
+function Magazyn(objekt, pojemnosc, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.pojemnosc = pojemnosc;
+	this.wymaganeSurowce = wymaganeSurowce;
 }
 
-function Extruder(objekt) {
+function Extruder(objekt, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
+	this.wymaganeSurowce = wymaganeSurowce;
 }
 
 function Pocisk(bron, pozycja, predkosc, obrot) {
@@ -692,16 +691,14 @@ Statek.prototype.wydobywaj = function(){
 
 			// wielkosc planety wyznacza ile razy mozna na niej wydobywac
 
-			var s = Math.floor(Math.random() * (10 - 0) + 0); // stopien trudnosci wydobycia
+			var s = Math.floor(Math.random() * (5 - 0) + 0); // stopien trudnosci wydobycia
 
-			if(s === 9 && this.planeta.wydobyc <= this.planeta.wielkosc/10)
+			if(s === 4 && this.planeta.wydobyc <= this.planeta.wielkosc/10)
 			{
 				this.rozwoj.dodajSurowiec(this.planeta.surowce[i]);
-				console.log(this.rozwoj.posiadaneSurowce)
-				this.planeta.wydobyc++;
 			}
-			if(this.planeta.wydobyc >= this.planeta.wielkosc/10)
-				console.log("przekroczona ilosc wydobyc")
+
+			this.planeta.wydobyc++;
 		}
 	
 	}
