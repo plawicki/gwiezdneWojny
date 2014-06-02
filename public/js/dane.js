@@ -35,7 +35,7 @@ var surowce = [];
 surowce.push(new Surowiec(objektgwiazda1, extrudery[0]));
 
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce);
-var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null);
+var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
 //gracz.rozwoj.posiadaneBronie.push(bronie[0]);
 gracz.rozwoj.posiadaneBronie.push(bronie[1]);
 gracz.rozwoj.aktualnyExtruder = gracz.rozwoj.zdobywalneExtrudery[0];
@@ -66,9 +66,13 @@ for(var j=0; j<50; j++)
 	mapa.uklady.push(n);
 }
 
-
+//typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek
+var obcy = new Statek(typstatku1, new Wektor2(100, 100), mapa[0], 0, "inny", null, new Wektor2(), true);
+obcy.obroc(200, 200);
+console.log(obcy)
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
+ekran1.inniGracze.push(obcy)
 
 var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
 

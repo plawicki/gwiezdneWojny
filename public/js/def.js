@@ -30,7 +30,7 @@ Planeta.prototype.rysuj = function(ctx){
 		this.skala = new Wektor2(this.grafika.width * this.wielkosc/100, this.grafika.height * this.wielkosc/100);
 		this.grafika.rysuj(ctx, this.pozycja, this.skala, null, null, true);
 	}
-	
+
 	// fizyka fix
 	if(this.fizyka.szerokosc === 0)
 	{
@@ -166,12 +166,12 @@ Image.prototype.rysuj = function(ctx, pozycja, rozmiar, offset, obrot, przesunac
 
 		ctx.rotate(obrot);
 		
-		pozycja = new Wektor2();
+		ctx.translate(-pozycja.x - offset.x, -pozycja.y - offset.y);
 
 		if(!rozmiar)
-			offset = new Wektor2(-offset.x - this.width/2, -offset.x - this.height/2);
+			ctx.translate(-this.width/2, -this.height/2);
 		else
-			offset = new Wektor2(-offset.x - rozmiar.x/2, -offset.x - rozmiar.y/2);
+			ctx.translate(-rozmiar.x/2, -rozmiar.y/2);
 	}
 
 	if(rozmiar)
@@ -259,10 +259,13 @@ Ekran.prototype.odswiez = function(ctx){
 
 	for(var i=0; i < this.inniGracze.length; i++)
 	{
-		for(var j=0; j < this.inniGracze.pociski.length; j++)
+		if(this.inniGracze[i] && this.inniGracze[i].pociski)
 		{
-			if(this.inniGracze.pociski[j].sprawdz(this.gracz.fizyka))
-				this.gracz.hp -= pocisk.moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+			for(var j=0; j < this.inniGracze[i].pociski.length; j++)
+			{
+				if(this.inniGracze.pociski[j].sprawdz(this.gracz.fizyka))
+					this.gracz.hp -= pocisk.moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+			}
 		}
 	}
 
@@ -325,12 +328,14 @@ Ekran.prototype.rysuj = function(ctx){
 	if(this.mapa)
 		this.mapa.rysuj(ctx);
 
+	/*
 	if(this.inniGracze.length !== 0)
 	{
 		for(var i=0; i<this.inniGracze.length; i++)
 			this.inniGracze[i].rysuj(ctx);
 	}
-		
+	*/
+
 	if(this.gracz)
 		this.gracz.rysuj(ctx, new Wektor2(25,25));
 
@@ -548,7 +553,8 @@ function Pocisk(bron, pozycja, predkosc, obrot) {
 Pocisk.prototype.rysuj = function(ctx){
 	if(ctx)
 	{
-		this.grafika.rysuj(ctx, this.pozycja, null, null, null, true);
+		// ctx, pozycja, rozmiar, offset, obrot, przesunacWzgledemGracza
+		this.grafika.rysuj(ctx, this.pozycja, null, null, this.obrot, true);
 	}
 };
 
@@ -576,12 +582,18 @@ function TypStatku(objekt, hp) {
 
 }
 
-function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
+function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik) {
 	this.id = 0;
+	this.bot = przeciwnik;
+
+	this.rozwoj = rozwoj;
+	if(this.rozwoj)
+		this.rozwoj.typStatku = typ;
 
 	this.hp = 100;
 	this.hp += typ.hp;
-	this.hp += rozwoj.aktualnyPancerz;
+	if(rozwoj)
+		this.hp += rozwoj.aktualnyPancerz;
 	this.isDead = false;
 
 	this.typ = typ;
@@ -592,7 +604,11 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 	this.obrot = obrot;
 
 	// uniwersum
-	this.kierunek = null; // uklad w ktorym sie znajduje
+	if(kierunek)
+		this.kierunek = kierunek;
+	else
+		this.kierunek = null; // uklad w ktorym sie znajduje
+
 	this.planeta = null; // planeta na ktorej laduje
 	this.dotarl = false;
 
@@ -606,8 +622,7 @@ function Statek (typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek) {
 
 	this.pociski = [];
 
-	this.rozwoj = rozwoj;
-	this.rozwoj.typStatku = typ;
+
 
 	this.timer = 0;
 }
@@ -620,20 +635,38 @@ Statek.prototype.rysuj = function(ctx, rozmiar)
 {
 	ctx.save();
 
-	if(!rozmiar)
-		this.grafika.rysuj(ctx, this.srodek, null, null, this.obrot);
-	else
-		this.grafika.rysuj(ctx, this.srodek, rozmiar, null, this.obrot);
-
-	if(this.pociski && this.pociski.length !== 0)
+	if(this.bot)
 	{
-		for(var i=0; i<this.pociski.length; i++)
+		if(!rozmiar)
+			this.grafika.rysuj(ctx, this.pozycja, null, null, this.obrot, true);
+		else
+			this.grafika.rysuj(ctx, this.pozycja, rozmiar, null, this.obrot, true);
+
+		if(this.pociski && this.pociski.length !== 0)
 		{
-			this.pociski[i].rysuj(ctx);
+			for(var i=0; i<this.pociski.length; i++)
+			{
+				this.pociski[i].rysuj(ctx);
+			}
 		}
 	}
-	ctx.restore();
+	else
+	{
+		if(!rozmiar)
+			this.grafika.rysuj(ctx, this.srodek, null, null, this.obrot);
+		else
+			this.grafika.rysuj(ctx, this.srodek, rozmiar, null, this.obrot);
 
+		if(this.pociski && this.pociski.length !== 0)
+		{
+			for(var i=0; i<this.pociski.length; i++)
+			{
+				this.pociski[i].rysuj(ctx);
+			}
+		}
+	}
+
+	ctx.restore();
 };
 
 Statek.prototype.ruszajDoGwiazdy = function(dokad, x, y)
