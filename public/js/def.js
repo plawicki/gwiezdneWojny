@@ -275,7 +275,11 @@ Ekran.prototype.odswiez = function(ctx){
 	{	
 		this.nazwa = "Uklad";
 		this.rysujUklad(ctx);
-				// liczenie odleglosci gracza od srodka ukladu, jesli pozycja dalej niz wielkosc ukladu to powrot do mapy 
+
+		// wczytanie talbicy inni gracze DODAC
+
+
+		// liczenie odleglosci gracza od srodka ukladu, jesli pozycja dalej niz wielkosc ukladu to powrot do mapy 
 		if(Math.sqrt(this.gracz.pozycja.x*this.gracz.pozycja.x +this.gracz.pozycja.y*this.gracz.pozycja.y) >= this.gracz.kierunek.wielkosc)
 		{
 			this.nazwa = "Uniwersum";
@@ -283,6 +287,8 @@ Ekran.prototype.odswiez = function(ctx){
 			this.gracz.ruszaj("stop");
 			this.gracz.pozycja.x = this.gracz.kierunek.pozycja.x + 35;
 			this.gracz.pozycja.y = this.gracz.kierunek.pozycja.y;
+
+			// kasowanie tablicy inni gracze DODAC
 		}
 	}
 	else
@@ -582,6 +588,8 @@ function TypStatku(objekt, hp) {
 
 }
 
+// DODAC parsowanie i zapisywanie do jsona, zeby mozna bylo wysylac informacje
+
 function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik) {
 	this.id = 0;
 	this.bot = przeciwnik;
@@ -706,7 +714,7 @@ Statek.prototype.ruszaj = function(e){
 Statek.prototype.strzel = function(){
 	if(this.rozwoj.aktualnaBron && this.timer >= this.rozwoj.aktualnaBron.szybkostrzelnosc)
 	{
-		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, $.extend( true, new Wektor2(), this.pozycja ), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot)
+		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, new Wektor2(this.pozycja.x, this.pozycja.y + this.grafika.height/2), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot)
 		this.pociski.push(pocisk);
 		this.timer = 0;
 	}

@@ -1,16 +1,17 @@
 
 // typy ekranow : Uniwersum, Uklad, Menu
 var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
-var objektekran2 = new Objekt(1, "Uklad", "/img/tla/skybox1.jpg");
-var objektekran3 = new Objekt(1, "Menu", "/img/tla/skybox1.jpg");
 
-var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/ziemia.jpg");
+var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/Earth.png");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
 
-var objektprzycisk = new Objekt(3, "", "/img/GUI/przycisk.jpg");
+var objektstatek1 = new Objekt(4, "Statek", "/img/statki/scouter.png");
 
-var objektstatek1 = new Objekt(4, "Statek", "/img/statki/1.png");
+var objektbron1 = new Objekt(3, "Gauss Cannon", "/img/bronie/gauss.png");
+
+var objektpocisk1 = new Objekt(6, "Kinetic missile", "/img/pociski/gauss.png");
+
 
 var typstatku1 = new TypStatku(objektstatek1, 100);
 
@@ -19,7 +20,7 @@ var typstatku1 = new TypStatku(objektstatek1, 100);
 var bronie = [];
 // objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku
 bronie.push(new Bron(objektgwiazda1, 0, 0, 0, 0, objektgwiazda1)); // null
-bronie.push(new Bron(objektgwiazda1, 1, 20, 10, 60, objektgwiazda1));
+bronie.push(new Bron(objektbron1, 1, 20, 10, 60, objektpocisk1));
 var pancerze = [];
 pancerze.push(new Pancerz(objektgwiazda1, 0)); // null
 pancerze.push(new Pancerz(objektgwiazda1, 10));
@@ -67,20 +68,12 @@ for(var j=0; j<50; j++)
 }
 
 //typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek
-var obcy = new Statek(typstatku1, new Wektor2(100, 100), mapa[0], 0, "inny", null, new Wektor2(), true);
-obcy.obroc(200, 200);
-console.log(obcy)
+var obcy = new Statek(typstatku1, new Wektor2(0, 0), mapa[0], 0, "inny", null, new Wektor2(), true);
+obcy.obroc(200, 100);
+
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
 ekran1.inniGracze.push(obcy)
-
-var tekst1 = new Tekst("Hello World!", new Wektor2(10, 50), 'red', 20, 'Arial');
-
-//ekran1.teksty.push(tekst1);
-
-var przycisk1 = new Przycisk(tekst1, objektprzycisk, new Wektor2(100, 100), new Wektor2(150, 200), function(){ alert("HELLO WORLD"); });
-
-//ekran1.przyciski.push(przycisk1);
 
 var wejscie = new Wejscie(ekran1);
 
