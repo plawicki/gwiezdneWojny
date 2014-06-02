@@ -393,16 +393,7 @@ Ekran.prototype.dzialaj = function(e){
 			if(this.nazwa == "Uklad")
 			{
 				console.log("zrobic cos ze statkiem w ukladzie");
-				// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
-				for(var i=0; i<this.gracz.kierunek.planety.length; i++)
-				{
-					if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
-					{
-						this.gracz.planeta = this.gracz.kierunek.planety[i];
-						this.gracz.ruszaj("stop");
-						continue;
-					}
-				}
+
 
 				this.gracz.strzel();
 			}
@@ -426,6 +417,26 @@ Ekran.prototype.dzialaj = function(e){
 			this.gracz.ruszaj(e);
 	}
 };
+
+Ekran.prototype.laduj = function(){
+	// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
+
+	for(var i=0; i<this.gracz.kierunek.planety.length; i++)
+	{
+		if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
+		{
+			this.gracz.planeta = this.gracz.kierunek.planety[i];
+			this.gracz.ruszaj("stop");
+			continue;
+		}
+	}
+}
+
+Ekran.prototype.odlec = function(){
+	// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
+	
+	this.gracz.planeta = null;
+}
 
 // mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
 function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {

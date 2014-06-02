@@ -33,8 +33,37 @@ $(function(){
 	$('#menu .odlec').click(function(){
 	
 		if(gracz.planeta)
+		{
+			$(canvas).show();
+			$('#wybor').show();
+			$('#planeta').hide();
 			$('#upgrade').hide();
-		gracz.planeta = null;
+			ekran1.odlec();
+		}
+	})
+
+	$('#menu .wlec').click(function(){
+
+		ekran1.laduj();
+		if(gracz.planeta)
+		{
+			$('#planeta #wielkosc').text("");
+			$('#planeta #doWykopania').text("");
+			$('#planeta img').replaceWith(gracz.planeta.grafika);
+			$('#planeta #wielkosc').text($('#planeta #wielkosc').text() + gracz.planeta.wielkosc);
+
+			if((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc >= 0)
+				$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
+			else
+				$('#planeta #proby').text("0");
+
+			$.each(gracz.planeta.surowce, function(i, surowiec){
+				$('#planeta #doWykopania').text($('#planeta #doWykopania').text() + " " + surowiec.nazwa);
+			})
+			$('#planeta').show();
+			$('#wybor').hide();
+			$(canvas).hide();
+		} 
 	})
 
 	// end okno planety
@@ -183,18 +212,8 @@ $(function(){
 
 			if(gracz.planeta)
 			{
-				$('#planeta #wielkosc').text("");
-				$('#planeta #doWykopania').text("");
-				$('#planeta img').replaceWith(gracz.planeta.grafika);
-				$('#planeta #wielkosc').text($('#planeta #wielkosc').text() + gracz.planeta.wielkosc);
-				$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
-				$.each(gracz.planeta.surowce, function(i, surowiec){
-					$('#planeta #doWykopania').text($('#planeta #doWykopania').text() + " " + surowiec.nazwa);
-				})
-				$('#planeta').show();
-				$('#wybor').hide();
-				$(canvas).hide();
-				gameState = 2;
+
+				//gameState = 2;
 			}
 
 
@@ -212,13 +231,7 @@ $(function(){
 		else if(gameState === 2)
 		{	
 
-			if(!gracz.planeta)
-			{
-				$('#planeta').hide();
-				$(canvas).show();
-				$('#wybor').show();
-				gameState = 0;
-			}
+
 
 		}
 		else if(gameState === 3)
