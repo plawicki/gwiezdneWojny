@@ -13,7 +13,11 @@ $(function(){
 	socket.on("uklady", function(uklady){
 		ekran1.mapa.uklady = [];
 		for(var i=0; i<uklady.length; i++)
-		 ekran1.mapa.uklady.push(stworzUklad(uklady[i]));
+			ekran1.mapa.uklady.push(stworzUklad(uklady[i]));
+	})
+
+	socket.on("innyGracz", function(gracz){
+		ekran1.inniGracze.push(stworzGracza(gracz));
 	})
 
 	// ustawienia grafiki okna gry
@@ -34,10 +38,6 @@ $(function(){
 	ctx.srodek = new Wektor2(canvas.width/2, canvas.height/2);
 
 	gracz.srodek = ctx.srodek;
-
-	// ustawienia gracza
-
-	gracz.nazwa = $('#canvas[name]').val();
 
 	// end ustawienia grafiki
 
@@ -85,7 +85,14 @@ $(function(){
 			$('#planeta').show();
 			$('#wybor').hide();
 		} 
+		else if(gracz.kierunek)
+		{
+			gracz.wejdzDoUkladu();
+
+			socket.emit("changeStar", { "nazwaUkladu": gracz.kierunek.nazwa, "gracz": gracz.nazwa });
+		}
 	})
+
 
 	// end okno planety
 

@@ -294,8 +294,10 @@ Ekran.prototype.odswiez = function(ctx){
 
 	if(this.gracz.dotarl)
 	{	
+
 		this.nazwa = "Uklad";
 		this.rysujUklad(ctx);
+
 
 		// wczytanie talbicy inni gracze DODAC
 
@@ -868,6 +870,17 @@ Statek.prototype.wydobywaj = function(){
 	}
 }
 
+Statek.prototype.wejdzDoUkladu = function(){
+	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
+	{
+		if(this.dotarl === false)
+		{
+			this.dotarl = true;
+			this.pozycja = new Wektor2();
+		}
+	}
+}
+
 Statek.prototype.odswiez = function(){
 
 	// fizyka fix
@@ -894,8 +907,6 @@ Statek.prototype.odswiez = function(){
 		if(this.dotarl === false)
 		{
 			this.ruszaj("stop");
-			this.dotarl = true;
-			this.pozycja = new Wektor2();
 		}
 	}
 

@@ -19,7 +19,7 @@ var sio;
 //var rooms = [{id: "roomGlobal", name: "Global"}];
 
 // uklady i planety
-var gracze = [];
+var gracze = {};
 var uklady = [];
 var iloscGraczy = 1;
 
@@ -194,7 +194,7 @@ sio.sockets.on('connection', function (socket) {
         iloscGraczy++;
 
         uklady.push(generujUklad());
-        gracze.push(gracz);
+        gracze[gracz.nazwa] = gracz;
 
         socket.emit('uklady', uklady);
         socket.broadcast.emit('uklady', uklady);
@@ -205,8 +205,29 @@ sio.sockets.on('connection', function (socket) {
     socket.emit("uklady", uklady);
 
     socket.on("changeStar", function(data){
+        socket.get('uklad', function (err, uklad) {
+            socket.leave(uklad);
+        });
 
-    })
+        socket.join(data.nazwaUkladu);
+        socket.set('uklad',data.nazwaUkladu);
+
+        for(var i=0; i<gracze.length; i++)
+        {
+            if(gracze[i].kierunek == data.nazwaUkladu)
+                socket.emit('innyGracz', gracze[i]);
+        }
+
+        // jesli wylecielismy poza jakis uklad, nie informuj o tym nikogo
+        if(data.nazwaUkladu != "global")
+        {   
+            var gracz = gracze[data.gracz];
+            gracz.przeciwnik = true;
+            socket.broadcast.emit('innyGracz', gracz);
+            console.log("Przeslano info o " + gracze[data.gracz].nazwa + " do ukladu " + data.nazwaUkladu)
+        }
+
+    });
     /*
         LOGIKA
         
