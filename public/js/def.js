@@ -41,11 +41,16 @@ Planeta.prototype.rysuj = function(ctx){
 };
 
 
-function Uklad(nazwa, ukladTyp, wielkosc, pozycja) {
+function Uklad(nazwa, ukladTyp, wielkosc, pozycja, planety) {
 	this.nazwa = nazwa;
 	this.ukladTyp = ukladTyp;
 	this.grafika = ukladTyp.grafika;
-	this.planety = [];
+
+	if(planety)
+		this.planety = planety;
+	else
+		this.planety = [];
+
 	this.wielkosc = wielkosc;
 	this.pozycja = pozycja;
 	this.fizyka = new Fizyka(this.pozycja, 0, 0);

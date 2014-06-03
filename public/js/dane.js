@@ -72,37 +72,23 @@ rozwojGracza.aktualnySilnik = rozwojGracza.zdobywalneSilniki[1];
 rozwojGracza.posiadaneSurowce[0] = 2;
 
 var gracz = new Statek(typyStatku[0], new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
-gracz.kupUlepszenie(magazyny[2]);
 
-var planetatyp1 = new PlanetaTyp(objektplaneta1, surowce);
+var typyPlanet = [];
+
+typyPlanet.push(new PlanetaTyp(objektplaneta1, surowce));
+
+var typyUkladow = [];
+
+typyUkladow.push(new UkladTyp(objektgwiazda1, 100));
 
 // 30 < d < 60
-var planeta1 = new Planeta("Ziemia", planetatyp1, 30, new Wektor2(0, 0));
-
-var ukladtyp1 = new UkladTyp(objektgwiazda1, 100);
+var planeta1 = new Planeta("Ziemia", typyPlanet[0], 30, new Wektor2(0, 0));
 
 var mapa = new Mapa();
 
-mapa.uklady.push(new Uklad(500, ukladtyp1, 500, new Wektor2(0,0)));
-mapa.uklady[0].planety.push(planeta1);
-
-for(var j=0; j<50; j++)
-{
-	var x = Math.random() * (1600 - 0) + 0;
-	var y = Math.random() * (600 - 50) + 50;
-	var s = Math.random() * (1500 - 800) + 800;
-	var n = new Uklad(j, ukladtyp1, 1600, new Wektor2(x,y));
-	n.planety.push(planeta1);
-	
-	mapa.uklady.push(n);
-}
-
-//typ, pozycja, pozycjaMapa, obrot, nazwa, rozwoj, srodek
-var obcy = new Statek(typyStatku[1], new Wektor2(0, 0), mapa[0], 0, "inny", rozwojGracza, new Wektor2(), true);
-obcy.obroc(200, 100);
+mapa.uklady.push(new Uklad("Uklad Sloneczny", typyUkladow[0], 500, new Wektor2(0,0), [planeta1]));
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
-ekran1.inniGracze.push(obcy)
 
 var wejscie = new Wejscie(ekran1);
 
@@ -116,6 +102,7 @@ var wejscie = new Wejscie(ekran1);
 */
 // DODAC parsowanie i zapisywanie(done) do jsona, zeby mozna bylo wysylac informacje
 
+// siec
 
 zapiszGracza = function(gracz){
 	// typ nazwa, pozycja wektor, kierunek nazwa, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
@@ -218,8 +205,6 @@ stworzGracza = function(json){
 			aMagazynO = magazyny[i];
 	}
 
-	console.log(pBronieO + pExtruderyeO + aPancerzO + aSilnikO + aMagazynO)
-
 	var gracz = new Statek(
 		typO, 
 		new Wektor2(json.pozycja.x, json.pozycja.y), 
@@ -233,5 +218,25 @@ stworzGracza = function(json){
 	return gracz;
 }
 
-var json = zapiszGracza(gracz);
-console.log(stworzGracza(json));
+stworzPlanete = function(json){
+	var typ = null
+	for(var i=0; i<typyPlanet.length; i++)
+		if(json.typ === typyPlanet[i].nazwa)
+			typ = typyPlanet[i];
+
+	var planeta = new Planeta(json.nazwa, typ, json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y));
+
+	return planeta;
+}
+
+stworzUklad = function(json){
+	// "Uklad Sloneczny", typyUkladow[0], 500, new Wektor2(0,0), [planeta1]
+	var typ = null
+	for(var i=0; i<typyUkladow.length; i++)
+		if(json.typ === typyUkladow[i].nazwa)
+			typ = typyUkladow[i];
+
+	var uklad = new Uklad(json.nazwa, typ, json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y), stworzPlanete(json.planety));
+
+	return uklad;
+}
