@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<title><%= title %></title>
+		<link rel='stylesheet' href='/css/styl.css' />
+	    <script src='jquery/dist/jquery.min.js'></script>
+	    <script src='/js/def.js'></script>
+	    <script src='/js/dane.js'></script>
+	    <script src='/js/gra.js'></script>
+	</head>
+	<body>
+		<canvas id="game"></canvas>
+		<div id="wybor">
+			<span id="wybor0"><img style="display: none"/></span>
+			<span id="wybor1"><img style="display: none"/></span>
+			<span id="wybor2"><img style="display: none"/></span>
+			<span id="wybor3"><img style="display: none"/></span>
+		</div>
+		<div id="login">
+			Login: <input id="login" type="text"></input>
+			Password: <input id="pass" type="password"></input>
+			<button id="conn">Connect</button>
+		</div>
+		<div id="planeta">
+			<img></img>
+			<br/>
+			Size: <div id="wielkosc"></div> mln km <br/>
+			Elements: <div id="doWykopania"></div>
+			Extraction attempts: <div id="proby"></div>
+		</div>
+		<div id="upgrade">
+			<div id="surowce">
+			Owned materials:<br/>
+				<img src="/img/surowce/zelazo.jpg"/> Iron: <div id="zelazo"></div>
+				<img src="/img/surowce/grafit.jpg"/> Graphite: <div id="wegiel"></div>
+				<img src="/img/surowce/pluton.jpg"/> Plutonium: <div id="pluton"></div>
+				<img src="/img/surowce/aluminium.jpg"/> Aluminum: <div id="aluminium"></div>
+			</div>
+			<div id="silniki">
+				Actual drive: <div id="aktualnySilnik"></div>
+				<div id="słaby spalinowy"></div>
+				<div id="spalinowy"></div>
+				<div id="impulsowy"></div>
+				<div id="nadprzestrzenny"></div>
+			</div>
+			<div id="bronie">
+				Owned weapons: <div id="posiadaneBronie"></div>
+				<div id="minigun"></div>
+				<div id="laser"></div>
+				<div id="gauss"></div>
+				<div id="rocket"></div>
+			</div>
+			<div id="pancerze">
+				Actual armor: <div id="aktualnyPancerz"></div>
+				<div id="lekki"></div>
+				<div id="ciezki"></div>
+			</div>
+			<div id="magazyny">
+				Actual depot: <div id="aktualnyMagazyn"></div>
+				<div id="maly"></div>
+				<div id="sredni"></div>
+				<div id="duzy"></div>
+			</div>
+			<div id="extrudery">
+				Owned drills: <div id="posiadaneExtrudery"></div>
+				<div id="wiertlo"></div>
+				<div id="wytapiarka"></div>
+			</div>
+		</div>
+		<div id="menu">
+			<span id="hp" style="color: lime"></span>
+			<span id="button" class="upgrade">Upgrade</span>
+			<span id="button" class="wlec">Deploy</span>
+			<span id="button" class="odlec">Undeploy</span>
+			<span id="button" class="wydobywanie">Drill</span>
+			<span id="button" class="logout">Logout</span>
+		</div>
+
+	</body>
+</html>
+
