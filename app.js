@@ -44,3 +44,4 @@ app.get('/', routes.index);
 http.createServer(app).listen(app.get('port'), function () {
     console.log("Serwer nasłuchuje na porcie " + app.get('port'));
 });
+

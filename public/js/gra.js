@@ -224,6 +224,7 @@ $(function(){
 		} 
 		else if(gameState === 0)
 		{
+			$('#hp').text(gracz.hp);
 			if(gracz.isDead === true)
 				gameState = 1;
 
