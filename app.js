@@ -228,6 +228,15 @@ sio.sockets.on('connection', function (socket) {
         }
 
     });
+
+    socket.on("ruch", function(data){
+
+        gracze[data.gracz].pozycja = data.pozycja;
+        gracze[data.gracz].obrot = data.obrot;
+        gracze[data.gracz].predkosc = data.predkosc;
+
+        socket.broadcast.emit("innyRuch", data);
+    })
     /*
         LOGIKA
         

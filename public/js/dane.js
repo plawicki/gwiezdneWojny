@@ -84,7 +84,7 @@ rozwojGracza.aktualnyMagazyn = rozwojGracza.zdobywalneMagazyny[1];
 rozwojGracza.aktualnySilnik = rozwojGracza.zdobywalneSilniki[1];
 rozwojGracza.posiadaneSurowce[0] = 2;
 
-var gracz = new Statek(typyStatku[0], new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
+var gracz = new Statek(typyStatku[0], new Wektor2(), null, 0.0, makeid(), rozwojGracza, null, false);
 
 var typyPlanet = [];
 
@@ -261,4 +261,15 @@ stworzUklad = function(json){
 	var uklad = new Uklad(json.nazwa, typyUkladow[json.typ], json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y), planety);
 
 	return uklad;
+}
+
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }

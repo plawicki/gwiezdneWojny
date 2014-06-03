@@ -20,6 +20,29 @@ $(function(){
 		ekran1.inniGracze.push(stworzGracza(gracz));
 	})
 
+	socket.on("ktosStrzela", function(data){
+		for(var i=0; i<ekran1.inniGracze.length; i++)
+		{
+			if(ekran1.inniGracze[i] === data.gracz)
+			{
+				ekran1.inniGracze[i].strzel();
+			}
+		}
+	});
+
+	socket.on("innyRuch", function(data){
+
+		for(var i=0; i<ekran1.inniGracze.length; i++)
+		{
+			if(ekran1.inniGracze[i].nazwa == data.gracz)
+			{
+				ekran1.inniGracze[i].obrot = data.obrot;
+				ekran1.inniGracze[i].pozycja = new Wektor2(data.pozycja.x, data.pozycja.y);
+				ekran1.inniGracze[i].predkosc = data.predkosc;
+			}
+		}
+	})
+
 	// ustawienia grafiki okna gry
 
 	var canvas = $('canvas')[0];
@@ -240,14 +263,20 @@ $(function(){
 
 	// end okno upgradow
 
+	poruszam = function(){
+		socket.emit("ruch", {"gracz": gracz.nazwa, "pozycja": {"x": gracz.pozycja.x, "y": gracz.pozycja.y}, "obrot": gracz.obrot, "predkosc": gracz.predkosc});
+	}
+
 	var mouseEvent = function(e){
 		wejscie.mysz = e;
 		wejscie.dzialajMysz();
+		poruszam();
 	}
 
 	var keyboardEvent = function(e){
 		wejscie.klawiatura = e;
 		wejscie.dzialajKlawiatura();
+		poruszam();
 	}
 
 	$('canvas').mousemove(mouseEvent);

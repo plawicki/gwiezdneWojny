@@ -418,6 +418,7 @@ Ekran.prototype.dzialaj = function(e){
 				console.log("zrobic cos ze statkiem w ukladzie");
 
 
+
 				this.gracz.strzel();
 			}
 				
