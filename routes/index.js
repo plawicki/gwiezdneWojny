@@ -5,6 +5,6 @@ exports.login = function (req, res) {
 
 exports.authorized = function (req, res) {
 	var usr = req.user.username;
-	console.log(usr);
-	res.render('authorized', {user: usr, title: 'Gwiezdne Wojny'});
+	var type = req.body.type;
+	res.render('authorized', {user: usr, title: 'Gwiezdne Wojny', type: type});
 }

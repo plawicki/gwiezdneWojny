@@ -3,23 +3,20 @@
 	<head>
 		<title><%= title %></title>
 		<link rel='stylesheet' href='/css/styl.css' />
+		<script src="/socket.io/socket.io.js"></script>
 	    <script src='jquery/dist/jquery.min.js'></script>
 	    <script src='/js/def.js'></script>
 	    <script src='/js/dane.js'></script>
 	    <script src='/js/gra.js'></script>
 	</head>
 	<body>
-		<canvas id="game"></canvas>
+
+		<canvas id="game" type="<%= type %>" name="<%= user %>"></canvas>
 		<div id="wybor">
 			<span id="wybor0"><img style="display: none"/></span>
 			<span id="wybor1"><img style="display: none"/></span>
 			<span id="wybor2"><img style="display: none"/></span>
 			<span id="wybor3"><img style="display: none"/></span>
-		</div>
-		<div id="login">
-			Login: <input id="login" type="text"></input>
-			Password: <input id="pass" type="password"></input>
-			<button id="conn">Connect</button>
 		</div>
 		<div id="planeta">
 			<img></img>

@@ -1,10 +1,23 @@
 
+// typow ukladow: 4, typow planet: 4
+
 // typy ekranow : Uniwersum, Uklad, Menu
 var objektekran1 = new Objekt(1, "Uniwersum", "/img/tla/skybox1.jpg");
 
-var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/planet3.png");
+var objektplaneta1 = new Objekt(5, "Earth", "/img/planety/planet3.png");
+var objektplaneta2 = new Objekt(5, "Magma planet", "/img/planety/planet14.png");
+var objektplaneta3 = new Objekt(5, "Gas Giant", "/img/planety/planet12.png");
+var objektplaneta4 = new Objekt(5, "Frozen planet", "/img/planety/planet12.png");
 
-var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
+var objektplaneta5 = new Objekt(5, "Earth", "/img/planety/blue_star.png");
+var objektplaneta6 = new Objekt(5, "Magma planet", "/img/planety/red_star.png");
+var objektplaneta7 = new Objekt(5, "Gas Giant", "/img/planety/white_star.png");
+var objektplaneta8 = new Objekt(5, "Frozen planet", "/img/planety/yellow_star.png");
+
+var objektgwiazda1 = new Objekt(2, "Small Star","/img/gwiazdy/gwiazda1.png" );
+var objektgwiazda2 = new Objekt(2, "Small Star","/img/gwiazdy/gwiazda1.png" );
+var objektgwiazda3 = new Objekt(2, "Small Star","/img/gwiazdy/gwiazda1.png" );
+var objektgwiazda4 = new Objekt(2, "Small Star","/img/gwiazdy/gwiazda1.png" );
 
 // satki
 var objektstatek1 = new Objekt(4, "Scouter", "/img/statki/scouter.png");
@@ -24,10 +37,10 @@ var objektpocisk1 = new Objekt(6, "Kinetic missile", "/img/pociski/gauss.png");
 var objektnull = new Objekt(0, "null", "/img/GUI/none.png");
 
 // surowce
-var objekzelazo = new Objekt(7, "Zelazo", "/img/surowce/zelazo.jpg");
-var objekaluminium = new Objekt(8, "Aluminium", "/img/surowce/aluminium.jpg");
-var objekpluton = new Objekt(9, "Pluton", "/img/surowce/pluton.jpg");
-var objekgrafit = new Objekt(10, "Grafit", "/img/surowce/grafit.jpg");
+var objekzelazo = new Objekt(7, "Iron", "/img/surowce/zelazo.jpg");
+var objekaluminium = new Objekt(8, "Aluminum", "/img/surowce/aluminium.jpg");
+var objekpluton = new Objekt(9, "Plutonium", "/img/surowce/pluton.jpg");
+var objekgrafit = new Objekt(10, "Graphite", "/img/surowce/grafit.jpg");
 
 // wydobywarki
 var objektextruder1 = new Objekt(13, "Drill", "/img/wiertla/mechaniczne.png");
@@ -73,15 +86,24 @@ rozwojGracza.posiadaneSurowce[0] = 2;
 
 var gracz = new Statek(typyStatku[0], new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
 
-var obcy = new Statek(typyStatku[2], new Wektor2(), null, 0, "Wrog", rozwojGracza, null, true);
-
 var typyPlanet = [];
 
-typyPlanet.push(new PlanetaTyp(objektplaneta1, surowce));
+typyPlanet.push(new PlanetaTyp(objektplaneta1, [surowce[3]]));
+typyPlanet.push(new PlanetaTyp(objektplaneta2, [surowce[0]]));
+typyPlanet.push(new PlanetaTyp(objektplaneta3, [surowce[2]]));
+typyPlanet.push(new PlanetaTyp(objektplaneta4, [surowce[1]]));
+
+typyPlanet.push(new PlanetaTyp(objektplaneta5, []));
+typyPlanet.push(new PlanetaTyp(objektplaneta6, []));
+typyPlanet.push(new PlanetaTyp(objektplaneta7, []));
+typyPlanet.push(new PlanetaTyp(objektplaneta8, []));
 
 var typyUkladow = [];
 
 typyUkladow.push(new UkladTyp(objektgwiazda1, 100));
+typyUkladow.push(new UkladTyp(objektgwiazda2, 200));
+typyUkladow.push(new UkladTyp(objektgwiazda3, 300));
+typyUkladow.push(new UkladTyp(objektgwiazda4, 400));
 
 // 30 < d < 60
 var planeta1 = new Planeta("Ziemia", typyPlanet[0], 30, new Wektor2(0, 0));
@@ -91,8 +113,6 @@ var mapa = new Mapa();
 mapa.uklady.push(new Uklad("Uklad Sloneczny", typyUkladow[0], 500, new Wektor2(0,0), [planeta1]));
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
-
-ekran1.inniGracze.push(obcy);
 
 var wejscie = new Wejscie(ekran1);
 
@@ -223,24 +243,22 @@ stworzGracza = function(json){
 }
 
 stworzPlanete = function(json){
-	var typ = null
-	for(var i=0; i<typyPlanet.length; i++)
-		if(json.typ === typyPlanet[i].nazwa)
-			typ = typyPlanet[i];
 
-	var planeta = new Planeta(json.nazwa, typ, json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y));
+
+	var planeta = new Planeta(json.nazwa, typyPlanet[json.typ], json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y));
 
 	return planeta;
 }
 
 stworzUklad = function(json){
-	// "Uklad Sloneczny", typyUkladow[0], 500, new Wektor2(0,0), [planeta1]
-	var typ = null
-	for(var i=0; i<typyUkladow.length; i++)
-		if(json.typ === typyUkladow[i].nazwa)
-			typ = typyUkladow[i];
 
-	var uklad = new Uklad(json.nazwa, typ, json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y), stworzPlanete(json.planety));
+	var planety = [];
+	for(var i=0; i<json.planety.length; i++)
+	{
+		planety.push(stworzPlanete(json.planety[i]));
+	}
+
+	var uklad = new Uklad(json.nazwa, typyUkladow[json.typ], json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y), planety);
 
 	return uklad;
 }

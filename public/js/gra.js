@@ -1,5 +1,21 @@
 $(function(){
 
+	// socketio
+
+	var socket = io.connect('http://' + location.host);
+
+	socket.emit("addPlayer", zapiszGracza(gracz));
+
+	socket.on("nowy", function(gracz){
+		console.log(gracz);
+	})
+
+	socket.on("uklady", function(uklady){
+		ekran1.mapa.uklady = [];
+		for(var i=0; i<uklady.length; i++)
+		 ekran1.mapa.uklady.push(stworzUklad(uklady[i]));
+	})
+
 	// ustawienia grafiki okna gry
 
 	var canvas = $('canvas')[0];
@@ -18,6 +34,10 @@ $(function(){
 	ctx.srodek = new Wektor2(canvas.width/2, canvas.height/2);
 
 	gracz.srodek = ctx.srodek;
+
+	// ustawienia gracza
+
+	gracz.nazwa = $('#canvas[name]').val();
 
 	// end ustawienia grafiki
 
@@ -104,7 +124,7 @@ $(function(){
 
 	$('.wydobywanie').click(function(){
 		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
-			$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
+			$('#planeta #proby').text(Math.floor((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc));
 		gracz.wydobywaj();
 		console.log(gracz.rozwoj.posiadaneSurowce);
 	});
