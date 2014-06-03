@@ -686,16 +686,20 @@ function TypStatku(objekt, hp, predkosc) {
 
 function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik) {
 	this.id = 0;
+
 	// zmienna bool, zachowanie jak bot czy gracz
 	this.bot = przeciwnik;
+
 	this.typ = typ;
 
 	this.rozwoj = rozwoj;
+
 	if(this.rozwoj)
 		this.rozwoj.typStatku = typ;
 
 	this.hp = 100;
 	this.hp += typ.hp;
+
 	if(rozwoj)
 		this.hp += rozwoj.aktualnyPancerz.wytrzymalosc;
 	this.isDead = false;
@@ -717,7 +721,10 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 	this.dotarl = false;
 
 	// pomocnicza zmienna ustawiajaca statek na srodku ekranu
-	this.srodek = srodek;
+	if(srodek)
+		this.srodek = srodek;
+	else
+		this.srodek = new Wektor2();
 
 	//this.fizyka = typ.fizyka;
 

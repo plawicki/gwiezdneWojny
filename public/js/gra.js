@@ -38,6 +38,7 @@ $(function(){
 			$('#wybor').show();
 			$('#planeta').hide();
 			$('#upgrade').hide();
+			przypiszBron();
 			ekran1.odlec();
 		}
 	})
@@ -47,6 +48,7 @@ $(function(){
 		ekran1.laduj();
 		if(gracz.planeta)
 		{
+			$('#upgrade').hide();
 			$('#planeta #wielkosc').text("");
 			$('#planeta #doWykopania').text("");
 			$('#planeta img').replaceWith(gracz.planeta.grafika);
@@ -62,7 +64,6 @@ $(function(){
 			})
 			$('#planeta').show();
 			$('#wybor').hide();
-			$(canvas).hide();
 		} 
 	})
 
@@ -71,25 +72,25 @@ $(function(){
 	przypiszBron = function(){
 		// ustawienia okna wyboru broni
 		if(gracz.rozwoj.posiadaneBronie[0])
-			$('#wybor0 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
+			$('#wybor0').append(gracz.rozwoj.posiadaneBronie[0].grafika);
 		$('#wybor0').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[0])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[0];
 		})
 		if(gracz.rozwoj.posiadaneBronie[1])
-			$('#wybor1 img').replaceWith(gracz.rozwoj.posiadaneBronie[1].grafika);
+			$('#wybor1 ').append(gracz.rozwoj.posiadaneBronie[1].grafika);
 		$('#wybor1').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[1])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[1];
 		})
 		if(gracz.rozwoj.posiadaneBronie[2])
-			$('#wybor2 img').replaceWith(gracz.rozwoj.posiadaneBronie[2].grafika);
+			$('#wybor2 ').append(gracz.rozwoj.posiadaneBronie[2].grafika);
 		$('#wybor2').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[2])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[2];
 		})
 		if(gracz.rozwoj.posiadaneBronie[3])
-			$('#wybor3 img').replaceWith(gracz.rozwoj.posiadaneBronie[3].grafika);
+			$('#wybor3 ').append(gracz.rozwoj.posiadaneBronie[3].grafika);
 		$('#wybor3').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[3])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
@@ -109,9 +110,36 @@ $(function(){
 	});
 
 	// ustawienia okna upgradow
+
+	// kupowanie silnikow
+	$('#spalinowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[1]); })
+	$('#impulsowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[2]); })
+	$('#nadprzestrzenny').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[3]); })
+
+	// kupowanie broni
+	$('#minigun').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[0]); })
+	$('#laser').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); })
+	$('#gauss').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[2]); })
+	$('#rocket').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[3]); })
+
+	// kupowanie pancerzy
+	$('#lekki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalnePancerze[0]); })
+	$('#ciezki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); })
+
+	// kupowanie magazynow
+	$('#maly').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[0]); })
+	$('#sredni').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[1]); })
+	$('#duzy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[2]); })
+
+	// kupowanie extryderow
+	$('#wiertlo').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[0]); })
+	$('#wytapiarka').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[1]); })
+
+
 	$('#upgrade').hide();
 	var ostatniEkran = null;
 	$('.upgrade').click(function(){
+
 		$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
 		$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
 		$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
@@ -144,6 +172,8 @@ $(function(){
 			if(ostatniEkran == "planeta")
 				$('#planeta').show();
 			$('#upgrade').hide();
+
+			przypiszBron();
 
 			return 0;
 		}
