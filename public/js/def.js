@@ -459,32 +459,44 @@ function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, surowce, posiad
 
 	this.aktualnaBron = null;
 
+	this.aktualnyPancerz = null;
+
 	if(pPancerze)
+	{
 		this.posiadanePancerze = pPancerze;
+		this.aktualnyPancerz = pPancerze[pPancerze.length-1];
+	}
 	else
 		this.posiadanePancerze = [];
 	
 	this.zdobywalnePancerze = pancerze;
 
-	this.aktualnyPancerz = null;
+
+	this.aktualnySilnik = null;
 
 	if(pSilniki)
+	{
 		this.posiadaneSilniki = pSilniki;
+		this.aktualnySilnik = pSilniki[pSilniki.length-1];
+	}
 	else
 		this.posiadaneSilniki = [];
 
 	this.zdobywalneSilniki = silniki;
 
-	this.aktualnySilnik = null;
+	this.aktualnyMagazyn = null;
 
 	if(pMagazyny)
+	{
 		this.posiadaneMagazyny = pMagazyny;
+		this.aktualnyMagazyn = pMagazyny[pMagazyny.length-1];
+	}
 	else
 		this.posiadaneMagazyny = [];
 
 	this.zdobywalneMagazyny = magazyny;
 
-	this.aktualnyMagazyn = null;
+	this.aktualnyExtruder = null;
 
 	if(pExtrudery)
 		this.posiadaneExtrudery = pExtrudery;
@@ -492,8 +504,6 @@ function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, surowce, posiad
 		this.posiadaneExtrudery = [];
 
 	this.zdobywalneExtrudery = extrudery;
-
-	this.aktualnyExtruder = null;
 }
 
 Rozwoj.prototype.dodajSurowiec = function(surowiec){
@@ -667,65 +677,7 @@ function TypStatku(objekt, hp, predkosc) {
 	this.predkosc = predkosc;
 }
 
-// DODAC parsowanie i zapisywanie do jsona, zeby mozna bylo wysylac informacje
 
-stworzGracza = function(typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik){
-	// typ nazwa, pozycja wektor, kierunek numer, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
-
-}
-
-zapiszGracza = function(gracz){
-	// typ nazwa, pozycja wektor, kierunek nazwa, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
-	// tworzenie jsona na podstawie statystyk
-	var rozwoj = zapiszRozwoj(gracz.rozwoj);
-	if(gracz.kierunek)
-	var json = 
-	{ 
-		"typ": gracz.typ.nazwa, 
-		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
-		"kierunek": gracz.kierunek.nazwa, 
-		"obrot": gracz.obrot, 
-		"nazwa": gracz.nazwa, 
-		"rozwoj": rozwoj, 
-		"srodek": null, 
-		"przeciwnik": null 
-	};
-	else
-	var json = 
-	{ 
-		"typ": gracz.typ.nazwa, 
-		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
-		"kierunek": null, 
-		"obrot": gracz.obrot, 
-		"nazwa": gracz.nazwa, 
-		"rozwoj": rozwoj, 
-		"srodek": null, 
-		"przeciwnik": null 
-	};
-	return json;
-}
-
-zapiszRozwoj = function(rozwoj){
-	// bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku)
-	var pBronie = [];
-	$.each(rozwoj.posiadaneBronie, function(i, el){
-		pBronie.push(el.nazwa);
-	})
-	var pExtrudery = [];
-	$.each(rozwoj.posiadaneExtrudery, function(i, el){
-		pExtrudery.push(el.nazwa);
-	})
-	var json =
-	{
-		"posiadaneSurowce": rozwoj.posiadaneSurowce,
-		"pBronie": pBronie,
-		"aktualnyPancerz": rozwoj.aktualnyPancerz.nazwa,
-		"aktualnySilnik": rozwoj.aktualnySilnik.nazwa,
-		"aktualnyMagazyn": rozwoj.aktualnyMagazyn.nazwa,
-		"posiadaneExtrudery": pExtrudery,
-	}
-	return json;
-}
 
 function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik) {
 	this.id = 0;

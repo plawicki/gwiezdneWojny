@@ -101,8 +101,6 @@ for(var j=0; j<50; j++)
 var obcy = new Statek(typyStatku[1], new Wektor2(0, 0), mapa[0], 0, "inny", rozwojGracza, new Wektor2(), true);
 obcy.obroc(200, 100);
 
-console.log(zapiszGracza(gracz));
-
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
 ekran1.inniGracze.push(obcy)
 
@@ -116,3 +114,124 @@ var wejscie = new Wejscie(ekran1);
 	3. Wczytywanie danych na temat otaczajacych go graczy (tworzenie tablicy gracze, i ustawienie kazdego z nich na bota)
 	4. Wczytanie mapy z serwera
 */
+// DODAC parsowanie i zapisywanie(done) do jsona, zeby mozna bylo wysylac informacje
+
+
+zapiszGracza = function(gracz){
+	// typ nazwa, pozycja wektor, kierunek nazwa, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
+	// tworzenie jsona na podstawie statystyk
+	var rozwoj = zapiszRozwoj(gracz.rozwoj);
+	if(gracz.kierunek)
+	var json = 
+	{ 
+		"typ": gracz.typ.nazwa, 
+		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
+		"kierunek": gracz.kierunek.nazwa, 
+		"obrot": gracz.obrot, 
+		"nazwa": gracz.nazwa, 
+		"rozwoj": rozwoj, 
+		"srodek": null, 
+		"przeciwnik": null 
+	};
+	else
+	var json = 
+	{ 
+		"typ": gracz.typ.nazwa, 
+		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
+		"kierunek": null, 
+		"obrot": gracz.obrot, 
+		"nazwa": gracz.nazwa, 
+		"rozwoj": rozwoj, 
+		"srodek": null, 
+		"przeciwnik": null 
+	};
+	return json;
+}
+
+zapiszRozwoj = function(rozwoj){
+	// bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku)
+	var pBronie = [];
+	$.each(rozwoj.posiadaneBronie, function(i, el){
+		pBronie.push(el.nazwa);
+	})
+	var pExtrudery = [];
+	$.each(rozwoj.posiadaneExtrudery, function(i, el){
+		pExtrudery.push(el.nazwa);
+	})
+	var json =
+	{
+		"posiadaneSurowce": rozwoj.posiadaneSurowce,
+		"pBronie": pBronie,
+		"aktualnyPancerz": rozwoj.aktualnyPancerz.nazwa,
+		"aktualnySilnik": rozwoj.aktualnySilnik.nazwa,
+		"aktualnyMagazyn": rozwoj.aktualnyMagazyn.nazwa,
+		"pExtrudery": pExtrudery,
+	}
+	return json;
+}
+
+stworzGracza = function(json){
+	// typ nazwa, pozycja wektor, kierunek numer, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
+	// typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik
+	var typO = null;
+	for(var i=0; i<typyStatku.length; i++)
+		if(typyStatku[i].nazwa === json.typ)
+			typO = typyStatku[i];
+
+	var kierunekO = null;
+	for(var i=0; i<ekran1.mapa.uklady.length; i++)
+		if(ekran1.mapa.uklady[i].nazwa === json.kierunek)
+			kierunekO = ekran1.mapa.uklady[i].nazwa;
+
+	// kierunek string
+	// rozowj bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku
+	var pBronieO = [];
+	for(var i=0; i<bronie.length; i++)
+	{
+		for(var j=0; j<json.rozwoj.pBronie.length; j++)
+			if(bronie[i].nazwa === json.rozwoj.pBronie[j])
+				pBronieO.push(bronie[i]);
+	}
+	var pExtruderyeO = [];
+	for(var i=0; i<extrudery.length; i++)
+	{
+		for(var j=0; j<json.rozwoj.pExtrudery.length; j++)
+			if(extrudery[i].nazwa === json.rozwoj.pExtrudery[j])
+				pExtruderyeO.push(extrudery[i]);
+	}
+	var aPancerzO = null;
+	for(var i=0; i<pancerze.length; i++)
+	{
+		if(pancerze[i].nazwa === json.rozwoj.aktualnyPancerz)
+				aPancerzO = pancerze[i];
+	}
+	var aSilnikO = null
+	for(var i=0; i<silniki.length; i++)
+	{
+		if(silniki[i].nazwa === json.rozwoj.aktualnySilnik)
+			aSilnikO = silniki[i];
+	}
+	var aMagazynO = null
+	for(var i=0; i<magazyny.length; i++)
+	{
+		if(magazyny[i].nazwa === json.rozwoj.aktualnyMagazyn)
+			aMagazynO = magazyny[i];
+	}
+
+	console.log(pBronieO + pExtruderyeO + aPancerzO + aSilnikO + aMagazynO)
+
+	var gracz = new Statek(
+		typO, 
+		new Wektor2(json.pozycja.x, json.pozycja.y), 
+		json.kierunek, 
+		json.obrot, 
+		json.nazwa, 
+		new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce, json.posiadaneSurowce, pBronieO, [aPancerzO], [aSilnikO], [aMagazynO], pExtruderyeO, typO), 
+		null, 
+		json.przeciwnik);
+
+	return gracz;
+}
+
+var json = zapiszGracza(gracz);
+console.log(stworzGracza(json));
