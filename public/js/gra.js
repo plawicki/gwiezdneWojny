@@ -29,7 +29,8 @@ $(function(){
 	})
 
 	socket.on("innyGracz", function(gracz){
-		ekran1.inniGracze.push(stworzGracza(gracz));
+		if(gracz.nazwa != ekran1.gracz.nazwa)
+			ekran1.inniGracze.push(stworzGracza(gracz));
 	})
 
 	socket.on("ktosStrzela", function(data){

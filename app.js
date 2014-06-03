@@ -211,6 +211,7 @@ sio.sockets.on('connection', function (socket) {
 
         socket.join(data.nazwaUkladu);
         socket.set('uklad',data.nazwaUkladu);
+        gracze[data.gracz].kierunek = data.nazwaUkladu;
 
         socket.get('uklad', function (err, uklad) {
             
@@ -221,6 +222,14 @@ sio.sockets.on('connection', function (socket) {
                 gracz.przeciwnik = true;
 
                 sio.sockets.in(uklad).emit('innyGracz', gracz);
+
+                // foreach
+                Object.keys(gracze).forEach(function(key) {
+
+                    if(gracze[key].kierunek === data.nazwaUkladu)
+                        socket.emit('innyGracz', gracze[key]);
+                });
+
                 console.log("Przeslano info o " + gracze[data.gracz].nazwa + " do ukladu " + data.nazwaUkladu);
             }
             else
@@ -230,11 +239,6 @@ sio.sockets.on('connection', function (socket) {
 
          });
 
-        for(var i=0; i<gracze.length; i++)
-        {
-            if(gracze[i].kierunek === data.nazwaUkladu)
-                socket.emit('innyGracz', gracze[i]);
-        }
 
 
     });
