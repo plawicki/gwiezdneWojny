@@ -68,32 +68,36 @@ $(function(){
 
 	// end okno planety
 
-	// ustawienia okna wyboru broni
-	if(gracz.rozwoj.posiadaneBronie[0])
-		$('#wybor0 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
-	$('#wybor0').click(function(){
+	przypiszBron = function(){
+		// ustawienia okna wyboru broni
 		if(gracz.rozwoj.posiadaneBronie[0])
-			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[0];
-	})
-	if(gracz.rozwoj.posiadaneBronie[1])
-		$('#wybor1 img').replaceWith(gracz.rozwoj.posiadaneBronie[1].grafika);
-	$('#wybor1').click(function(){
+			$('#wybor0 img').replaceWith(gracz.rozwoj.posiadaneBronie[0].grafika);
+		$('#wybor0').click(function(){
+			if(gracz.rozwoj.posiadaneBronie[0])
+				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[0];
+		})
 		if(gracz.rozwoj.posiadaneBronie[1])
-			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[1];
-	})
-	if(gracz.rozwoj.posiadaneBronie[2])
-		$('#wybor2 img').replaceWith(gracz.rozwoj.posiadaneBronie[2].grafika);
-	$('#wybor2').click(function(){
+			$('#wybor1 img').replaceWith(gracz.rozwoj.posiadaneBronie[1].grafika);
+		$('#wybor1').click(function(){
+			if(gracz.rozwoj.posiadaneBronie[1])
+				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[1];
+		})
 		if(gracz.rozwoj.posiadaneBronie[2])
-			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[2];
-	})
-	if(gracz.rozwoj.posiadaneBronie[3])
-		$('#wybor3 img').replaceWith(gracz.rozwoj.posiadaneBronie[3].grafika);
-	$('#wybor3').click(function(){
+			$('#wybor2 img').replaceWith(gracz.rozwoj.posiadaneBronie[2].grafika);
+		$('#wybor2').click(function(){
+			if(gracz.rozwoj.posiadaneBronie[2])
+				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[2];
+		})
 		if(gracz.rozwoj.posiadaneBronie[3])
-			gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
-	})	
-	// end okno wyboru
+			$('#wybor3 img').replaceWith(gracz.rozwoj.posiadaneBronie[3].grafika);
+		$('#wybor3').click(function(){
+			if(gracz.rozwoj.posiadaneBronie[3])
+				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
+		})	
+		// end okno wyboru
+	}
+
+	przypiszBron();
 
 	// menu
 
@@ -101,18 +105,39 @@ $(function(){
 		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
 			$('#planeta #proby').text((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
 		gracz.wydobywaj();
-		console.log("wcisnieto");
+		console.log(gracz.rozwoj.posiadaneSurowce);
 	});
 
 	// ustawienia okna upgradow
 	$('#upgrade').hide();
 	var ostatniEkran = null;
 	$('.upgrade').click(function(){
-
 		$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
 		$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
 		$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
 		$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[3]);
+
+		$('#aktualnySilnik').text(gracz.rozwoj.aktualnySilnik.nazwa);
+		$('#aktualnySilnik').append(gracz.rozwoj.aktualnySilnik.grafika);
+
+		// tak wiem ze bronie nie sa poprawna forma
+		$('#posiadaneBronie').text("");
+		$.each(gracz.rozwoj.posiadaneBronie, function(i, el){
+			$('#posiadaneBronie').html($('#posiadaneBronie').text() + el.nazwa);
+			$('#posiadaneBronie').append(el.grafika);
+		});
+
+		$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
+		$('#aktualnyPancerz').append(gracz.rozwoj.aktualnyPancerz.grafika);
+
+		$('#aktualnyMagazyn').text(gracz.rozwoj.aktualnyMagazyn.nazwa);
+		$('#aktualnyMagazyn').append(gracz.rozwoj.aktualnyMagazyn.grafika);
+
+		$('#posiadaneExtrudery').text("");
+		$.each(gracz.rozwoj.posiadaneExtrudery, function(i, el){
+			$('#posiadaneExtrudery').text($('#posiadaneExtrudery').text() + el.nazwa);
+			$('#posiadaneExtrudery').append(el.grafika);
+		});
 
 		if($('#upgrade').is(':visible'))
 		{
@@ -201,13 +226,6 @@ $(function(){
 		{
 			if(gracz.isDead === true)
 				gameState = 1;
-
-			if(gracz.planeta)
-			{
-
-				//gameState = 2;
-			}
-
 
 			if(gracz)
 			{

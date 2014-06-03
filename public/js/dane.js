@@ -6,46 +6,72 @@ var objektplaneta1 = new Objekt(5, "Ziemia", "/img/planety/planet3.png");
 
 var objektgwiazda1 = new Objekt(2, "Niebieska Gwiazda","/img/gwiazdy/gwiazda1.png" );
 
-var objektstatek1 = new Objekt(4, "Statek", "/img/statki/scouter.png");
+// satki
+var objektstatek1 = new Objekt(4, "Scouter", "/img/statki/scouter.png");
+var objektstatek2 = new Objekt(11, "Cruiser", "/img/statki/cruiser.png");
+var objektstatek3 = new Objekt(12, "Destroyer", "/img/statki/destroyer.png");
 
+var typstatku1 = new TypStatku(objektstatek1, 100, 3);
+var typstatku2 = new TypStatku(objektstatek2, 200, 0);
+var typstatku3 = new TypStatku(objektstatek2, 150, 1);
+
+//bron
 var objektbron1 = new Objekt(3, "Gauss Cannon", "/img/bronie/gauss.png");
 
 var objektpocisk1 = new Objekt(6, "Kinetic missile", "/img/pociski/gauss.png");
 
 var objektnull = new Objekt(0, "null", "/img/GUI/none.png");
 
-var typstatku1 = new TypStatku(objektstatek1, 100);
+// surowce
+var objekzelazo = new Objekt(7, "Zelazo", "/img/surowce/zelazo.jpg");
+var objekaluminium = new Objekt(8, "Aluminium", "/img/surowce/aluminium.jpg");
+var objekpluton = new Objekt(9, "Pluton", "/img/surowce/pluton.jpg");
+var objekgrafit = new Objekt(10, "Grafit", "/img/surowce/grafit.jpg");
+
+// wydobywarki
+var objektextruder1 = new Objekt(13, "Drill", "/img/wiertla/mechaniczne.png");
+var objektextruder2 = new Objekt(13, "Smelter", "/img/wiertla/wytapiarka.png");
+
+// itemy w grze
+var extrudery = [];
+extrudery.push(new Extruder(objektextruder1));
+extrudery.push(new Extruder(objektextruder2));
+var surowce = [];
+surowce.push(new Surowiec(objekzelazo, extrudery[0]));
+surowce.push(new Surowiec(objekaluminium, extrudery[0]));
+surowce.push(new Surowiec(objekpluton, extrudery[1]));
+surowce.push(new Surowiec(objekgrafit, extrudery[1]));
+
+extrudery[0].wymaganeSurowce = [surowce[0]];
+extrudery[1].wymaganeSurowce = [surowce[0], surowce[0]];
+
+var bronie = [];
+bronie.push(new Bron(objektbron1, 1, 20, 10, 60, objektpocisk1, [surowce[0], surowce[0], surowce[3]]));
+var pancerze = [];
+pancerze.push(new Pancerz(objektgwiazda1, 10), [surowce[1], surowce[1]]);
+var silniki = [];
+silniki.push(new Silnik(objektgwiazda1, 4, 1), [surowce[0]]); // default
+silniki.push(new Silnik(objektgwiazda1, 6, 1), [surowce[0], surowce[0]]); // spalinowy
+var magazyny = [];
+magazyny.push(new Magazyn(objektgwiazda1, 0, [surowce[0]])); // null
+magazyny.push(new Magazyn(objektgwiazda1, 10, [surowce[0], surowce[0]])); // maly
+magazyny.push(new Magazyn(objektgwiazda1, 15, [surowce[0], surowce[0], surowce[1]])); // sredni
+
+
 
 // gracz
 
-var bronie = [];
-// objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku
-bronie.push(new Bron(objektnull, 0, 0, 0, 0, objektnull)); // null
-bronie.push(new Bron(objektbron1, 1, 20, 10, 60, objektpocisk1));
-var pancerze = [];
-pancerze.push(new Pancerz(objektgwiazda1, 0)); // null
-pancerze.push(new Pancerz(objektgwiazda1, 10));
-var silniki = [];
-silniki.push(new Silnik(objektgwiazda1, 4, 1)); // default
-silniki.push(new Silnik(objektgwiazda1, 6, 1)); // spalinowy
-var magazyny = [];
-magazyny.push(new Magazyn(objektgwiazda1, 0)); // null
-magazyny.push(new Magazyn(objektgwiazda1, 10)); // maly
-var extrudery = [];
-extrudery.push(new Extruder(objektgwiazda1));
-var surowce = [];
-surowce.push(new Surowiec(objektgwiazda1, extrudery[0]));
-
 var rozwojGracza = new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce);
+
+rozwojGracza.posiadaneBronie.push(bronie[0]);
+rozwojGracza.aktualnyExtruder = rozwojGracza.zdobywalneExtrudery[0];
+rozwojGracza.aktualnyPancerz = rozwojGracza.zdobywalnePancerze[0];
+rozwojGracza.aktualnyMagazyn = rozwojGracza.zdobywalneMagazyny[1];
+rozwojGracza.aktualnySilnik = rozwojGracza.zdobywalneSilniki[1];
+rozwojGracza.posiadaneSurowce[0] = 2;
+
 var gracz = new Statek(typstatku1, new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
-
-gracz.rozwoj.posiadaneBronie.push(bronie[1]);
-
-gracz.rozwoj.aktualnyExtruder = gracz.rozwoj.zdobywalneExtrudery[0];
-gracz.rozwoj.aktualnyPancerz = gracz.rozwoj.zdobywalnePancerze[1];
-gracz.rozwoj.aktualnyMagazyn = gracz.rozwoj.zdobywalneMagazyny[1];
-gracz.rozwoj.aktualnySilnik = gracz.rozwoj.zdobywalneSilniki[1];
-
+gracz.kupUlepszenie(magazyny[2]);
 
 var planetatyp1 = new PlanetaTyp(objektplaneta1, surowce);
 

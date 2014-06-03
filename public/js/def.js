@@ -505,10 +505,78 @@ Rozwoj.prototype.dodajSurowiec = function(surowiec){
 			if(surowiec.nazwa === this.surowce[i].nazwa && this.posiadaneSurowce[i] < this.aktualnyMagazyn.pojemnosc && this.aktualnyExtruder.nazwa === surowiec.wymaganyExtruder.nazwa)
 			{
 				this.posiadaneSurowce[i]++;
+				return 1;
 			}
 		}
 	}
 }	
+
+Rozwoj.prototype.kup = function(ulepszenie){
+
+	var pass = false;
+
+	for(var i=0; i<ulepszenie.wymaganeSurowce.length; i++)
+	{
+		if(ulepszenie.wymaganeSurowce[i].nazwa === this.surowce[0].nazwa)
+		{
+			if(this.posiadaneSurowce[0] > 0)
+			{
+				console.log("5etap")
+				pass = true;
+			}
+			else
+				pass = false;
+		}
+		if(ulepszenie === this.surowce[1].nazwa)
+		{
+			if(this.posiadaneSurowce[1] > 0)
+				pass = true;
+			else
+				pass = false;
+		}
+		if(ulepszenie === this.surowce[2].nazwa)
+		{
+			if(this.posiadaneSurowce[2] > 0)
+				pass = true;
+			else
+				pass = false;
+		}
+		if(ulepszenie === this.surowce[3].nazwa)
+		{
+			if(this.posiadaneSurowce[3] > 0)
+				pass = true;
+			else
+				pass = false;
+		}
+	}
+
+	if(pass === true)
+	{
+		if(ulepszenie instanceof Bron)
+		{
+			this.aktualnaBron = ulepszenie;
+			this.posiadaneBronie.push(ulepszenie);
+		}
+		if(ulepszenie instanceof Magazyn)
+		{
+			this.aktualnyMagazyn = ulepszenie;
+		}
+		if(ulepszenie instanceof Extruder)
+		{
+			this.aktualnyExtruder = ulepszenie;
+			this.posiadaneExtrudery.push(ulepszenie);
+		}
+		if(ulepszenie instanceof Pancerz)
+		{
+			this.aktualnyPancerz = ulepszenie;
+			return 1;
+		}
+		if(ulepszenie instanceof Silnik)
+		{
+			this.aktualnySilnik = ulepszenie;
+		}
+	}
+}
 
 function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
@@ -592,12 +660,12 @@ Pocisk.prototype.odswiez = function(){
 		this.doSkasowania = true;
 };
 
-function TypStatku(objekt, hp) {
+function TypStatku(objekt, hp, predkosc) {
 	this.id = objekt.id;
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
 	this.hp = hp;
-
+	this.predkosc = predkosc;
 }
 
 // DODAC parsowanie i zapisywanie do jsona, zeby mozna bylo wysylac informacje
@@ -613,7 +681,7 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 	this.hp = 100;
 	this.hp += typ.hp;
 	if(rozwoj)
-		this.hp += rozwoj.aktualnyPancerz;
+		this.hp += rozwoj.aktualnyPancerz.wytrzymalosc;
 	this.isDead = false;
 
 	this.typ = typ;
@@ -638,6 +706,7 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 	//this.fizyka = typ.fizyka;
 
 	this.nazwa = nazwa;
+	this.maxPredkosc = this.rozwoj.typStatku.predkosc + this.rozwoj.aktualnySilnik.szybkosc;
 	this.predkosc = 0;
 
 	this.pociski = [];
@@ -645,6 +714,15 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 
 
 	this.timer = 0;
+}
+
+Statek.prototype.kupUlepszenie = function(ulepszenie){
+
+	// jesli akutalizujemy pancerz trzeba dodac hp
+	if(this.rozwoj.kup(ulepszenie) === 1)
+		this.hp += this.rozwoj.aktualnyPancerz.wytrzymalosc;
+
+	console.log(this.rozwoj)
 }
 
 Statek.prototype.obroc = function(x, y){
@@ -700,7 +778,7 @@ Statek.prototype.ruszajDoGwiazdy = function(dokad, x, y)
 Statek.prototype.ruszaj = function(e){
 	if(e === "przod")
 	{
-		if(Math.floor(this.predkosc) < this.rozwoj.aktualnySilnik.szybkosc)
+		if(Math.floor(this.predkosc) < this.maxPredkosc)
 			this.predkosc = this.rozwoj.aktualnySilnik.przyspieszenie;
 	}
 
@@ -710,7 +788,7 @@ Statek.prototype.ruszaj = function(e){
 	}
 	
 	if(e.keyCode === 119)
-		if(Math.floor(this.predkosc) < this.rozwoj.aktualnySilnik.szybkosc)
+		if(Math.floor(this.predkosc) < this.maxPredkosc)
 			this.predkosc += this.rozwoj.aktualnySilnik.przyspieszenie;
 
 	if(e.keyCode === 115)
@@ -747,12 +825,10 @@ Statek.prototype.wydobywaj = function(){
 
 			if(s === 4 && this.planeta.wydobyc <= this.planeta.wielkosc/10)
 			{
-				this.rozwoj.dodajSurowiec(this.planeta.surowce[i]);
+				if(this.rozwoj.dodajSurowiec(this.planeta.surowce[i]) === 1)
+					this.planeta.wydobyc++;
 			}
-
-			this.planeta.wydobyc++;
 		}
-	
 	}
 }
 
