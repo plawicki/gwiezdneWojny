@@ -255,6 +255,9 @@ $(function(){
 		else if(gameState === 0)
 		{
 			$('#hp').text(gracz.hp);
+
+			obcy.strzel();
+
 			if(gracz.isDead === true)
 				gameState = 1;
 

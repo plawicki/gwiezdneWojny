@@ -73,6 +73,8 @@ rozwojGracza.posiadaneSurowce[0] = 2;
 
 var gracz = new Statek(typyStatku[0], new Wektor2(), null, 0.0, "Gracz", rozwojGracza, null, false);
 
+var obcy = new Statek(typyStatku[2], new Wektor2(), null, 0, "Wrog", rozwojGracza, null, true);
+
 var typyPlanet = [];
 
 typyPlanet.push(new PlanetaTyp(objektplaneta1, surowce));
@@ -89,6 +91,8 @@ var mapa = new Mapa();
 mapa.uklady.push(new Uklad("Uklad Sloneczny", typyUkladow[0], 500, new Wektor2(0,0), [planeta1]));
 
 var ekran1 = new Ekran(objektekran1, mapa, gracz);
+
+ekran1.inniGracze.push(obcy);
 
 var wejscie = new Wejscie(ekran1);
 

@@ -269,8 +269,23 @@ Ekran.prototype.odswiez = function(ctx){
 		{
 			for(var j=0; j < this.inniGracze[i].pociski.length; j++)
 			{
-				if(this.inniGracze.pociski[j].sprawdz(this.gracz.fizyka))
-					this.gracz.hp -= pocisk.moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+				if(this.gracz.fizyka.sprawdz(this.inniGracze[i].pociski[j].fizyka))
+				{
+					this.gracz.hp -= this.inniGracze[i].pociski[j].moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+					this.inniGracze[i].pociski[j].doSkasowania = true;
+				}
+			}
+		}
+
+		if(this.inniGracze[i] && this.gracz.pociski)
+		{
+			for(var j=0; j < this.gracz.pociski.length; j++)
+			{
+				if(this.inniGracze[i].fizyka.sprawdz(this.gracz.pociski[j].fizyka))
+				{
+					this.inniGracze[i].hp -= this.gracz.pociski[j].moc; // jesli jakis pocisk uderzy w gracza odejmuje mu zycie o swoja energie
+					this.gracz.pociski[j].doSkasowania = true;
+				}
 			}
 		}
 	}
