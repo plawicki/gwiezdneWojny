@@ -294,25 +294,8 @@ Ekran.prototype.odswiez = function(ctx){
 
 	if(this.gracz.dotarl)
 	{	
-
 		this.nazwa = "Uklad";
 		this.rysujUklad(ctx);
-
-
-		// wczytanie talbicy inni gracze DODAC
-
-
-		// liczenie odleglosci gracza od srodka ukladu, jesli pozycja dalej niz wielkosc ukladu to powrot do mapy 
-		if(Math.sqrt(this.gracz.pozycja.x*this.gracz.pozycja.x +this.gracz.pozycja.y*this.gracz.pozycja.y) >= this.gracz.kierunek.wielkosc)
-		{
-			this.nazwa = "Uniwersum";
-			this.gracz.dotarl = false;
-			this.gracz.ruszaj("stop");
-			this.gracz.pozycja.x = this.gracz.kierunek.pozycja.x + 35;
-			this.gracz.pozycja.y = this.gracz.kierunek.pozycja.y;
-
-			// kasowanie tablicy inni gracze DODAC
-		}
 	}
 	else
 		this.rysuj(ctx);
@@ -825,7 +808,7 @@ Statek.prototype.ruszaj = function(e){
 	{
 		this.predkosc = 0;
 	}
-	
+
 	if(e.keyCode === 119)
 		if(Math.floor(this.predkosc) < this.maxPredkosc)
 			this.predkosc += this.rozwoj.aktualnySilnik.przyspieszenie;
@@ -879,6 +862,18 @@ Statek.prototype.wejdzDoUkladu = function(){
 			this.dotarl = true;
 			this.pozycja = new Wektor2();
 		}
+	}
+}
+
+Statek.prototype.wyjdzZUkladu = function(){
+	if(Math.sqrt(this.pozycja.x*this.pozycja.x +this.pozycja.y*this.pozycja.y) >= this.kierunek.wielkosc)
+	{
+		console.log("mozna wyjsc")
+		this.dotarl = false;
+		this.ruszaj("stop");
+
+		this.pozycja.x = this.kierunek.pozycja.x + 35;
+		this.pozycja.y = this.kierunek.pozycja.y;
 	}
 }
 

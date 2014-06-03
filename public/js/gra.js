@@ -10,6 +10,18 @@ $(function(){
 		console.log(gracz);
 	})
 
+	socket.on("innyOdlatuje", function(gracz){
+
+		for(var i=0; i<ekran1.inniGracze.length; i++)
+		{
+			if(ekran1.inniGracze[i].nazwa == gracz)
+			{
+				ekran1.inniGracze[i].splice(i, 1);
+				continue;
+			}
+		}
+	})
+
 	socket.on("uklady", function(uklady){
 		ekran1.mapa.uklady = [];
 		for(var i=0; i<uklady.length; i++)
@@ -83,6 +95,13 @@ $(function(){
 			$('#upgrade').hide();
 			przypiszBron();
 			ekran1.odlec();
+		}
+		else if(gracz.kierunek)
+		{
+			gracz.wyjdzZUkladu();
+			ekran1.nazwa = "Uniwersum";
+			ekran1.inniGracze = [];
+			socket.emit("changeStar", { "nazwaUkladu": "global", "gracz": gracz.nazwa });
 		}
 	})
 

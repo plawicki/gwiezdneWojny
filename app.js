@@ -212,30 +212,42 @@ sio.sockets.on('connection', function (socket) {
         socket.join(data.nazwaUkladu);
         socket.set('uklad',data.nazwaUkladu);
 
+        socket.get('uklad', function (err, uklad) {
+            
+            // jesli wylecielismy poza jakis uklad, nie informuj o tym nikogo
+            if(data.nazwaUkladu != "global")
+            {   
+                var gracz = gracze[data.gracz];
+                gracz.przeciwnik = true;
+
+                sio.sockets.in(uklad).emit('innyGracz', gracz);
+                console.log("Przeslano info o " + gracze[data.gracz].nazwa + " do ukladu " + data.nazwaUkladu);
+            }
+            else
+            {
+                sio.sockets.in(uklad).emit('innyOdlatuje', data.gracz);
+            }
+
+         });
+
         for(var i=0; i<gracze.length; i++)
         {
-            if(gracze[i].kierunek == data.nazwaUkladu)
+            if(gracze[i].kierunek === data.nazwaUkladu)
                 socket.emit('innyGracz', gracze[i]);
         }
 
-        // jesli wylecielismy poza jakis uklad, nie informuj o tym nikogo
-        if(data.nazwaUkladu != "global")
-        {   
-            var gracz = gracze[data.gracz];
-            gracz.przeciwnik = true;
-            socket.broadcast.emit('innyGracz', gracz);
-            console.log("Przeslano info o " + gracze[data.gracz].nazwa + " do ukladu " + data.nazwaUkladu)
-        }
 
     });
 
     socket.on("ruch", function(data){
 
-        gracze[data.gracz].pozycja = data.pozycja;
-        gracze[data.gracz].obrot = data.obrot;
-        gracze[data.gracz].predkosc = data.predkosc;
+        socket.get('uklad', function (err, uklad) {
+            gracze[data.gracz].pozycja = data.pozycja;
+            gracze[data.gracz].obrot = data.obrot;
+            gracze[data.gracz].predkosc = data.predkosc;
 
-        socket.broadcast.emit("innyRuch", data);
+            sio.sockets.in(uklad).emit("innyRuch", data);
+        })
     })
     /*
         LOGIKA
