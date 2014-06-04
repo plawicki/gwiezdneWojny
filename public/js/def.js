@@ -703,7 +703,6 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 
 	if(this.rozwoj && rozwoj.aktualnyPancerz)
 		this.hp += rozwoj.aktualnyPancerz.wytrzymalosc;
-	this.isDead = false;
 
 	this.typ = typ;
 	this.grafika = typ.grafika;
@@ -893,7 +892,7 @@ Statek.prototype.odswiez = function(){
 	this.fizyka.pozycja.x = this.pozycja.x;
 	this.fizyka.pozycja.y = this.pozycja.y;
 
-	if(this.isDead) // logika co jesli nie zyje
+	if(this.hp <= 0) // logika co jesli nie zyje
 		return 0;
 
 	// pomocnicza do liczenia szybkostrzelnosci statku

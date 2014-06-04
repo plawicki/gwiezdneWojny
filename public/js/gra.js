@@ -343,14 +343,16 @@ $(function(){
 
 		if(gameState === 1)
 		{
-
+			$(canvas).replaceWith("<h1>You are dead</h1>");
+			$('#menu').detach();
+			socket.emit("smierc", gracz.nazwa);
 		} 
 		else if(gameState === 0)
 		{
 			$('#hp').text(gracz.hp);
 			$('#predkosc').text(gracz.predkosc);
 
-			if(gracz.isDead === true)
+			if(gracz.hp <= 0)
 				gameState = 1;
 
 			if(gracz)

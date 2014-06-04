@@ -5,10 +5,10 @@
 var objektekran1 = new Objekt(0, "Uniwersum", "/img/tla/skybox1.jpg");
 
 // planety
-var objektplaneta1 = new Objekt(1, "Earth", "/img/planety/planet3.png");
-var objektplaneta2 = new Objekt(2, "Magma planet", "/img/planety/planet14.png");
-var objektplaneta3 = new Objekt(3, "Gas Giant", "/img/planety/planet12.png");
-var objektplaneta4 = new Objekt(4, "Frozen planet", "/img/planety/planet17.png");
+var objektplaneta1 = new Objekt(1, "Earth", "/img/planety/planet3.png"); // ziemia
+var objektplaneta2 = new Objekt(2, "Magma planet", "/img/planety/planet14.png"); // magma
+var objektplaneta3 = new Objekt(3, "Gas Giant", "/img/planety/planet12.png"); // gas
+var objektplaneta4 = new Objekt(4, "Frozen planet", "/img/planety/planet17.png"); // frozen
 
 var objektplaneta5 = new Objekt(5, "Blue Star", "/img/planety/blue_star.png");
 var objektplaneta6 = new Objekt(6, "Red Star", "/img/planety/red_star.png");
@@ -216,7 +216,7 @@ stworzGracza = function(json){
 	// typ nazwa, pozycja wektor, kierunek numer, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
 	// typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik
 	var typO = null;
-  	var i=0, j=0;
+  var i=0, j=0;
   
 	for(i=0; i<typyStatku.length; i++)
 		if(typyStatku[i].nazwa === json.typ)
