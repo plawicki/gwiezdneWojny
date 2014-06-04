@@ -186,7 +186,7 @@ stworzGracza = function(json){
 	// typ nazwa, pozycja wektor, kierunek numer, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
 	// typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik
 	var typO = null;
-  var i=0, j=0;
+  	var i=0, j=0;
   
 	for(i=0; i<typyStatku.length; i++)
 		if(typyStatku[i].nazwa === json.typ)
@@ -195,7 +195,7 @@ stworzGracza = function(json){
 	var kierunekO = null;
 	for(i=0; i<ekran1.mapa.uklady.length; i++)
 		if(ekran1.mapa.uklady[i].nazwa === json.kierunek)
-			kierunekO = ekran1.mapa.uklady[i].nazwa;
+			kierunekO = ekran1.mapa.uklady[i];
 
 	// kierunek string
 	// rozowj bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku
@@ -235,7 +235,7 @@ stworzGracza = function(json){
 	var gracz = new Statek(
 		typO, 
 		new Wektor2(json.pozycja.x, json.pozycja.y), 
-		json.kierunek, 
+		kierunekO, 
 		json.obrot, 
 		json.nazwa, 
 		new Rozwoj(bronie, pancerze, silniki, magazyny, extrudery, surowce, json.posiadaneSurowce, pBronieO, [aPancerzO], [aSilnikO], [aMagazynO], pExtruderyeO, typO), 

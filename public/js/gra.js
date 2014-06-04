@@ -31,6 +31,7 @@ $(function(){
 	socket.on("innyGracz", function(gracz){
 		if(gracz.nazwa != ekran1.gracz.nazwa)
 			ekran1.inniGracze.push(stworzGracza(gracz));
+		console.log(ekran1.inniGracze);
 	});
 
 	socket.on("ktosStrzela", function(data){
@@ -76,12 +77,6 @@ $(function(){
 	gracz.srodek = ctx.srodek;
 
 	// end ustawienia grafiki
-
-	// ustawienia okna logowania
-
-	$('#login').hide();
-
-	// end okno logowania
 
 	// ustawienia okna planety
 
@@ -174,7 +169,7 @@ $(function(){
 
 	$('.wydobywanie').click(function(){
 		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
-			$('#planeta #proby').text(Math.floor((gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc));
+			$('#planeta #proby').text(Math.floor(gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
 		gracz.wydobywaj();
 		console.log(gracz.rozwoj.posiadaneSurowce);
 	});
@@ -331,7 +326,7 @@ $(function(){
 		else if(gameState === 0)
 		{
 			$('#hp').text(gracz.hp);
-			$('#hp').text(gracz.predkosc);
+			$('#predkosc').text(gracz.predkosc);
 
 			if(gracz.isDead === true)
 				gameState = 1;
