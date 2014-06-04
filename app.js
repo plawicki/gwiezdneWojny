@@ -257,6 +257,14 @@ sio.sockets.on('connection', function (socket) {
             sio.sockets.in(uklad).emit("innyRuch", data);
         });
     });
+
+    socket.on("strzelanie", function(data){
+
+        socket.get('uklad', function (err, uklad) {
+            
+            sio.sockets.in(uklad).emit("innyStrzal", data);
+        });
+    });
     /*
         LOGIKA
         

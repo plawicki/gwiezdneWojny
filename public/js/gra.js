@@ -2,8 +2,6 @@ $(function(){
 
 	// socketio
 
-	var socket = io.connect('http://' + location.host);
-
 	socket.emit("addPlayer", zapiszGracza(gracz));
 
 	socket.on("nowy", function(gracz){
@@ -34,12 +32,20 @@ $(function(){
 		console.log(ekran1.inniGracze);
 	});
 
-	socket.on("ktosStrzela", function(data){
+	socket.on("innyStrzal", function(data){
 		for(var i=0; i<ekran1.inniGracze.length; i++)
 		{
-			if(ekran1.inniGracze[i] === data.gracz)
+			if(ekran1.inniGracze[i].nazwa === data.gracz)
 			{
+				for(var j=0; j<bronie.length; j++)
+					if(bronie[j].nazwa === data.bron)
+					{
+						console.log("Bron znaleziona");
+						ekran1.inniGracze[i].rozwoj.aktualnaBron = bronie[j];
+					}
+
 				ekran1.inniGracze[i].strzel();
+
 			}
 		}
 	});
@@ -286,6 +292,8 @@ $(function(){
 		wejscie.mysz = e;
 		wejscie.dzialajMysz();
 		poruszam();
+
+
 	};
 
 	var keyboardEvent = function(e){

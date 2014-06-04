@@ -1,3 +1,5 @@
+var socket = io.connect('http://' + location.host);
+
 function PlanetaTyp (objekt, surowce) {
 	this.nazwa = objekt.nazwa;
 	this.grafika = objekt.grafika;
@@ -412,7 +414,6 @@ Ekran.prototype.dzialaj = function(e){
 			{
 				console.log("zrobic cos ze statkiem w ukladzie");
 
-
 				this.gracz.strzel();
 			}
 				
@@ -821,7 +822,7 @@ Statek.prototype.ruszaj = function(e){
 	{
 		this.predkosc = 0;
 	}
-	
+
 	if(e.keyCode === 119)
 		if(Math.floor(this.predkosc) < this.maxPredkosc)
 			this.predkosc += this.rozwoj.aktualnySilnik.przyspieszenie;
@@ -842,6 +843,7 @@ Statek.prototype.strzel = function(){
 		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, new Wektor2(this.pozycja.x, this.pozycja.y + this.grafika.height/2), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot);
 		this.pociski.push(pocisk);
 		this.timer = 0;
+		socket.emit("strzelanie", {"bron": this.rozwoj.aktualnaBron.nazwa, "gracz": this.nazwa});
 	}
 };
 
