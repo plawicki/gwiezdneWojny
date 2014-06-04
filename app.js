@@ -1,22 +1,25 @@
-var http = require('http');
-var routes = require('./routes');
 var express = require('express');
-var app = express();
+var routes = require('./routes');
+var http = require('http');
+var path = require('path');
+var less = require('less-middleware');
+var redis = require('redis');
+var rClient = redis.createClient();
 var connect = require('connect');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var socketIo = require('socket.io');
+var socketio = require("socket.io");
 var passportSocketIo = require('passport.socketio');
+var LocalStrategy = require('passport-local').Strategy;
 var sessionStore = new connect.session.MemoryStore();
 
-var sessionSecret = 'wielkiSekret44';
+var sessionSecret = '123hbh321h3jHhjj123459900dsad09dad78s';
 var sessionKey = 'connect.sid';
-var server;
-var sio;
 
-// roomchaty i wpisy
-//var history = {"roomGlobal": []};
-//var rooms = [{id: "roomGlobal", name: "Global"}];
+///socket io i server create
+var app = express();
+http = http.createServer(app);
+
+var sio = socketio.listen(http, { log: false });
 
 // uklady i planety
 var gracze = {};
@@ -116,62 +119,103 @@ passport.deserializeUser(function (obj, done) {
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        if ((username === 'admin') && (password === 'tajne')) {
+        rClient.get(username, function (err, reply) {
+            if (reply && password === reply.toString()) {
             console.log("Udane logowanie...");
             return done(null, {
                 username: username,
-                password: password,
+                password: password
             });
-        } else {
-            return done(null, false);
-        }
+            } else {
+                return done(null, false);
+            }
+        });
     }
 ));
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+ //express + passport
+    app.use(express.cookieParser());
+    app.use(express.urlencoded());
+    app.use(express.session({
+        store: sessionStore,
+        key: sessionKey,
+        secret: sessionSecret
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-app.use(express.cookieParser());
-app.use(express.urlencoded());
-app.use(express.session({
-    store: sessionStore,
-    key: sessionKey,
-    secret: sessionSecret
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static('public'));
-app.use(express.static("bower_components"));
+//EXPRESS CONF
+app.configure(function () {
+    app.set('port', process.env.PORT || 80);
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'ejs');
+    app.use(express.json());
+    app.use(express.urlencoded());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser('bardzo tajne aqq'));
+    app.use(express.session());
+    app.use(app.router);
 
+        // „middleware” obsługujące LESS-a
+    // samo kompiluje pliki less-owe do CSS
+    // a do tego pliki wynikowe kompresuje
+    // Opis parametrów:
+    //
+    // https://github.com/emberfeather/less.js-middleware
+    app.use(less({
+        src: path.join(__dirname, 'less'),
+        dest: path.join(__dirname, 'public/css'),
+        prefix: '/css',
+        compress: true
+    }));
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'bower_components/jquery/dist')));
+   
+
+});
+
+//Routes
 app.get('/', routes.login);
-
-app.post('/login',
+app.get('/register', routes.register);
+app.post('/',
     passport.authenticate('local', {
-        failureRedirect: '/login',
+        failureRedirect: '/',
     }),
     routes.authorized
 );
 
+app.post('/register',function(req, res){
+    if(req.body.password == req.body.password1)
+     rClient.set(req.body.username, req.body.password, function(){
+        console.log();
+        res.redirect('/');
+     });
+    else{
+        res.redirect('/register');
+    }
+});
+
 app.get('/logout', function (req, res) {
     console.log('Wylogowanie...');
     req.logout();
-    res.redirect('/login');
+    res.redirect('/');
 });
 
-server = http.createServer(app);
-sio = socketIo.listen(server);
+//server start
+http.listen(app.get('port'), function () {
+    console.log("Serwer nasłuchuje na porcie " + app.get('port'));
+});
 
+//SOCKET PASSPORT 
 var onAuthorizeSuccess = function (data, accept) {
-    console.log('Udane połączenie z socket.io');
-    accept(null, true);
+    accept( null, true );
 };
 
 var onAuthorizeFail = function (data, message, error, accept) {
-    if (error) {
-        throw new Error(message);
+    if ( error ) {
+        throw new Error( message );
     }
-    console.log('Nieudane połączenie z socket.io:', message);
-    accept(null, false);
+    accept( null, false );
 };
 
 sio.set('authorization', passportSocketIo.authorize({
@@ -183,8 +227,6 @@ sio.set('authorization', passportSocketIo.authorize({
     success: onAuthorizeSuccess,
     fail: onAuthorizeFail
 }));
-
-sio.set('log level', 2); // 3 == DEBUG, 2 == INFO, 1 == WARN, 0 == ERROR
 
 sio.sockets.on('connection', function (socket) {
 
@@ -283,8 +325,6 @@ sio.sockets.on('connection', function (socket) {
 
     socket.on("smierc", function(gracz){
 
-        console.log(gracz)
-
         socket.get('uklad', function (err, uklad) {
 
             sio.sockets.in(uklad).emit("innySmierc", gracz);
@@ -323,8 +363,4 @@ sio.sockets.on('connection', function (socket) {
     var current_date = year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
 
     console.log(address.address + " logged " + current_date);
-});
-
-server.listen(80, function () {
-    console.log('Serwer pod adresem http://localhost:80/');
 });

@@ -181,10 +181,23 @@ $(function(){
 		// end okno wyboru
 	};
 
+	przypiszExtruder = function(){
+		if(gracz.rozwoj.posiadaneExtrudery[0])
+			$('#wybor10').append(gracz.rozwoj.posiadaneExtrudery[0].grafika).click(function(){
+				gracz.aktualnyExtruder = gracz.rozwoj.posiadaneExtrudery[0];
+		});
+
+		if(gracz.rozwoj.posiadaneExtrudery[1])
+			$('#wybor11').append(gracz.rozwoj.posiadaneExtrudery[1].grafika).click(function(){
+				gracz.aktualnyExtruder = gracz.rozwoj.posiadaneExtrudery[1];
+		});
+	};
+
+	przypiszExtruder();
+
 	przypiszBron();
 
 	// menu
-
 	$('.wydobywanie').click(function(){
 		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
 			$('#planeta #proby').text(Math.floor(gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
@@ -258,6 +271,7 @@ $(function(){
 			$('#upgrade').hide();
 
 			przypiszBron();
+			przypiszExtruder();
 
 			return 0;
 		}
