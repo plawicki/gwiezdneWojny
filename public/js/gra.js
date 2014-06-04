@@ -8,6 +8,18 @@ $(function(){
 		console.log(gracz);
 	});
 
+	socket.on("innySmierc", function(gracz){
+
+		for(var i=0; i<ekran1.inniGracze.length; i++)
+		{
+			if(ekran1.inniGracze[i].nazwa == gracz)
+			{
+				ekran1.inniGracze.splice(i, 1);
+				continue;
+			}
+		}
+	});
+
 	socket.on("innyOdlatuje", function(gracz){
 
 		for(var i=0; i<ekran1.inniGracze.length; i++)
@@ -226,8 +238,11 @@ $(function(){
 			$('#posiadaneBronie').append(el.grafika);
 		});
 
-		$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
-		$('#aktualnyPancerz').append(gracz.rozwoj.aktualnyPancerz.grafika);
+		if(gracz.rozwoj.aktualnyPancerz)
+		{
+			$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
+			$('#aktualnyPancerz').append(gracz.rozwoj.aktualnyPancerz.grafika);
+		}
 
 		$('#aktualnyMagazyn').text(gracz.rozwoj.aktualnyMagazyn.nazwa);
 		$('#aktualnyMagazyn').append(gracz.rozwoj.aktualnyMagazyn.grafika);
@@ -276,7 +291,8 @@ $(function(){
 	$.each(gracz.rozwoj.posiadaneBronie, function(i, el){
 		$('#posiadaneBronie').text($('#posiadaneBronie').text() + el.nazwa);
 	});
-	$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
+	if(gracz.rozwoj.aktualnyPancerz)
+		$('#aktualnyPancerz').text(gracz.rozwoj.aktualnyPancerz.nazwa);
 	$('#aktualnyMagazyn').text(gracz.rozwoj.aktualnyMagazyn.nazwa);
 	$.each(gracz.rozwoj.posiadaneExtrudery, function(i, el){
 		$('#posiadaneExtrudery').text($('#posiadaneExtrudery').text() + el.nazwa);

@@ -713,7 +713,7 @@ function Statek (typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwni
 	this.hp = 100;
 	this.hp += typ.hp;
 
-	if(rozwoj)
+	if(this.rozwoj && rozwoj.aktualnyPancerz)
 		this.hp += rozwoj.aktualnyPancerz.wytrzymalosc;
 	this.isDead = false;
 

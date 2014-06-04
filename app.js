@@ -188,6 +188,21 @@ sio.set('log level', 2); // 3 == DEBUG, 2 == INFO, 1 == WARN, 0 == ERROR
 
 sio.sockets.on('connection', function (socket) {
 
+    /*
+        LOGIKA
+        
+        ==== uklady gwiezdne dzialaja jak kanaly w czacie
+        ==== mapa jest generowana na starcie sererwera
+        ==== mapa zmienia sie za kazdym razem gdy ktos wchodzi do gry (dodaje sie uklad)
+        
+        Mozliwosci:
+        1. gracz wchodzi do gry (generuje sobie playera w kliencie) i przesyla go do serwera
+        2. gracz otrzymuje mape
+        3. gracz wchodzi do ukladu, przesylane sa informacje na temat graczy do niego, on jest wysylany do innych graczy (wysylanie wiadmosci w czacie)
+        4. gracz umiera to wywala go do logowania i usuwa jego statek
+        5. gracz wylogowywuje sie
+    */
+
     // gdy polaczony zwieksz ilosc graczy i generuj nowy uklad
     socket.on("addPlayer", function(gracz){
 
@@ -261,30 +276,23 @@ sio.sockets.on('connection', function (socket) {
     socket.on("strzelanie", function(data){
 
         socket.get('uklad', function (err, uklad) {
-            
+
             sio.sockets.in(uklad).emit("innyStrzal", data);
         });
     });
-    /*
-        LOGIKA
-        
-        ==== uklady gwiezdne dzialaja jak kanaly w czacie
-        ==== mapa jest generowana na starcie sererwera
-        ==== mapa zmienia sie za kazdym razem gdy ktos wchodzi do gry (dodaje sie uklad)
-        
-        Mozliwosci:
-        1. gracz wchodzi do gry (generuje sobie playera w kliencie) i przesyla go do serwera
-        2. gracz otrzymuje mape
-        3. gracz wchodzi do ukladu, przesylane sa informacje na temat graczy do niego, on jest wysylany do innych graczy (wysylanie wiadmosci w czacie)
-        4. gracz umiera to wywala go do logowania i usuwa jego statek
-        5. gracz wylogowywuje sie
-    */
 
-    //1.
+    socket.on("smierc", function(gracz){
 
-    // generuj mape
+        socket.get('uklad', function (err, uklad) {
 
-    // socket.emit('mapa', mapa)
+            sio.sockets.in(uklad).emit("innySmierc", gracz);
+        });
+
+        delete gracze[gracz];
+
+        socket.close();
+    });
+
 
     var address = socket.handshake.address;
 
