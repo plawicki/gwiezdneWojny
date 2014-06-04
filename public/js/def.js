@@ -821,7 +821,7 @@ Statek.prototype.ruszaj = function(e){
 	{
 		this.predkosc = 0;
 	}
-
+	
 	if(e.keyCode === 119)
 		if(Math.floor(this.predkosc) < this.maxPredkosc)
 			this.predkosc += this.rozwoj.aktualnySilnik.przyspieszenie;

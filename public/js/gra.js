@@ -16,7 +16,7 @@ $(function(){
 		{
 			if(ekran1.inniGracze[i].nazwa == gracz)
 			{
-				ekran1.inniGracze[i].splice(i, 1);
+				ekran1.inniGracze.splice(i, 1);
 				continue;
 			}
 		}

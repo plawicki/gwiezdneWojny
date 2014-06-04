@@ -206,6 +206,10 @@ sio.sockets.on('connection', function (socket) {
 
     socket.on("changeStar", function(data){
         socket.get('uklad', function (err, uklad) {
+            // powiedz kazdemu kogo miales w ukladzie, ze juz cie tam nie ma
+
+            sio.sockets.in(uklad).emit('innyOdlatuje', data.gracz);
+
             socket.leave(uklad);
         });
 
@@ -214,7 +218,7 @@ sio.sockets.on('connection', function (socket) {
         gracze[data.gracz].kierunek = data.nazwaUkladu;
 
         socket.get('uklad', function (err, uklad) {
-            
+
             // jesli wylecielismy poza jakis uklad, nie informuj o tym nikogo
             if(data.nazwaUkladu != "global")
             {   
@@ -229,8 +233,6 @@ sio.sockets.on('connection', function (socket) {
 
                     if(gracze[key].kierunek === data.nazwaUkladu)
                         socket.emit('innyGracz', gracze[key]);
-
-                    console.log(gracze[key]);
                 });
 
 
