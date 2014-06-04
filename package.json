@@ -20,7 +20,6 @@
     "express": "3.x",
     "less-middleware": "0.1.x",
     "ejs": "*",
-    "socket.io": "0.9.x",
     "connect": "^2.14.5",
     "socket.io": "^0.9.16",
     "passport": "^0.2.0",

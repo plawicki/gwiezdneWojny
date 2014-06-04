@@ -119,8 +119,8 @@ passport.deserializeUser(function (obj, done) {
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        rClient.get(username, function (err, reply) {
-            if (reply && password === reply.toString()) {
+        rClient.hgetall(username, function (err, data) {
+            if (data.pass && password === data.pass.toString()) {
             console.log("Udane logowanie...");
             return done(null, {
                 username: username,
@@ -185,9 +185,8 @@ app.post('/',
 );
 
 app.post('/register',function(req, res){
-    if(req.body.password == req.body.password1)
-     rClient.set(req.body.username, req.body.password, function(){
-        console.log();
+    if(req.body.password == req.body.password1 && req.body.ship >= 0 && req.body.ship <= 2)
+     rClient.hmset(req.body.username, "pass", req.body.password,"type", req.body.ship, function(){
         res.redirect('/');
      });
     else{
