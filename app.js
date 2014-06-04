@@ -223,12 +223,14 @@ sio.sockets.on('connection', function (socket) {
 
                 sio.sockets.in(uklad).emit('innyGracz', gracz);
 
+                /*
                 // foreach
                 Object.keys(gracze).forEach(function(key) {
 
                     if(gracze[key].kierunek === data.nazwaUkladu)
                         socket.emit('innyGracz', gracze[key]);
                 });
+                */
 
                 console.log("Przeslano info o " + gracze[data.gracz].nazwa + " do ukladu " + data.nazwaUkladu);
             }

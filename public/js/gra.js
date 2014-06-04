@@ -109,7 +109,7 @@ $(function(){
 	$('#menu .wlec').click(function(){
 
 		ekran1.laduj();
-		if(gracz.planeta)
+		if(ekran1.nazwa !== "Uniwersum" && gracz.planeta)
 		{
 			$('#upgrade').hide();
 			$('#planeta #wielkosc').text("");
@@ -331,6 +331,7 @@ $(function(){
 		else if(gameState === 0)
 		{
 			$('#hp').text(gracz.hp);
+			$('#hp').text(gracz.predkosc);
 
 			if(gracz.isDead === true)
 				gameState = 1;

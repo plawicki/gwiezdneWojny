@@ -297,6 +297,12 @@ Ekran.prototype.odswiez = function(ctx){
 	if(this.gracz.dotarl)
 	{	
 		this.nazwa = "Uklad";
+
+		if(Math.sqrt(this.gracz.pozycja.x*this.gracz.pozycja.x +this.gracz.pozycja.y*this.gracz.pozycja.y) >= this.gracz.kierunek.wielkosc)
+		{
+			this.gracz.ruszaj("stop");
+		}
+
 		this.rysujUklad(ctx);
 	}
 	else
@@ -407,7 +413,6 @@ Ekran.prototype.dzialaj = function(e){
 				console.log("zrobic cos ze statkiem w ukladzie");
 
 
-
 				this.gracz.strzel();
 			}
 				
@@ -436,7 +441,7 @@ Ekran.prototype.laduj = function(){
 
 	for(var i=0; i<this.gracz.kierunek.planety.length; i++)
 	{
-		if(this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
+		if(this.gracz.pozycja.x !== 0 && this.gracz.pozycja.y !== 0 && this.gracz.kierunek.planety[i].fizyka.sprawdz(this.gracz.fizyka) === true) // ciekawostka gdyby nie porownanie ===true, funkcja sprawdzala czy != null XD
 		{
 			this.gracz.planeta = this.gracz.kierunek.planety[i];
 			this.gracz.ruszaj("stop");
@@ -905,7 +910,7 @@ Statek.prototype.odswiez = function(){
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
 
-	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
+	if(this.przeciwnik !== false && this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
 	{
 		if(this.dotarl === false)
 		{
