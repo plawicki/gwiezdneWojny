@@ -8,7 +8,7 @@ var objektekran1 = new Objekt(0, "Uniwersum", "/img/tla/skybox1.jpg");
 var objektplaneta1 = new Objekt(1, "Earth", "/img/planety/planet3.png");
 var objektplaneta2 = new Objekt(2, "Magma planet", "/img/planety/planet14.png");
 var objektplaneta3 = new Objekt(3, "Gas Giant", "/img/planety/planet12.png");
-var objektplaneta4 = new Objekt(4, "Frozen planet", "/img/planety/planet12.png");
+var objektplaneta4 = new Objekt(4, "Frozen planet", "/img/planety/planet17.png");
 
 var objektplaneta5 = new Objekt(5, "Blue Star", "/img/planety/blue_star.png");
 var objektplaneta6 = new Objekt(6, "Red Star", "/img/planety/red_star.png");
@@ -85,11 +85,10 @@ extrudery[0].wymaganeSurowce = [surowce[0]];
 extrudery[1].wymaganeSurowce = [surowce[0], surowce[1]];
 
 var bronie = [];
-// objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku, wymaganeSurowce
 bronie.push(new Bron(objektbron1, 50, 30, 30, 120, objektpocisk1, [surowce[0], surowce[0], surowce[2]]));
 bronie.push(new Bron(objektbron2, 20, 10, 5, 150, objektpocisk2, [surowce[1], surowce[1], surowce[3]]));
 bronie.push(new Bron(objektbron3, 10, 5, 5, 60, objektpocisk3, [surowce[1], surowce[0]]));
-bronie.push(new Bron(objektbron3, 40, 20, 15, 40, objektpocisk4, [surowce[0], surowce[1], surowce[3], surowce[2]]));
+bronie.push(new Bron(objektbron4, 40, 20, 15, 40, objektpocisk4, [surowce[0], surowce[1], surowce[3], surowce[2]]));
 
 var pancerze = [];
 pancerze.push(new Pancerz(objektpancerz1, 50), [surowce[1], surowce[1], surowce[1], surowce[3]]);

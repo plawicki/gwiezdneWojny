@@ -102,6 +102,8 @@ function generujPlanete(rc){
     var nazwaPlanety = makeid();
     var wielkoscPlanety = Math.floor(Math.random() * (60 - 30 + 1)) + 30;
 
+    console.log("Wygenerowalem planete " + typPlanety);
+
     return Planeta(nazwaPlanety, typPlanety, wielkoscPlanety, x, y);
 }
 

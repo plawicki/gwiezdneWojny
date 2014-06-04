@@ -189,34 +189,32 @@ $(function(){
 		if(gracz.planeta.wydobyc <= (gracz.planeta.wielkosc/10))
 			$('#planeta #proby').text(Math.floor(gracz.planeta.wielkosc/10) - gracz.planeta.wydobyc);
 		gracz.wydobywaj();
-		console.log(gracz.rozwoj.posiadaneSurowce);
 	});
 
 	// ustawienia okna upgradow
-
 	// kupowanie silnikow
-	$('#spalinowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[1]); });
-	$('#impulsowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[2]); });
-	$('#nadprzestrzenny').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[3]); });
+	$('#spalinowy img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneSilniki[1]); });
+	$('#impulsowy img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneSilniki[2]); });
+	$('#nadprzestrzenny img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneSilniki[3]); });
 
 	// kupowanie broni
-	$('#minigun').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[0]); });
-	$('#laser').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); });
-	$('#gauss').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[2]); });
-	$('#rocket').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[3]); });
+	$('#minigun img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneBronie[0]); });
+	$('#laser img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneBronie[1]); });
+	$('#gauss img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneBronie[2]); });
+	$('#rocket img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneBronie[3]); });
 
 	// kupowanie pancerzy
-	$('#lekki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalnePancerze[0]); });
-	$('#ciezki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); });
+	$('#lekki img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalnePancerze[0]); });
+	$('#ciezki img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneBronie[1]); });
 
 	// kupowanie magazynow
-	$('#maly').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[0]); });
-	$('#sredni').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[1]); });
-	$('#duzy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[2]); });
+	$('#maly img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneMagazyny[0]); });
+	$('#sredni img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneMagazyny[1]); });
+	$('#duzy img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneMagazyny[2]); });
 
 	// kupowanie extryderow
-	$('#wiertlo').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[0]); });
-	$('#wytapiarka').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[1]); });
+	$('#wiertlo img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneExtrudery[0]); });
+	$('#wytapiarka img').click(function(){ gracz.kupUlepszenie(gracz.rozwoj.zdobywalneExtrudery[1]); });
 
 
 	$('#upgrade').hide();
@@ -224,9 +222,9 @@ $(function(){
 	$('.upgrade').click(function(){
 
 		$('#zelazo').text(gracz.rozwoj.posiadaneSurowce[0]);
-		$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[1]);
+		$('#wegiel').text(gracz.rozwoj.posiadaneSurowce[3]);
 		$('#pluton').text(gracz.rozwoj.posiadaneSurowce[2]);
-		$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[3]);
+		$('#aluminium').text(gracz.rozwoj.posiadaneSurowce[1]);
 
 		$('#aktualnySilnik').text(gracz.rozwoj.aktualnySilnik.nazwa);
 		$('#aktualnySilnik').append(gracz.rozwoj.aktualnySilnik.grafika);

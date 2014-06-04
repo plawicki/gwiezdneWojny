@@ -533,6 +533,7 @@ Rozwoj.prototype.dodajSurowiec = function(surowiec){
 			if(surowiec.nazwa === this.surowce[i].nazwa && this.posiadaneSurowce[i] < this.aktualnyMagazyn.pojemnosc && this.aktualnyExtruder.nazwa === surowiec.wymaganyExtruder.nazwa)
 			{
 				this.posiadaneSurowce[i]++;
+				console.log("Dodaje " + surowiec.nazwa);
 				return 1;
 			}
 		}
@@ -541,39 +542,24 @@ Rozwoj.prototype.dodajSurowiec = function(surowiec){
 
 Rozwoj.prototype.kup = function(ulepszenie){
 
+	var i=0, j=0;
 	var pass = false;
+	var posiadane = [this.posiadaneSurowce[0], this.posiadaneSurowce[1], this.posiadaneSurowce[2], this.posiadaneSurowce[3]];
 
-	for(var i=0; i<ulepszenie.wymaganeSurowce.length; i++)
+	for(i=0; i<ulepszenie.wymaganeSurowce.length; i++)
 	{
-		if(ulepszenie.wymaganeSurowce[i].nazwa === this.surowce[0].nazwa)
+		for(j=0; j<this.surowce.length; j++)
 		{
-			if(this.posiadaneSurowce[0] > 0)
+			if(ulepszenie.wymaganeSurowce[i].nazwa === this.surowce[j].nazwa)
 			{
-				pass = true;
+				if(posiadane[j] > 0)
+				{
+					pass = true;
+					posiadane[j]--;
+				}
+				else
+					pass = false;
 			}
-			else
-				pass = false;
-		}
-		if(ulepszenie === this.surowce[1].nazwa)
-		{
-			if(this.posiadaneSurowce[1] > 0)
-				pass = true;
-			else
-				pass = false;
-		}
-		if(ulepszenie === this.surowce[2].nazwa)
-		{
-			if(this.posiadaneSurowce[2] > 0)
-				pass = true;
-			else
-				pass = false;
-		}
-		if(ulepszenie === this.surowce[3].nazwa)
-		{
-			if(this.posiadaneSurowce[3] > 0)
-				pass = true;
-			else
-				pass = false;
 		}
 	}
 
@@ -602,6 +588,8 @@ Rozwoj.prototype.kup = function(ulepszenie){
 		{
 			this.aktualnySilnik = ulepszenie;
 		}
+
+		this.posiadaneSurowce = posiadane;
 	}
 };
 
@@ -849,10 +837,12 @@ Statek.prototype.strzel = function(){
 
 Statek.prototype.wydobywaj = function(){
 
+	var i=0;
+
 	if(this.planeta && this.rozwoj.aktualnyMagazyn && this.rozwoj.aktualnyExtruder)
 	{
 
-		for(var i=0; i<this.planeta.surowce.length; i++)
+		for(i=0; i<this.planeta.surowce.length; i++)
 		{
 			// random number of surowiec
 
