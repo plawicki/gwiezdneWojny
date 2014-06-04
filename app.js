@@ -41,8 +41,8 @@ function Planeta(nazwa, typ, wielkosc, x, y){
         "typ": typ,
         "wielkosc": wielkosc,
         "pozycja": {"x": x, "y": y}
-    }
-    return json
+    };
+    return json;
 }
 
 function Uklad(nazwa, typ, wielkosc, x, y, planety){
@@ -53,8 +53,8 @@ function Uklad(nazwa, typ, wielkosc, x, y, planety){
         "wielkosc": wielkosc,
         "pozycja": {"x": x, "y": y},
         "planety": planety
-    }
-    return json
+    };
+    return json;
 }
 
 function generujUklad(){
@@ -143,7 +143,7 @@ app.use(passport.session());
 app.use(express.static('public'));
 app.use(express.static("bower_components"));
 
-app.get('/', routes.login)
+app.get('/', routes.login);
 
 app.post('/login',
     passport.authenticate('local', {
@@ -153,7 +153,7 @@ app.post('/login',
 );
 
 app.get('/logout', function (req, res) {
-    console.log('Wylogowanie...')
+    console.log('Wylogowanie...');
     req.logout();
     res.redirect('/login');
 });
@@ -198,7 +198,7 @@ sio.sockets.on('connection', function (socket) {
 
         socket.emit('uklady', uklady);
         socket.broadcast.emit('uklady', uklady);
-    })
+    });
 
     socket.join("global");
     socket.set("uklad", "global");
@@ -251,8 +251,8 @@ sio.sockets.on('connection', function (socket) {
             gracze[data.gracz].predkosc = data.predkosc;
 
             sio.sockets.in(uklad).emit("innyRuch", data);
-        })
-    })
+        });
+    });
     /*
         LOGIKA
         

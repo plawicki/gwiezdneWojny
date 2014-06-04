@@ -132,14 +132,14 @@ function Fizyka (pozycja, szerokosc, wysokosc) {
 			// 1 1
 			// 1 1
 		if(	(zkim.pozycja.x >= this.pozycja.x && zkim.pozycja.x <= this.pozycja.x + this.szerokosc &&
-			 zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
-			(zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
-			 zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
-			(zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
-			 zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc) ||
-			(zkim.pozycja.x >= this.pozycja.x && zkim.pozycja.x <= this.pozycja.x + this.szerokosc &&
-			 zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc)
-		  )	
+         zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
+        (zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
+         zkim.pozycja.y >= this.pozycja.y && zkim.pozycja.y <= this.pozycja.y + this.wysokosc) ||
+        (zkim.pozycja.x + zkim.szerokosc >= this.pozycja.x && zkim.pozycja.x + zkim.szerokosc <= this.pozycja.x + this.szerokosc &&
+         zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc) ||
+        (zkim.pozycja.x >= this.pozycja.x && zkim.pozycja.x <= this.pozycja.x + this.szerokosc &&
+         zkim.pozycja.y + zkim.pozycja.wysokosc >= this.pozycja.y && zkim.pozycja.y + zkim.pozycja.wysokosc <= this.pozycja.y + this.wysokosc)
+      )	
 			return true;
 		else
 			return false;
@@ -261,13 +261,15 @@ function Ekran (ekranTyp, mapa, gracz) {
 }
 
 Ekran.prototype.odswiez = function(ctx){
+  
+  var i=0, j=0;
 
-	for(var i=0; i < this.inniGracze.length; i++)
+	for(i=0; i < this.inniGracze.length; i++)
 	{
 		this.inniGracze[i].odswiez();
 		if(this.inniGracze[i] && this.inniGracze[i].pociski)
 		{
-			for(var j=0; j < this.inniGracze[i].pociski.length; j++)
+			for(j=0; j < this.inniGracze[i].pociski.length; j++)
 			{
 				if(this.gracz.fizyka.sprawdz(this.inniGracze[i].pociski[j].fizyka))
 				{
@@ -279,7 +281,7 @@ Ekran.prototype.odswiez = function(ctx){
 
 		if(this.inniGracze[i] && this.gracz.pociski)
 		{
-			for(var j=0; j < this.gracz.pociski.length; j++)
+			for(j=0; j < this.gracz.pociski.length; j++)
 			{
 				if(this.inniGracze[i].fizyka.sprawdz(this.gracz.pociski[j].fizyka))
 				{
@@ -302,6 +304,8 @@ Ekran.prototype.odswiez = function(ctx){
 };
 
 Ekran.prototype.rysujUklad = function(ctx){
+  
+  var i=0,j=0;
 
 	this.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
 	ctx.przesuniecie = this.gracz.pozycja;
@@ -310,7 +314,7 @@ Ekran.prototype.rysujUklad = function(ctx){
 
 	if(this.inniGracze.length !== 0)
 	{
-		for(var i=0; i<this.inniGracze.length; i++)
+		for(i=0; i<this.inniGracze.length; i++)
 			this.inniGracze[i].rysuj(ctx);
 	}
 
@@ -319,19 +323,21 @@ Ekran.prototype.rysujUklad = function(ctx){
 
 	if(this.przyciski.length !== 0)
 	{
-		for(var i=0; i<this.przyciski.length; i++)
+		for(i=0; i<this.przyciski.length; i++)
 			this.przyciski[i].rysuj(ctx);
 	}
 
 	if(this.teksty.length !== 0)
 	{
-		for(var i=0; i<this.teksty.length; i++)
+		for(i=0; i<this.teksty.length; i++)
 			this.teksty[i].rysuj(ctx);
 	}
 
 };
 
 Ekran.prototype.rysuj = function(ctx){
+  
+  var i=0, j=0;
 
 	this.tlo.rysuj(ctx, new Wektor2(0,0), new Wektor2(ctx.szerokosc, ctx.wysokosc));
 
@@ -353,13 +359,13 @@ Ekran.prototype.rysuj = function(ctx){
 
 	if(this.przyciski.length !== 0)
 	{
-		for(var i=0; i<this.przyciski.length; i++)
+		for(i=0; i<this.przyciski.length; i++)
 			this.przyciski[i].rysuj(ctx);
 	}
 
 	if(this.teksty.length !== 0)
 	{
-		for(var i=0; i<this.teksty.length; i++)
+		for(i=0; i<this.teksty.length; i++)
 			this.teksty[i].rysuj(ctx);
 	}
 };
@@ -386,7 +392,7 @@ Ekran.prototype.dzialaj = function(e){
 			{
 				// wyznaczanie kierunku statkowi ku ukladowi gwiezdnemu 
 
-				for(var i=0; i<this.mapa.uklady.length; i++)
+				for(i=0; i<this.mapa.uklady.length; i++)
 				{
 
 					if(e.clientX >= this.mapa.uklady[i].pozycja.x - this.gracz.pozycja.x + this.gracz.srodek.x && e.clientX <= (this.mapa.uklady[i].pozycja.x + this.mapa.uklady[i].grafika.width - this.gracz.pozycja.x + this.gracz.srodek.x) && e.clientY >= this.mapa.uklady[i].pozycja.y - this.gracz.pozycja.y + this.gracz.srodek.y && e.clientY <= (this.mapa.uklady[i].pozycja.y + this.mapa.uklady[i].grafika.height - this.gracz.pozycja.y + this.gracz.srodek.y))
@@ -437,13 +443,13 @@ Ekran.prototype.laduj = function(){
 			continue;
 		}
 	}
-}
+};
 
 Ekran.prototype.odlec = function(){
 	// sprawdzenie czy statek jest nad jakas planeta, jesli tak mozna ladaowac
 	
 	this.gracz.planeta = null;
-}
+};
 
 // mozna budowac all chyba ze sie nie ma surowcow, im wiekszy statek tym wiekszy magazyn moze powstac
 function Rozwoj (bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku) {
@@ -525,7 +531,7 @@ Rozwoj.prototype.dodajSurowiec = function(surowiec){
 			}
 		}
 	}
-}	
+};
 
 Rozwoj.prototype.kup = function(ulepszenie){
 
@@ -591,7 +597,7 @@ Rozwoj.prototype.kup = function(ulepszenie){
 			this.aktualnySilnik = ulepszenie;
 		}
 	}
-}
+};
 
 function Bron (objekt, moc, szybkostrzelnosc, zasieg, szybkoscPocisku, objektPocisku, wymaganeSurowce) {
 	this.nazwa = objekt.nazwa;
@@ -670,7 +676,7 @@ Pocisk.prototype.odswiez = function(){
 	//this.pozycja.x += szybkosc;
 	this.pozycja.x += Math.cos(this.obrot) * this.predkosc; 
 	this.pozycja.y += Math.sin(this.obrot) * this.predkosc;
-	this.odleglosc++
+	this.odleglosc++;
 	if(this.odleglosc >= this.zasieg)
 		this.doSkasowania = true;
 };
@@ -745,7 +751,7 @@ Statek.prototype.kupUlepszenie = function(ulepszenie){
 	// jesli akutalizujemy pancerz trzeba dodac hp
 	if(this.rozwoj.kup(ulepszenie) === 1)
 		this.hp += this.rozwoj.aktualnyPancerz.wytrzymalosc;
-}
+};
 
 Statek.prototype.obroc = function(x, y){
 	this.obrot = Math.atan2(y - (this.grafika.height/2) - this.srodek.y, x - (this.grafika.width/2) - this.srodek.x);
@@ -753,6 +759,8 @@ Statek.prototype.obroc = function(x, y){
 
 Statek.prototype.rysuj = function(ctx, rozmiar)
 {
+  var i=0, j=0;
+  
 	ctx.save();
 
 	if(this.bot)
@@ -764,7 +772,7 @@ Statek.prototype.rysuj = function(ctx, rozmiar)
 
 		if(this.pociski && this.pociski.length !== 0)
 		{
-			for(var i=0; i<this.pociski.length; i++)
+			for(i=0; i<this.pociski.length; i++)
 			{
 				this.pociski[i].rysuj(ctx);
 			}
@@ -779,7 +787,7 @@ Statek.prototype.rysuj = function(ctx, rozmiar)
 
 		if(this.pociski && this.pociski.length !== 0)
 		{
-			for(var i=0; i<this.pociski.length; i++)
+			for(i=0; i<this.pociski.length; i++)
 			{
 				this.pociski[i].rysuj(ctx);
 			}
@@ -826,7 +834,7 @@ Statek.prototype.ruszaj = function(e){
 Statek.prototype.strzel = function(){
 	if(this.rozwoj.aktualnaBron && this.timer >= this.rozwoj.aktualnaBron.szybkostrzelnosc)
 	{
-		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, new Wektor2(this.pozycja.x, this.pozycja.y + this.grafika.height/2), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot)
+		var pocisk = new Pocisk(this.rozwoj.aktualnaBron, new Wektor2(this.pozycja.x, this.pozycja.y + this.grafika.height/2), this.rozwoj.aktualnaBron.szybkoscPocisku, this.obrot);
 		this.pociski.push(pocisk);
 		this.timer = 0;
 	}
@@ -852,7 +860,7 @@ Statek.prototype.wydobywaj = function(){
 			}
 		}
 	}
-}
+};
 
 Statek.prototype.wejdzDoUkladu = function(){
 	if(this.kierunek && this.pozycja.x >= this.kierunek.pozycja.x - 32 && this.pozycja.x <= this.kierunek.pozycja.x + 32 && this.pozycja.y >= this.kierunek.pozycja.y - 32 && this.pozycja.y <= this.kierunek.pozycja.y + 32)
@@ -863,19 +871,18 @@ Statek.prototype.wejdzDoUkladu = function(){
 			this.pozycja = new Wektor2();
 		}
 	}
-}
+};
 
 Statek.prototype.wyjdzZUkladu = function(){
 	if(Math.sqrt(this.pozycja.x*this.pozycja.x +this.pozycja.y*this.pozycja.y) >= this.kierunek.wielkosc)
 	{
-		console.log("mozna wyjsc")
 		this.dotarl = false;
 		this.ruszaj("stop");
 
 		this.pozycja.x = this.kierunek.pozycja.x + 35;
 		this.pozycja.y = this.kierunek.pozycja.y;
 	}
-}
+};
 
 Statek.prototype.odswiez = function(){
 

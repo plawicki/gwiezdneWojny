@@ -132,8 +132,9 @@ zapiszGracza = function(gracz){
 	// typ nazwa, pozycja wektor, kierunek nazwa, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
 	// tworzenie jsona na podstawie statystyk
 	var rozwoj = zapiszRozwoj(gracz.rozwoj);
+  var json = null;
 	if(gracz.kierunek)
-	var json = 
+	json = 
 	{ 
 		"typ": gracz.typ.nazwa, 
 		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
@@ -145,7 +146,7 @@ zapiszGracza = function(gracz){
 		"przeciwnik": null 
 	};
 	else
-	var json = 
+	json = 
 	{ 
 		"typ": gracz.typ.nazwa, 
 		"pozycja": { "x": gracz.pozycja.x, "y": gracz.pozycja.y}, 
@@ -157,18 +158,18 @@ zapiszGracza = function(gracz){
 		"przeciwnik": null 
 	};
 	return json;
-}
+};
 
 zapiszRozwoj = function(rozwoj){
 	// bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku)
 	var pBronie = [];
 	$.each(rozwoj.posiadaneBronie, function(i, el){
 		pBronie.push(el.nazwa);
-	})
+	});
 	var pExtrudery = [];
 	$.each(rozwoj.posiadaneExtrudery, function(i, el){
 		pExtrudery.push(el.nazwa);
-	})
+	});
 	var json =
 	{
 		"posiadaneSurowce": rozwoj.posiadaneSurowce,
@@ -177,53 +178,55 @@ zapiszRozwoj = function(rozwoj){
 		"aktualnySilnik": rozwoj.aktualnySilnik.nazwa,
 		"aktualnyMagazyn": rozwoj.aktualnyMagazyn.nazwa,
 		"pExtrudery": pExtrudery,
-	}
+	};
 	return json;
-}
+};
 
 stworzGracza = function(json){
 	// typ nazwa, pozycja wektor, kierunek numer, obrot numer, nazwa string, rozwoj - objekt, srodek null, przeciwnik tak lub nie
 	// typ, pozycja, kierunek, obrot, nazwa, rozwoj, srodek, przeciwnik
 	var typO = null;
-	for(var i=0; i<typyStatku.length; i++)
+  var i=0, j=0;
+  
+	for(i=0; i<typyStatku.length; i++)
 		if(typyStatku[i].nazwa === json.typ)
 			typO = typyStatku[i];
 
 	var kierunekO = null;
-	for(var i=0; i<ekran1.mapa.uklady.length; i++)
+	for(i=0; i<ekran1.mapa.uklady.length; i++)
 		if(ekran1.mapa.uklady[i].nazwa === json.kierunek)
 			kierunekO = ekran1.mapa.uklady[i].nazwa;
 
 	// kierunek string
 	// rozowj bronie, pancerze, silniki, magazyny, extrudery, surowce, posiadaneSurowce, pBronie, pPancerze, pSilniki, pMagazyny, pExtrudery, typStatku
 	var pBronieO = [];
-	for(var i=0; i<bronie.length; i++)
+	for(i=0; i<bronie.length; i++)
 	{
-		for(var j=0; j<json.rozwoj.pBronie.length; j++)
+		for(j=0; j<json.rozwoj.pBronie.length; j++)
 			if(bronie[i].nazwa === json.rozwoj.pBronie[j])
 				pBronieO.push(bronie[i]);
 	}
 	var pExtruderyeO = [];
-	for(var i=0; i<extrudery.length; i++)
+	for(i=0; i<extrudery.length; i++)
 	{
-		for(var j=0; j<json.rozwoj.pExtrudery.length; j++)
+		for(j=0; j<json.rozwoj.pExtrudery.length; j++)
 			if(extrudery[i].nazwa === json.rozwoj.pExtrudery[j])
 				pExtruderyeO.push(extrudery[i]);
 	}
 	var aPancerzO = null;
-	for(var i=0; i<pancerze.length; i++)
+	for(i=0; i<pancerze.length; i++)
 	{
 		if(pancerze[i].nazwa === json.rozwoj.aktualnyPancerz)
 				aPancerzO = pancerze[i];
 	}
-	var aSilnikO = null
-	for(var i=0; i<silniki.length; i++)
+	var aSilnikO = null;
+	for(i=0; i<silniki.length; i++)
 	{
 		if(silniki[i].nazwa === json.rozwoj.aktualnySilnik)
 			aSilnikO = silniki[i];
 	}
-	var aMagazynO = null
-	for(var i=0; i<magazyny.length; i++)
+	var aMagazynO = null;
+	for(i=0; i<magazyny.length; i++)
 	{
 		if(magazyny[i].nazwa === json.rozwoj.aktualnyMagazyn)
 			aMagazynO = magazyny[i];
@@ -240,7 +243,7 @@ stworzGracza = function(json){
 		json.przeciwnik);
 
 	return gracz;
-}
+};
 
 stworzPlanete = function(json){
 
@@ -248,7 +251,7 @@ stworzPlanete = function(json){
 	var planeta = new Planeta(json.nazwa, typyPlanet[json.typ], json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y));
 
 	return planeta;
-}
+};
 
 stworzUklad = function(json){
 
@@ -261,7 +264,7 @@ stworzUklad = function(json){
 	var uklad = new Uklad(json.nazwa, typyUkladow[json.typ], json.wielkosc, new Wektor2(json.pozycja.x, json.pozycja.y), planety);
 
 	return uklad;
-}
+};
 
 function makeid()
 {

@@ -8,7 +8,7 @@ $(function(){
 
 	socket.on("nowy", function(gracz){
 		console.log(gracz);
-	})
+	});
 
 	socket.on("innyOdlatuje", function(gracz){
 
@@ -20,18 +20,18 @@ $(function(){
 				continue;
 			}
 		}
-	})
+	});
 
 	socket.on("uklady", function(uklady){
 		ekran1.mapa.uklady = [];
 		for(var i=0; i<uklady.length; i++)
 			ekran1.mapa.uklady.push(stworzUklad(uklady[i]));
-	})
+	});
 
 	socket.on("innyGracz", function(gracz){
 		if(gracz.nazwa != ekran1.gracz.nazwa)
 			ekran1.inniGracze.push(stworzGracza(gracz));
-	})
+	});
 
 	socket.on("ktosStrzela", function(data){
 		for(var i=0; i<ekran1.inniGracze.length; i++)
@@ -54,7 +54,7 @@ $(function(){
 				ekran1.inniGracze[i].predkosc = data.predkosc;
 			}
 		}
-	})
+	});
 
 	// ustawienia grafiki okna gry
 
@@ -104,7 +104,7 @@ $(function(){
 			ekran1.inniGracze = [];
 			socket.emit("changeStar", { "nazwaUkladu": "global", "gracz": gracz.nazwa });
 		}
-	})
+	});
 
 	$('#menu .wlec').click(function(){
 
@@ -124,7 +124,7 @@ $(function(){
 
 			$.each(gracz.planeta.surowce, function(i, surowiec){
 				$('#planeta #doWykopania').text($('#planeta #doWykopania').text() + " " + surowiec.nazwa);
-			})
+			});
 			$('#planeta').show();
 			$('#wybor').hide();
 		} 
@@ -134,7 +134,7 @@ $(function(){
 
 			socket.emit("changeStar", { "nazwaUkladu": gracz.kierunek.nazwa, "gracz": gracz.nazwa });
 		}
-	})
+	});
 
 
 	// end okno planety
@@ -146,27 +146,27 @@ $(function(){
 		$('#wybor0').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[0])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[0];
-		})
+		});
 		if(gracz.rozwoj.posiadaneBronie[1])
 			$('#wybor1 ').append(gracz.rozwoj.posiadaneBronie[1].grafika);
 		$('#wybor1').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[1])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[1];
-		})
+		});
 		if(gracz.rozwoj.posiadaneBronie[2])
 			$('#wybor2 ').append(gracz.rozwoj.posiadaneBronie[2].grafika);
 		$('#wybor2').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[2])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[2];
-		})
+		});
 		if(gracz.rozwoj.posiadaneBronie[3])
 			$('#wybor3 ').append(gracz.rozwoj.posiadaneBronie[3].grafika);
 		$('#wybor3').click(function(){
 			if(gracz.rozwoj.posiadaneBronie[3])
 				gracz.rozwoj.aktualnaBron = gracz.rozwoj.posiadaneBronie[3];
-		})	
+		});
 		// end okno wyboru
-	}
+	};
 
 	przypiszBron();
 
@@ -182,28 +182,28 @@ $(function(){
 	// ustawienia okna upgradow
 
 	// kupowanie silnikow
-	$('#spalinowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[1]); })
-	$('#impulsowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[2]); })
-	$('#nadprzestrzenny').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[3]); })
+	$('#spalinowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[1]); });
+	$('#impulsowy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[2]); });
+	$('#nadprzestrzenny').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneSilniki[3]); });
 
 	// kupowanie broni
-	$('#minigun').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[0]); })
-	$('#laser').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); })
-	$('#gauss').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[2]); })
-	$('#rocket').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[3]); })
+	$('#minigun').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[0]); });
+	$('#laser').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); });
+	$('#gauss').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[2]); });
+	$('#rocket').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[3]); });
 
 	// kupowanie pancerzy
-	$('#lekki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalnePancerze[0]); })
-	$('#ciezki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); })
+	$('#lekki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalnePancerze[0]); });
+	$('#ciezki').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneBronie[1]); });
 
 	// kupowanie magazynow
-	$('#maly').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[0]); })
-	$('#sredni').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[1]); })
-	$('#duzy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[2]); })
+	$('#maly').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[0]); });
+	$('#sredni').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[1]); });
+	$('#duzy').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneMagazyny[2]); });
 
 	// kupowanie extryderow
-	$('#wiertlo').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[0]); })
-	$('#wytapiarka').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[1]); })
+	$('#wiertlo').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[0]); });
+	$('#wytapiarka').click(function(){ gracz.kupUlepszenie(gracz.zdobywalneExtrudery[1]); });
 
 
 	$('#upgrade').hide();
@@ -264,7 +264,7 @@ $(function(){
 
 			return 0;
 		}
-	})
+	});
 	$('#zelazo').text($('#zelazo').text() + gracz.rozwoj.posiadaneSurowce[0]);
 	$('#wegiel').text($('#wegiel').text() + gracz.rozwoj.posiadaneSurowce[1]);
 	$('#pluton').text($('#pluton').text() + gracz.rozwoj.posiadaneSurowce[2]);
@@ -285,19 +285,19 @@ $(function(){
 
 	poruszam = function(){
 		socket.emit("ruch", {"gracz": gracz.nazwa, "pozycja": {"x": gracz.pozycja.x, "y": gracz.pozycja.y}, "obrot": gracz.obrot, "predkosc": gracz.predkosc});
-	}
+	};
 
 	var mouseEvent = function(e){
 		wejscie.mysz = e;
 		wejscie.dzialajMysz();
 		poruszam();
-	}
+	};
 
 	var keyboardEvent = function(e){
 		wejscie.klawiatura = e;
 		wejscie.dzialajKlawiatura();
 		poruszam();
-	}
+	};
 
 	$('canvas').mousemove(mouseEvent);
 	$('canvas').click(mouseEvent);
@@ -317,7 +317,7 @@ $(function(){
 		// After all media are initialized we can start a game loop
 
 		setInterval(play, 33);
-	}
+	};
 
 	play = function(){
 
@@ -361,7 +361,7 @@ $(function(){
 
 		}
 
-	}
+	};
 
 	window.onload = init;
 });
