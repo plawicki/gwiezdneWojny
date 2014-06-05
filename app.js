@@ -120,7 +120,7 @@ passport.deserializeUser(function (obj, done) {
 passport.use(new LocalStrategy(
     function (username, password, done) {
         rClient.hgetall(username, function (err, data) {
-            if (data.pass && password === data.pass.toString()) {
+            if (data && data.pass && password === data.pass.toString()) {
             console.log("Udane logowanie...");
             return done(null, {
                 username: username,
